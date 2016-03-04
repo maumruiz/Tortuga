@@ -155,7 +155,7 @@ def t_AND(t):
     return t
 
 def t_OR(t):
-    r'||'
+    r'\|\|'
     return t
 
 def t_ADELANTE(t):
@@ -253,6 +253,7 @@ t_ignore = ' \t'
 
 def t_ENDLINE(t):
     r'\n+'
+    print("found newline")
     t.lexer.lineno += t.value.count("\n")
 
 def t_error(t):
@@ -266,8 +267,13 @@ lexer = lex.lex()
 #Parsing rules
 
 def p_programa(p):
-    'programa : PROGRAMA ID ENDLINE progvar progfunc block'
+    'programa : dec_programa progvar progfunc block'
     print("Programa terminado con exito")
+    pass
+
+def p_dec_programa(p):
+    'dec_programa : PROGRAMA ID PUNTOYCOMA'
+    print("Programa declarado")
     pass
 
 def p_progvar(p):
@@ -281,7 +287,7 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino varasign DOSPUNTOS type ENDLINE'
+    'var : VAR ID arrsino varasign DOSPUNTOS type PUNTOYCOMA'
     pass
 
 def p_arrsino(p):
@@ -295,7 +301,7 @@ def p_varasign(p):
     pass
 
 def p_type(p):
-    '''tipo : INT arrsino
+    '''type : INT arrsino
             | FLOAT arrsino
             | STRING arrsino
             | BOOL arrsino'''
@@ -430,7 +436,7 @@ def p_args1(p):
     'args1 : ssexp args2'
     pass
 
-def p_cond1(p):
+def p_args2(p):
     '''args2 : COMA args1
             | vacio'''
     pass
@@ -490,20 +496,18 @@ parser = yacc.yacc()
 
 if __name__ == '__main__':
     data = '''
-            program alfa ;
-            var a, b, c : int;
-                d, e, f : float;
-            {
-                a = 5 + 4 ;
-                if ( a > 10 )
-                {
-                    print ( 'es mayor' );
-                }
-                else
-                {
-                    print ( 'es menor' );
-                } ;
-                print ( 'terminar' );
-            }
-            '''
+    programa hojas
+    {
+      grosor_linea(3)
+      color_linea(255, 255, 255)
+      color_relleno(255, 44, 53)
+      derecha(180, 50)
+      derecha(90)
+      derecha(180, 50)
+      derecha(90)
+      derecha(180, 50)
+      derecha(90)
+      derecha(180, 50)
+    }
+    '''
     parser.parse(data,tracking = True)

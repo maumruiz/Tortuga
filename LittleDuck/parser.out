@@ -1,4 +1,4 @@
-Created by PLY version 3.4 (http://www.dabeaz.com/ply)
+Created by PLY version 3.8 (http://www.dabeaz.com/ply)
 
 Grammar
 
@@ -150,18 +150,18 @@ state 4
     (4) vars -> . VAR var1
     (13) bloque -> . LLAVEI bloque1 LLAVED
 
-    VAR             shift and go to state 7
+    VAR             shift and go to state 9
     LLAVEI          shift and go to state 8
 
-    prog1                          shift and go to state 5
-    bloque                         shift and go to state 9
+    prog1                          shift and go to state 7
+    bloque                         shift and go to state 5
     vars                           shift and go to state 6
 
 state 5
 
-    (1) program -> PROGRAM ID PUNTOYCOMA prog1 .
+    (3) prog1 -> bloque .
 
-    $end            reduce using rule 1 (program -> PROGRAM ID PUNTOYCOMA prog1 .)
+    $end            reduce using rule 3 (prog1 -> bloque .)
 
 
 state 6
@@ -175,14 +175,10 @@ state 6
 
 state 7
 
-    (4) vars -> VAR . var1
-    (5) var1 -> . var2 DOSPUNTOS tipo PUNTOYCOMA var3
-    (6) var2 -> . ID var21
+    (1) program -> PROGRAM ID PUNTOYCOMA prog1 .
 
-    ID              shift and go to state 13
+    $end            reduce using rule 1 (program -> PROGRAM ID PUNTOYCOMA prog1 .)
 
-    var1                           shift and go to state 11
-    var2                           shift and go to state 12
 
 state 8
 
@@ -198,23 +194,27 @@ state 8
     (20) escritura -> . PRINT PARENTESISI escr1 PARENTESISD PUNTOYCOMA
 
     LLAVED          reduce using rule 48 (vacio -> .)
-    ID              shift and go to state 21
+    ID              shift and go to state 14
     IF              shift and go to state 19
-    PRINT           shift and go to state 20
+    PRINT           shift and go to state 12
 
-    bloque1                        shift and go to state 14
-    asignacion                     shift and go to state 15
+    asignacion                     shift and go to state 17
+    vacio                          shift and go to state 11
+    escritura                      shift and go to state 13
+    condicion                      shift and go to state 15
+    bloque1                        shift and go to state 18
     estatuto                       shift and go to state 16
-    vacio                          shift and go to state 17
-    condicion                      shift and go to state 18
-    escritura                      shift and go to state 22
 
 state 9
 
-    (3) prog1 -> bloque .
+    (4) vars -> VAR . var1
+    (5) var1 -> . var2 DOSPUNTOS tipo PUNTOYCOMA var3
+    (6) var2 -> . ID var21
 
-    $end            reduce using rule 3 (prog1 -> bloque .)
+    ID              shift and go to state 22
 
+    var1                           shift and go to state 21
+    var2                           shift and go to state 20
 
 state 10
 
@@ -225,46 +225,43 @@ state 10
 
 state 11
 
-    (4) vars -> VAR var1 .
+    (15) bloque1 -> vacio .
 
-    LLAVEI          reduce using rule 4 (vars -> VAR var1 .)
+    LLAVED          reduce using rule 15 (bloque1 -> vacio .)
 
 
 state 12
 
-    (5) var1 -> var2 . DOSPUNTOS tipo PUNTOYCOMA var3
+    (20) escritura -> PRINT . PARENTESISI escr1 PARENTESISD PUNTOYCOMA
 
-    DOSPUNTOS       shift and go to state 23
+    PARENTESISI     shift and go to state 23
 
 
 state 13
 
-    (6) var2 -> ID . var21
-    (7) var21 -> . COMA var2
-    (8) var21 -> . vacio
-    (48) vacio -> .
+    (18) estatuto -> escritura .
 
-    COMA            shift and go to state 24
-    DOSPUNTOS       reduce using rule 48 (vacio -> .)
+    ID              reduce using rule 18 (estatuto -> escritura .)
+    IF              reduce using rule 18 (estatuto -> escritura .)
+    PRINT           reduce using rule 18 (estatuto -> escritura .)
+    LLAVED          reduce using rule 18 (estatuto -> escritura .)
 
-    vacio                          shift and go to state 25
-    var21                          shift and go to state 26
 
 state 14
 
-    (13) bloque -> LLAVEI bloque1 . LLAVED
+    (19) asignacion -> ID . IGUAL expresion PUNTOYCOMA
 
-    LLAVED          shift and go to state 27
+    IGUAL           shift and go to state 24
 
 
 state 15
 
-    (16) estatuto -> asignacion .
+    (17) estatuto -> condicion .
 
-    ID              reduce using rule 16 (estatuto -> asignacion .)
-    IF              reduce using rule 16 (estatuto -> asignacion .)
-    PRINT           reduce using rule 16 (estatuto -> asignacion .)
-    LLAVED          reduce using rule 16 (estatuto -> asignacion .)
+    ID              reduce using rule 17 (estatuto -> condicion .)
+    IF              reduce using rule 17 (estatuto -> condicion .)
+    PRINT           reduce using rule 17 (estatuto -> condicion .)
+    LLAVED          reduce using rule 17 (estatuto -> condicion .)
 
 
 state 16
@@ -281,143 +278,69 @@ state 16
     (20) escritura -> . PRINT PARENTESISI escr1 PARENTESISD PUNTOYCOMA
 
     LLAVED          reduce using rule 48 (vacio -> .)
-    ID              shift and go to state 21
+    ID              shift and go to state 14
     IF              shift and go to state 19
-    PRINT           shift and go to state 20
+    PRINT           shift and go to state 12
 
-    bloque1                        shift and go to state 28
-    asignacion                     shift and go to state 15
+    asignacion                     shift and go to state 17
+    vacio                          shift and go to state 11
+    escritura                      shift and go to state 13
+    condicion                      shift and go to state 15
+    bloque1                        shift and go to state 25
     estatuto                       shift and go to state 16
-    vacio                          shift and go to state 17
-    condicion                      shift and go to state 18
-    escritura                      shift and go to state 22
 
 state 17
 
-    (15) bloque1 -> vacio .
+    (16) estatuto -> asignacion .
 
-    LLAVED          reduce using rule 15 (bloque1 -> vacio .)
+    ID              reduce using rule 16 (estatuto -> asignacion .)
+    IF              reduce using rule 16 (estatuto -> asignacion .)
+    PRINT           reduce using rule 16 (estatuto -> asignacion .)
+    LLAVED          reduce using rule 16 (estatuto -> asignacion .)
 
 
 state 18
 
-    (17) estatuto -> condicion .
+    (13) bloque -> LLAVEI bloque1 . LLAVED
 
-    ID              reduce using rule 17 (estatuto -> condicion .)
-    IF              reduce using rule 17 (estatuto -> condicion .)
-    PRINT           reduce using rule 17 (estatuto -> condicion .)
-    LLAVED          reduce using rule 17 (estatuto -> condicion .)
+    LLAVED          shift and go to state 26
 
 
 state 19
 
     (34) condicion -> IF . PARENTESISI expresion PARENTESISD bloque cond1 PUNTOYCOMA
 
-    PARENTESISI     shift and go to state 29
+    PARENTESISI     shift and go to state 27
 
 
 state 20
 
-    (20) escritura -> PRINT . PARENTESISI escr1 PARENTESISD PUNTOYCOMA
+    (5) var1 -> var2 . DOSPUNTOS tipo PUNTOYCOMA var3
 
-    PARENTESISI     shift and go to state 30
+    DOSPUNTOS       shift and go to state 28
 
 
 state 21
 
-    (19) asignacion -> ID . IGUAL expresion PUNTOYCOMA
+    (4) vars -> VAR var1 .
 
-    IGUAL           shift and go to state 31
+    LLAVEI          reduce using rule 4 (vars -> VAR var1 .)
 
 
 state 22
 
-    (18) estatuto -> escritura .
+    (6) var2 -> ID . var21
+    (7) var21 -> . COMA var2
+    (8) var21 -> . vacio
+    (48) vacio -> .
 
-    ID              reduce using rule 18 (estatuto -> escritura .)
-    IF              reduce using rule 18 (estatuto -> escritura .)
-    PRINT           reduce using rule 18 (estatuto -> escritura .)
-    LLAVED          reduce using rule 18 (estatuto -> escritura .)
+    COMA            shift and go to state 29
+    DOSPUNTOS       reduce using rule 48 (vacio -> .)
 
+    var21                          shift and go to state 31
+    vacio                          shift and go to state 30
 
 state 23
-
-    (5) var1 -> var2 DOSPUNTOS . tipo PUNTOYCOMA var3
-    (11) tipo -> . INT
-    (12) tipo -> . FLOAT
-
-    INT             shift and go to state 33
-    FLOAT           shift and go to state 34
-
-    tipo                           shift and go to state 32
-
-state 24
-
-    (7) var21 -> COMA . var2
-    (6) var2 -> . ID var21
-
-    ID              shift and go to state 13
-
-    var2                           shift and go to state 35
-
-state 25
-
-    (8) var21 -> vacio .
-
-    DOSPUNTOS       reduce using rule 8 (var21 -> vacio .)
-
-
-state 26
-
-    (6) var2 -> ID var21 .
-
-    DOSPUNTOS       reduce using rule 6 (var2 -> ID var21 .)
-
-
-state 27
-
-    (13) bloque -> LLAVEI bloque1 LLAVED .
-
-    $end            reduce using rule 13 (bloque -> LLAVEI bloque1 LLAVED .)
-    PUNTOYCOMA      reduce using rule 13 (bloque -> LLAVEI bloque1 LLAVED .)
-    ELSE            reduce using rule 13 (bloque -> LLAVEI bloque1 LLAVED .)
-
-
-state 28
-
-    (14) bloque1 -> estatuto bloque1 .
-
-    LLAVED          reduce using rule 14 (bloque1 -> estatuto bloque1 .)
-
-
-state 29
-
-    (34) condicion -> IF PARENTESISI . expresion PARENTESISD bloque cond1 PUNTOYCOMA
-    (25) expresion -> . exp expres1
-    (30) exp -> . termino exp1
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    expresion                      shift and go to state 36
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 41
-    factor                         shift and go to state 42
-
-state 30
 
     (20) escritura -> PRINT PARENTESISI . escr1 PARENTESISD PUNTOYCOMA
     (21) escr1 -> . expresion escr1
@@ -433,22 +356,22 @@ state 30
     (46) varcte -> . CTEI
     (47) varcte -> . CTEF
 
-    CTESTRING       shift and go to state 48
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
+    CTESTRING       shift and go to state 33
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
     CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
+    CTEF            shift and go to state 34
 
-    expresion                      shift and go to state 47
-    varcte                         shift and go to state 37
-    escr1                          shift and go to state 49
-    termino                        shift and go to state 40
-    exp                            shift and go to state 41
-    factor                         shift and go to state 42
+    expresion                      shift and go to state 37
+    termino                        shift and go to state 43
+    escr1                          shift and go to state 42
+    exp                            shift and go to state 35
+    varcte                         shift and go to state 41
+    factor                         shift and go to state 39
 
-state 31
+state 24
 
     (19) asignacion -> ID IGUAL . expresion PUNTOYCOMA
     (25) expresion -> . exp expres1
@@ -462,75 +385,168 @@ state 31
     (46) varcte -> . CTEI
     (47) varcte -> . CTEF
 
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
     CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
+    CTEF            shift and go to state 34
 
-    expresion                      shift and go to state 50
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 41
-    factor                         shift and go to state 42
+    expresion                      shift and go to state 45
+    termino                        shift and go to state 43
+    exp                            shift and go to state 35
+    varcte                         shift and go to state 41
+    factor                         shift and go to state 39
+
+state 25
+
+    (14) bloque1 -> estatuto bloque1 .
+
+    LLAVED          reduce using rule 14 (bloque1 -> estatuto bloque1 .)
+
+
+state 26
+
+    (13) bloque -> LLAVEI bloque1 LLAVED .
+
+    ELSE            reduce using rule 13 (bloque -> LLAVEI bloque1 LLAVED .)
+    PUNTOYCOMA      reduce using rule 13 (bloque -> LLAVEI bloque1 LLAVED .)
+    $end            reduce using rule 13 (bloque -> LLAVEI bloque1 LLAVED .)
+
+
+state 27
+
+    (34) condicion -> IF PARENTESISI . expresion PARENTESISD bloque cond1 PUNTOYCOMA
+    (25) expresion -> . exp expres1
+    (30) exp -> . termino exp1
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    expresion                      shift and go to state 46
+    termino                        shift and go to state 43
+    exp                            shift and go to state 35
+    varcte                         shift and go to state 41
+    factor                         shift and go to state 39
+
+state 28
+
+    (5) var1 -> var2 DOSPUNTOS . tipo PUNTOYCOMA var3
+    (11) tipo -> . INT
+    (12) tipo -> . FLOAT
+
+    INT             shift and go to state 47
+    FLOAT           shift and go to state 48
+
+    tipo                           shift and go to state 49
+
+state 29
+
+    (7) var21 -> COMA . var2
+    (6) var2 -> . ID var21
+
+    ID              shift and go to state 22
+
+    var2                           shift and go to state 50
+
+state 30
+
+    (8) var21 -> vacio .
+
+    DOSPUNTOS       reduce using rule 8 (var21 -> vacio .)
+
+
+state 31
+
+    (6) var2 -> ID var21 .
+
+    DOSPUNTOS       reduce using rule 6 (var2 -> ID var21 .)
+
 
 state 32
 
-    (5) var1 -> var2 DOSPUNTOS tipo . PUNTOYCOMA var3
+    (42) factor -> SUMA . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
 
-    PUNTOYCOMA      shift and go to state 51
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
 
+    varcte                         shift and go to state 51
 
 state 33
 
-    (11) tipo -> INT .
+    (22) escr1 -> CTESTRING . escr2
+    (23) escr2 -> . COMA escr1
+    (24) escr2 -> . vacio
+    (48) vacio -> .
 
-    PUNTOYCOMA      reduce using rule 11 (tipo -> INT .)
+    COMA            shift and go to state 52
+    PARENTESISD     reduce using rule 48 (vacio -> .)
 
+    vacio                          shift and go to state 54
+    escr2                          shift and go to state 53
 
 state 34
 
-    (12) tipo -> FLOAT .
+    (47) varcte -> CTEF .
 
-    PUNTOYCOMA      reduce using rule 12 (tipo -> FLOAT .)
+    MULTIP          reduce using rule 47 (varcte -> CTEF .)
+    DIVISION        reduce using rule 47 (varcte -> CTEF .)
+    SUMA            reduce using rule 47 (varcte -> CTEF .)
+    RESTA           reduce using rule 47 (varcte -> CTEF .)
+    MAYOR           reduce using rule 47 (varcte -> CTEF .)
+    MENOR           reduce using rule 47 (varcte -> CTEF .)
+    DIFERENTE       reduce using rule 47 (varcte -> CTEF .)
+    PUNTOYCOMA      reduce using rule 47 (varcte -> CTEF .)
+    CTESTRING       reduce using rule 47 (varcte -> CTEF .)
+    PARENTESISI     reduce using rule 47 (varcte -> CTEF .)
+    ID              reduce using rule 47 (varcte -> CTEF .)
+    CTEI            reduce using rule 47 (varcte -> CTEF .)
+    CTEF            reduce using rule 47 (varcte -> CTEF .)
+    PARENTESISD     reduce using rule 47 (varcte -> CTEF .)
 
 
 state 35
 
-    (7) var21 -> COMA var2 .
+    (25) expresion -> exp . expres1
+    (26) expres1 -> . MAYOR exp
+    (27) expres1 -> . MENOR exp
+    (28) expres1 -> . DIFERENTE exp
+    (29) expres1 -> . vacio
+    (48) vacio -> .
 
-    DOSPUNTOS       reduce using rule 7 (var21 -> COMA var2 .)
+    MAYOR           shift and go to state 59
+    MENOR           shift and go to state 58
+    DIFERENTE       shift and go to state 56
+    CTESTRING       reduce using rule 48 (vacio -> .)
+    PARENTESISI     reduce using rule 48 (vacio -> .)
+    SUMA            reduce using rule 48 (vacio -> .)
+    RESTA           reduce using rule 48 (vacio -> .)
+    ID              reduce using rule 48 (vacio -> .)
+    CTEI            reduce using rule 48 (vacio -> .)
+    CTEF            reduce using rule 48 (vacio -> .)
+    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
+    PARENTESISD     reduce using rule 48 (vacio -> .)
 
+    expres1                        shift and go to state 57
+    vacio                          shift and go to state 55
 
 state 36
-
-    (34) condicion -> IF PARENTESISI expresion . PARENTESISD bloque cond1 PUNTOYCOMA
-
-    PARENTESISD     shift and go to state 52
-
-
-state 37
-
-    (44) factor -> varcte .
-
-    MULTIP          reduce using rule 44 (factor -> varcte .)
-    DIVISION        reduce using rule 44 (factor -> varcte .)
-    SUMA            reduce using rule 44 (factor -> varcte .)
-    RESTA           reduce using rule 44 (factor -> varcte .)
-    MAYOR           reduce using rule 44 (factor -> varcte .)
-    MENOR           reduce using rule 44 (factor -> varcte .)
-    DIFERENTE       reduce using rule 44 (factor -> varcte .)
-    PARENTESISD     reduce using rule 44 (factor -> varcte .)
-    CTESTRING       reduce using rule 44 (factor -> varcte .)
-    PARENTESISI     reduce using rule 44 (factor -> varcte .)
-    ID              reduce using rule 44 (factor -> varcte .)
-    CTEI            reduce using rule 44 (factor -> varcte .)
-    CTEF            reduce using rule 44 (factor -> varcte .)
-    PUNTOYCOMA      reduce using rule 44 (factor -> varcte .)
-
-
-state 38
 
     (41) factor -> PARENTESISI . expresion PARENTESISD
     (25) expresion -> . exp expres1
@@ -544,186 +560,20 @@ state 38
     (46) varcte -> . CTEI
     (47) varcte -> . CTEF
 
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
     CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
+    CTEF            shift and go to state 34
 
-    expresion                      shift and go to state 53
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 41
-    factor                         shift and go to state 42
+    expresion                      shift and go to state 60
+    termino                        shift and go to state 43
+    exp                            shift and go to state 35
+    varcte                         shift and go to state 41
+    factor                         shift and go to state 39
 
-state 39
-
-    (45) varcte -> ID .
-
-    MULTIP          reduce using rule 45 (varcte -> ID .)
-    DIVISION        reduce using rule 45 (varcte -> ID .)
-    SUMA            reduce using rule 45 (varcte -> ID .)
-    RESTA           reduce using rule 45 (varcte -> ID .)
-    MAYOR           reduce using rule 45 (varcte -> ID .)
-    MENOR           reduce using rule 45 (varcte -> ID .)
-    DIFERENTE       reduce using rule 45 (varcte -> ID .)
-    PUNTOYCOMA      reduce using rule 45 (varcte -> ID .)
-    PARENTESISD     reduce using rule 45 (varcte -> ID .)
-    CTESTRING       reduce using rule 45 (varcte -> ID .)
-    PARENTESISI     reduce using rule 45 (varcte -> ID .)
-    ID              reduce using rule 45 (varcte -> ID .)
-    CTEI            reduce using rule 45 (varcte -> ID .)
-    CTEF            reduce using rule 45 (varcte -> ID .)
-
-
-state 40
-
-    (30) exp -> termino . exp1
-    (31) exp1 -> . SUMA exp
-    (32) exp1 -> . RESTA exp
-    (33) exp1 -> . vacio
-    (48) vacio -> .
-
-  ! shift/reduce conflict for SUMA resolved as shift
-  ! shift/reduce conflict for RESTA resolved as shift
-    SUMA            shift and go to state 57
-    RESTA           shift and go to state 56
-    MAYOR           reduce using rule 48 (vacio -> .)
-    MENOR           reduce using rule 48 (vacio -> .)
-    DIFERENTE       reduce using rule 48 (vacio -> .)
-    PARENTESISD     reduce using rule 48 (vacio -> .)
-    CTESTRING       reduce using rule 48 (vacio -> .)
-    PARENTESISI     reduce using rule 48 (vacio -> .)
-    ID              reduce using rule 48 (vacio -> .)
-    CTEI            reduce using rule 48 (vacio -> .)
-    CTEF            reduce using rule 48 (vacio -> .)
-    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
-
-  ! SUMA            [ reduce using rule 48 (vacio -> .) ]
-  ! RESTA           [ reduce using rule 48 (vacio -> .) ]
-
-    exp1                           shift and go to state 54
-    vacio                          shift and go to state 55
-
-state 41
-
-    (25) expresion -> exp . expres1
-    (26) expres1 -> . MAYOR exp
-    (27) expres1 -> . MENOR exp
-    (28) expres1 -> . DIFERENTE exp
-    (29) expres1 -> . vacio
-    (48) vacio -> .
-
-    MAYOR           shift and go to state 62
-    MENOR           shift and go to state 61
-    DIFERENTE       shift and go to state 60
-    PARENTESISD     reduce using rule 48 (vacio -> .)
-    CTESTRING       reduce using rule 48 (vacio -> .)
-    PARENTESISI     reduce using rule 48 (vacio -> .)
-    SUMA            reduce using rule 48 (vacio -> .)
-    RESTA           reduce using rule 48 (vacio -> .)
-    ID              reduce using rule 48 (vacio -> .)
-    CTEI            reduce using rule 48 (vacio -> .)
-    CTEF            reduce using rule 48 (vacio -> .)
-    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
-
-    expres1                        shift and go to state 58
-    vacio                          shift and go to state 59
-
-state 42
-
-    (37) termino -> factor . term1
-    (38) term1 -> . MULTIP termino
-    (39) term1 -> . DIVISION termino
-    (40) term1 -> . vacio
-    (48) vacio -> .
-
-    MULTIP          shift and go to state 64
-    DIVISION        shift and go to state 63
-    SUMA            reduce using rule 48 (vacio -> .)
-    RESTA           reduce using rule 48 (vacio -> .)
-    MAYOR           reduce using rule 48 (vacio -> .)
-    MENOR           reduce using rule 48 (vacio -> .)
-    DIFERENTE       reduce using rule 48 (vacio -> .)
-    PARENTESISD     reduce using rule 48 (vacio -> .)
-    CTESTRING       reduce using rule 48 (vacio -> .)
-    PARENTESISI     reduce using rule 48 (vacio -> .)
-    ID              reduce using rule 48 (vacio -> .)
-    CTEI            reduce using rule 48 (vacio -> .)
-    CTEF            reduce using rule 48 (vacio -> .)
-    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
-
-    vacio                          shift and go to state 66
-    term1                          shift and go to state 65
-
-state 43
-
-    (47) varcte -> CTEF .
-
-    MULTIP          reduce using rule 47 (varcte -> CTEF .)
-    DIVISION        reduce using rule 47 (varcte -> CTEF .)
-    SUMA            reduce using rule 47 (varcte -> CTEF .)
-    RESTA           reduce using rule 47 (varcte -> CTEF .)
-    MAYOR           reduce using rule 47 (varcte -> CTEF .)
-    MENOR           reduce using rule 47 (varcte -> CTEF .)
-    DIFERENTE       reduce using rule 47 (varcte -> CTEF .)
-    PUNTOYCOMA      reduce using rule 47 (varcte -> CTEF .)
-    PARENTESISD     reduce using rule 47 (varcte -> CTEF .)
-    CTESTRING       reduce using rule 47 (varcte -> CTEF .)
-    PARENTESISI     reduce using rule 47 (varcte -> CTEF .)
-    ID              reduce using rule 47 (varcte -> CTEF .)
-    CTEI            reduce using rule 47 (varcte -> CTEF .)
-    CTEF            reduce using rule 47 (varcte -> CTEF .)
-
-
-state 44
-
-    (46) varcte -> CTEI .
-
-    MULTIP          reduce using rule 46 (varcte -> CTEI .)
-    DIVISION        reduce using rule 46 (varcte -> CTEI .)
-    SUMA            reduce using rule 46 (varcte -> CTEI .)
-    RESTA           reduce using rule 46 (varcte -> CTEI .)
-    MAYOR           reduce using rule 46 (varcte -> CTEI .)
-    MENOR           reduce using rule 46 (varcte -> CTEI .)
-    DIFERENTE       reduce using rule 46 (varcte -> CTEI .)
-    PUNTOYCOMA      reduce using rule 46 (varcte -> CTEI .)
-    PARENTESISD     reduce using rule 46 (varcte -> CTEI .)
-    CTESTRING       reduce using rule 46 (varcte -> CTEI .)
-    PARENTESISI     reduce using rule 46 (varcte -> CTEI .)
-    ID              reduce using rule 46 (varcte -> CTEI .)
-    CTEI            reduce using rule 46 (varcte -> CTEI .)
-    CTEF            reduce using rule 46 (varcte -> CTEI .)
-
-
-state 45
-
-    (43) factor -> RESTA . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 67
-
-state 46
-
-    (42) factor -> SUMA . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 68
-
-state 47
+state 37
 
     (21) escr1 -> expresion . escr1
     (21) escr1 -> . expresion escr1
@@ -739,375 +589,199 @@ state 47
     (46) varcte -> . CTEI
     (47) varcte -> . CTEF
 
-    CTESTRING       shift and go to state 48
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
+    CTESTRING       shift and go to state 33
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
     CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
+    CTEF            shift and go to state 34
 
-    expresion                      shift and go to state 47
-    varcte                         shift and go to state 37
-    escr1                          shift and go to state 69
-    termino                        shift and go to state 40
-    exp                            shift and go to state 41
-    factor                         shift and go to state 42
+    expresion                      shift and go to state 37
+    termino                        shift and go to state 43
+    escr1                          shift and go to state 61
+    exp                            shift and go to state 35
+    varcte                         shift and go to state 41
+    factor                         shift and go to state 39
 
-state 48
+state 38
 
-    (22) escr1 -> CTESTRING . escr2
-    (23) escr2 -> . COMA escr1
-    (24) escr2 -> . vacio
+    (45) varcte -> ID .
+
+    MULTIP          reduce using rule 45 (varcte -> ID .)
+    DIVISION        reduce using rule 45 (varcte -> ID .)
+    SUMA            reduce using rule 45 (varcte -> ID .)
+    RESTA           reduce using rule 45 (varcte -> ID .)
+    MAYOR           reduce using rule 45 (varcte -> ID .)
+    MENOR           reduce using rule 45 (varcte -> ID .)
+    DIFERENTE       reduce using rule 45 (varcte -> ID .)
+    PUNTOYCOMA      reduce using rule 45 (varcte -> ID .)
+    CTESTRING       reduce using rule 45 (varcte -> ID .)
+    PARENTESISI     reduce using rule 45 (varcte -> ID .)
+    ID              reduce using rule 45 (varcte -> ID .)
+    CTEI            reduce using rule 45 (varcte -> ID .)
+    CTEF            reduce using rule 45 (varcte -> ID .)
+    PARENTESISD     reduce using rule 45 (varcte -> ID .)
+
+
+state 39
+
+    (37) termino -> factor . term1
+    (38) term1 -> . MULTIP termino
+    (39) term1 -> . DIVISION termino
+    (40) term1 -> . vacio
     (48) vacio -> .
 
-    COMA            shift and go to state 70
+    MULTIP          shift and go to state 63
+    DIVISION        shift and go to state 64
+    SUMA            reduce using rule 48 (vacio -> .)
+    RESTA           reduce using rule 48 (vacio -> .)
+    MAYOR           reduce using rule 48 (vacio -> .)
+    MENOR           reduce using rule 48 (vacio -> .)
+    DIFERENTE       reduce using rule 48 (vacio -> .)
+    CTESTRING       reduce using rule 48 (vacio -> .)
+    PARENTESISI     reduce using rule 48 (vacio -> .)
+    ID              reduce using rule 48 (vacio -> .)
+    CTEI            reduce using rule 48 (vacio -> .)
+    CTEF            reduce using rule 48 (vacio -> .)
+    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
     PARENTESISD     reduce using rule 48 (vacio -> .)
 
-    escr2                          shift and go to state 71
-    vacio                          shift and go to state 72
+    vacio                          shift and go to state 62
+    term1                          shift and go to state 65
 
-state 49
+state 40
+
+    (43) factor -> RESTA . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    varcte                         shift and go to state 66
+
+state 41
+
+    (44) factor -> varcte .
+
+    MULTIP          reduce using rule 44 (factor -> varcte .)
+    DIVISION        reduce using rule 44 (factor -> varcte .)
+    SUMA            reduce using rule 44 (factor -> varcte .)
+    RESTA           reduce using rule 44 (factor -> varcte .)
+    CTESTRING       reduce using rule 44 (factor -> varcte .)
+    PARENTESISI     reduce using rule 44 (factor -> varcte .)
+    ID              reduce using rule 44 (factor -> varcte .)
+    CTEI            reduce using rule 44 (factor -> varcte .)
+    CTEF            reduce using rule 44 (factor -> varcte .)
+    PUNTOYCOMA      reduce using rule 44 (factor -> varcte .)
+    PARENTESISD     reduce using rule 44 (factor -> varcte .)
+    MAYOR           reduce using rule 44 (factor -> varcte .)
+    MENOR           reduce using rule 44 (factor -> varcte .)
+    DIFERENTE       reduce using rule 44 (factor -> varcte .)
+
+
+state 42
 
     (20) escritura -> PRINT PARENTESISI escr1 . PARENTESISD PUNTOYCOMA
+
+    PARENTESISD     shift and go to state 67
+
+
+state 43
+
+    (30) exp -> termino . exp1
+    (31) exp1 -> . SUMA exp
+    (32) exp1 -> . RESTA exp
+    (33) exp1 -> . vacio
+    (48) vacio -> .
+
+  ! shift/reduce conflict for SUMA resolved as shift
+  ! shift/reduce conflict for RESTA resolved as shift
+    SUMA            shift and go to state 69
+    RESTA           shift and go to state 71
+    MAYOR           reduce using rule 48 (vacio -> .)
+    MENOR           reduce using rule 48 (vacio -> .)
+    DIFERENTE       reduce using rule 48 (vacio -> .)
+    CTESTRING       reduce using rule 48 (vacio -> .)
+    PARENTESISI     reduce using rule 48 (vacio -> .)
+    ID              reduce using rule 48 (vacio -> .)
+    CTEI            reduce using rule 48 (vacio -> .)
+    CTEF            reduce using rule 48 (vacio -> .)
+    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
+    PARENTESISD     reduce using rule 48 (vacio -> .)
+
+  ! SUMA            [ reduce using rule 48 (vacio -> .) ]
+  ! RESTA           [ reduce using rule 48 (vacio -> .) ]
+
+    vacio                          shift and go to state 68
+    exp1                           shift and go to state 70
+
+state 44
+
+    (46) varcte -> CTEI .
+
+    MULTIP          reduce using rule 46 (varcte -> CTEI .)
+    DIVISION        reduce using rule 46 (varcte -> CTEI .)
+    SUMA            reduce using rule 46 (varcte -> CTEI .)
+    RESTA           reduce using rule 46 (varcte -> CTEI .)
+    MAYOR           reduce using rule 46 (varcte -> CTEI .)
+    MENOR           reduce using rule 46 (varcte -> CTEI .)
+    DIFERENTE       reduce using rule 46 (varcte -> CTEI .)
+    PUNTOYCOMA      reduce using rule 46 (varcte -> CTEI .)
+    CTESTRING       reduce using rule 46 (varcte -> CTEI .)
+    PARENTESISI     reduce using rule 46 (varcte -> CTEI .)
+    ID              reduce using rule 46 (varcte -> CTEI .)
+    CTEI            reduce using rule 46 (varcte -> CTEI .)
+    CTEF            reduce using rule 46 (varcte -> CTEI .)
+    PARENTESISD     reduce using rule 46 (varcte -> CTEI .)
+
+
+state 45
+
+    (19) asignacion -> ID IGUAL expresion . PUNTOYCOMA
+
+    PUNTOYCOMA      shift and go to state 72
+
+
+state 46
+
+    (34) condicion -> IF PARENTESISI expresion . PARENTESISD bloque cond1 PUNTOYCOMA
 
     PARENTESISD     shift and go to state 73
 
 
-state 50
+state 47
 
-    (19) asignacion -> ID IGUAL expresion . PUNTOYCOMA
+    (11) tipo -> INT .
+
+    PUNTOYCOMA      reduce using rule 11 (tipo -> INT .)
+
+
+state 48
+
+    (12) tipo -> FLOAT .
+
+    PUNTOYCOMA      reduce using rule 12 (tipo -> FLOAT .)
+
+
+state 49
+
+    (5) var1 -> var2 DOSPUNTOS tipo . PUNTOYCOMA var3
 
     PUNTOYCOMA      shift and go to state 74
 
 
+state 50
+
+    (7) var21 -> COMA var2 .
+
+    DOSPUNTOS       reduce using rule 7 (var21 -> COMA var2 .)
+
+
 state 51
-
-    (5) var1 -> var2 DOSPUNTOS tipo PUNTOYCOMA . var3
-    (9) var3 -> . var1
-    (10) var3 -> . vacio
-    (5) var1 -> . var2 DOSPUNTOS tipo PUNTOYCOMA var3
-    (48) vacio -> .
-    (6) var2 -> . ID var21
-
-    LLAVEI          reduce using rule 48 (vacio -> .)
-    ID              shift and go to state 13
-
-    var1                           shift and go to state 75
-    var3                           shift and go to state 76
-    var2                           shift and go to state 12
-    vacio                          shift and go to state 77
-
-state 52
-
-    (34) condicion -> IF PARENTESISI expresion PARENTESISD . bloque cond1 PUNTOYCOMA
-    (13) bloque -> . LLAVEI bloque1 LLAVED
-
-    LLAVEI          shift and go to state 8
-
-    bloque                         shift and go to state 78
-
-state 53
-
-    (41) factor -> PARENTESISI expresion . PARENTESISD
-
-    PARENTESISD     shift and go to state 79
-
-
-state 54
-
-    (30) exp -> termino exp1 .
-
-    MAYOR           reduce using rule 30 (exp -> termino exp1 .)
-    MENOR           reduce using rule 30 (exp -> termino exp1 .)
-    DIFERENTE       reduce using rule 30 (exp -> termino exp1 .)
-    PARENTESISD     reduce using rule 30 (exp -> termino exp1 .)
-    CTESTRING       reduce using rule 30 (exp -> termino exp1 .)
-    PARENTESISI     reduce using rule 30 (exp -> termino exp1 .)
-    SUMA            reduce using rule 30 (exp -> termino exp1 .)
-    RESTA           reduce using rule 30 (exp -> termino exp1 .)
-    ID              reduce using rule 30 (exp -> termino exp1 .)
-    CTEI            reduce using rule 30 (exp -> termino exp1 .)
-    CTEF            reduce using rule 30 (exp -> termino exp1 .)
-    PUNTOYCOMA      reduce using rule 30 (exp -> termino exp1 .)
-
-
-state 55
-
-    (33) exp1 -> vacio .
-
-    MAYOR           reduce using rule 33 (exp1 -> vacio .)
-    MENOR           reduce using rule 33 (exp1 -> vacio .)
-    DIFERENTE       reduce using rule 33 (exp1 -> vacio .)
-    PARENTESISD     reduce using rule 33 (exp1 -> vacio .)
-    CTESTRING       reduce using rule 33 (exp1 -> vacio .)
-    PARENTESISI     reduce using rule 33 (exp1 -> vacio .)
-    SUMA            reduce using rule 33 (exp1 -> vacio .)
-    RESTA           reduce using rule 33 (exp1 -> vacio .)
-    ID              reduce using rule 33 (exp1 -> vacio .)
-    CTEI            reduce using rule 33 (exp1 -> vacio .)
-    CTEF            reduce using rule 33 (exp1 -> vacio .)
-    PUNTOYCOMA      reduce using rule 33 (exp1 -> vacio .)
-
-
-state 56
-
-    (32) exp1 -> RESTA . exp
-    (30) exp -> . termino exp1
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 80
-    factor                         shift and go to state 42
-
-state 57
-
-    (31) exp1 -> SUMA . exp
-    (30) exp -> . termino exp1
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 81
-    factor                         shift and go to state 42
-
-state 58
-
-    (25) expresion -> exp expres1 .
-
-    CTESTRING       reduce using rule 25 (expresion -> exp expres1 .)
-    PARENTESISI     reduce using rule 25 (expresion -> exp expres1 .)
-    SUMA            reduce using rule 25 (expresion -> exp expres1 .)
-    RESTA           reduce using rule 25 (expresion -> exp expres1 .)
-    ID              reduce using rule 25 (expresion -> exp expres1 .)
-    CTEI            reduce using rule 25 (expresion -> exp expres1 .)
-    CTEF            reduce using rule 25 (expresion -> exp expres1 .)
-    PARENTESISD     reduce using rule 25 (expresion -> exp expres1 .)
-    PUNTOYCOMA      reduce using rule 25 (expresion -> exp expres1 .)
-
-
-state 59
-
-    (29) expres1 -> vacio .
-
-    PARENTESISD     reduce using rule 29 (expres1 -> vacio .)
-    CTESTRING       reduce using rule 29 (expres1 -> vacio .)
-    PARENTESISI     reduce using rule 29 (expres1 -> vacio .)
-    SUMA            reduce using rule 29 (expres1 -> vacio .)
-    RESTA           reduce using rule 29 (expres1 -> vacio .)
-    ID              reduce using rule 29 (expres1 -> vacio .)
-    CTEI            reduce using rule 29 (expres1 -> vacio .)
-    CTEF            reduce using rule 29 (expres1 -> vacio .)
-    PUNTOYCOMA      reduce using rule 29 (expres1 -> vacio .)
-
-
-state 60
-
-    (28) expres1 -> DIFERENTE . exp
-    (30) exp -> . termino exp1
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 82
-    factor                         shift and go to state 42
-
-state 61
-
-    (27) expres1 -> MENOR . exp
-    (30) exp -> . termino exp1
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 83
-    factor                         shift and go to state 42
-
-state 62
-
-    (26) expres1 -> MAYOR . exp
-    (30) exp -> . termino exp1
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 40
-    exp                            shift and go to state 84
-    factor                         shift and go to state 42
-
-state 63
-
-    (39) term1 -> DIVISION . termino
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 85
-    factor                         shift and go to state 42
-
-state 64
-
-    (38) term1 -> MULTIP . termino
-    (37) termino -> . factor term1
-    (41) factor -> . PARENTESISI expresion PARENTESISD
-    (42) factor -> . SUMA varcte
-    (43) factor -> . RESTA varcte
-    (44) factor -> . varcte
-    (45) varcte -> . ID
-    (46) varcte -> . CTEI
-    (47) varcte -> . CTEF
-
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
-    CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
-
-    varcte                         shift and go to state 37
-    termino                        shift and go to state 86
-    factor                         shift and go to state 42
-
-state 65
-
-    (37) termino -> factor term1 .
-
-    SUMA            reduce using rule 37 (termino -> factor term1 .)
-    RESTA           reduce using rule 37 (termino -> factor term1 .)
-    PARENTESISD     reduce using rule 37 (termino -> factor term1 .)
-    CTESTRING       reduce using rule 37 (termino -> factor term1 .)
-    PARENTESISI     reduce using rule 37 (termino -> factor term1 .)
-    ID              reduce using rule 37 (termino -> factor term1 .)
-    CTEI            reduce using rule 37 (termino -> factor term1 .)
-    CTEF            reduce using rule 37 (termino -> factor term1 .)
-    PUNTOYCOMA      reduce using rule 37 (termino -> factor term1 .)
-    MAYOR           reduce using rule 37 (termino -> factor term1 .)
-    MENOR           reduce using rule 37 (termino -> factor term1 .)
-    DIFERENTE       reduce using rule 37 (termino -> factor term1 .)
-
-
-state 66
-
-    (40) term1 -> vacio .
-
-    SUMA            reduce using rule 40 (term1 -> vacio .)
-    RESTA           reduce using rule 40 (term1 -> vacio .)
-    MAYOR           reduce using rule 40 (term1 -> vacio .)
-    MENOR           reduce using rule 40 (term1 -> vacio .)
-    DIFERENTE       reduce using rule 40 (term1 -> vacio .)
-    PARENTESISD     reduce using rule 40 (term1 -> vacio .)
-    CTESTRING       reduce using rule 40 (term1 -> vacio .)
-    PARENTESISI     reduce using rule 40 (term1 -> vacio .)
-    ID              reduce using rule 40 (term1 -> vacio .)
-    CTEI            reduce using rule 40 (term1 -> vacio .)
-    CTEF            reduce using rule 40 (term1 -> vacio .)
-    PUNTOYCOMA      reduce using rule 40 (term1 -> vacio .)
-
-
-state 67
-
-    (43) factor -> RESTA varcte .
-
-    MULTIP          reduce using rule 43 (factor -> RESTA varcte .)
-    DIVISION        reduce using rule 43 (factor -> RESTA varcte .)
-    SUMA            reduce using rule 43 (factor -> RESTA varcte .)
-    RESTA           reduce using rule 43 (factor -> RESTA varcte .)
-    MAYOR           reduce using rule 43 (factor -> RESTA varcte .)
-    MENOR           reduce using rule 43 (factor -> RESTA varcte .)
-    DIFERENTE       reduce using rule 43 (factor -> RESTA varcte .)
-    PARENTESISD     reduce using rule 43 (factor -> RESTA varcte .)
-    CTESTRING       reduce using rule 43 (factor -> RESTA varcte .)
-    PARENTESISI     reduce using rule 43 (factor -> RESTA varcte .)
-    ID              reduce using rule 43 (factor -> RESTA varcte .)
-    CTEI            reduce using rule 43 (factor -> RESTA varcte .)
-    CTEF            reduce using rule 43 (factor -> RESTA varcte .)
-    PUNTOYCOMA      reduce using rule 43 (factor -> RESTA varcte .)
-
-
-state 68
 
     (42) factor -> SUMA varcte .
 
@@ -1115,26 +789,19 @@ state 68
     DIVISION        reduce using rule 42 (factor -> SUMA varcte .)
     SUMA            reduce using rule 42 (factor -> SUMA varcte .)
     RESTA           reduce using rule 42 (factor -> SUMA varcte .)
-    MAYOR           reduce using rule 42 (factor -> SUMA varcte .)
-    MENOR           reduce using rule 42 (factor -> SUMA varcte .)
-    DIFERENTE       reduce using rule 42 (factor -> SUMA varcte .)
-    PARENTESISD     reduce using rule 42 (factor -> SUMA varcte .)
     CTESTRING       reduce using rule 42 (factor -> SUMA varcte .)
     PARENTESISI     reduce using rule 42 (factor -> SUMA varcte .)
     ID              reduce using rule 42 (factor -> SUMA varcte .)
     CTEI            reduce using rule 42 (factor -> SUMA varcte .)
     CTEF            reduce using rule 42 (factor -> SUMA varcte .)
     PUNTOYCOMA      reduce using rule 42 (factor -> SUMA varcte .)
+    PARENTESISD     reduce using rule 42 (factor -> SUMA varcte .)
+    MAYOR           reduce using rule 42 (factor -> SUMA varcte .)
+    MENOR           reduce using rule 42 (factor -> SUMA varcte .)
+    DIFERENTE       reduce using rule 42 (factor -> SUMA varcte .)
 
 
-state 69
-
-    (21) escr1 -> expresion escr1 .
-
-    PARENTESISD     reduce using rule 21 (escr1 -> expresion escr1 .)
-
-
-state 70
+state 52
 
     (23) escr2 -> COMA . escr1
     (21) escr1 -> . expresion escr1
@@ -1150,43 +817,350 @@ state 70
     (46) varcte -> . CTEI
     (47) varcte -> . CTEF
 
-    CTESTRING       shift and go to state 48
-    PARENTESISI     shift and go to state 38
-    SUMA            shift and go to state 46
-    RESTA           shift and go to state 45
-    ID              shift and go to state 39
+    CTESTRING       shift and go to state 33
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
     CTEI            shift and go to state 44
-    CTEF            shift and go to state 43
+    CTEF            shift and go to state 34
 
-    expresion                      shift and go to state 47
-    varcte                         shift and go to state 37
-    escr1                          shift and go to state 87
-    termino                        shift and go to state 40
-    exp                            shift and go to state 41
-    factor                         shift and go to state 42
+    expresion                      shift and go to state 37
+    termino                        shift and go to state 43
+    escr1                          shift and go to state 75
+    exp                            shift and go to state 35
+    varcte                         shift and go to state 41
+    factor                         shift and go to state 39
 
-state 71
+state 53
 
     (22) escr1 -> CTESTRING escr2 .
 
     PARENTESISD     reduce using rule 22 (escr1 -> CTESTRING escr2 .)
 
 
-state 72
+state 54
 
     (24) escr2 -> vacio .
 
     PARENTESISD     reduce using rule 24 (escr2 -> vacio .)
 
 
-state 73
+state 55
+
+    (29) expres1 -> vacio .
+
+    CTESTRING       reduce using rule 29 (expres1 -> vacio .)
+    PARENTESISI     reduce using rule 29 (expres1 -> vacio .)
+    SUMA            reduce using rule 29 (expres1 -> vacio .)
+    RESTA           reduce using rule 29 (expres1 -> vacio .)
+    ID              reduce using rule 29 (expres1 -> vacio .)
+    CTEI            reduce using rule 29 (expres1 -> vacio .)
+    CTEF            reduce using rule 29 (expres1 -> vacio .)
+    PUNTOYCOMA      reduce using rule 29 (expres1 -> vacio .)
+    PARENTESISD     reduce using rule 29 (expres1 -> vacio .)
+
+
+state 56
+
+    (28) expres1 -> DIFERENTE . exp
+    (30) exp -> . termino exp1
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    exp                            shift and go to state 76
+    varcte                         shift and go to state 41
+    termino                        shift and go to state 43
+    factor                         shift and go to state 39
+
+state 57
+
+    (25) expresion -> exp expres1 .
+
+    PARENTESISD     reduce using rule 25 (expresion -> exp expres1 .)
+    CTESTRING       reduce using rule 25 (expresion -> exp expres1 .)
+    PARENTESISI     reduce using rule 25 (expresion -> exp expres1 .)
+    SUMA            reduce using rule 25 (expresion -> exp expres1 .)
+    RESTA           reduce using rule 25 (expresion -> exp expres1 .)
+    ID              reduce using rule 25 (expresion -> exp expres1 .)
+    CTEI            reduce using rule 25 (expresion -> exp expres1 .)
+    CTEF            reduce using rule 25 (expresion -> exp expres1 .)
+    PUNTOYCOMA      reduce using rule 25 (expresion -> exp expres1 .)
+
+
+state 58
+
+    (27) expres1 -> MENOR . exp
+    (30) exp -> . termino exp1
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    exp                            shift and go to state 77
+    varcte                         shift and go to state 41
+    termino                        shift and go to state 43
+    factor                         shift and go to state 39
+
+state 59
+
+    (26) expres1 -> MAYOR . exp
+    (30) exp -> . termino exp1
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    exp                            shift and go to state 78
+    varcte                         shift and go to state 41
+    termino                        shift and go to state 43
+    factor                         shift and go to state 39
+
+state 60
+
+    (41) factor -> PARENTESISI expresion . PARENTESISD
+
+    PARENTESISD     shift and go to state 79
+
+
+state 61
+
+    (21) escr1 -> expresion escr1 .
+
+    PARENTESISD     reduce using rule 21 (escr1 -> expresion escr1 .)
+
+
+state 62
+
+    (40) term1 -> vacio .
+
+    SUMA            reduce using rule 40 (term1 -> vacio .)
+    RESTA           reduce using rule 40 (term1 -> vacio .)
+    MAYOR           reduce using rule 40 (term1 -> vacio .)
+    MENOR           reduce using rule 40 (term1 -> vacio .)
+    DIFERENTE       reduce using rule 40 (term1 -> vacio .)
+    CTESTRING       reduce using rule 40 (term1 -> vacio .)
+    PARENTESISI     reduce using rule 40 (term1 -> vacio .)
+    ID              reduce using rule 40 (term1 -> vacio .)
+    CTEI            reduce using rule 40 (term1 -> vacio .)
+    CTEF            reduce using rule 40 (term1 -> vacio .)
+    PUNTOYCOMA      reduce using rule 40 (term1 -> vacio .)
+    PARENTESISD     reduce using rule 40 (term1 -> vacio .)
+
+
+state 63
+
+    (38) term1 -> MULTIP . termino
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    termino                        shift and go to state 80
+    factor                         shift and go to state 39
+    varcte                         shift and go to state 41
+
+state 64
+
+    (39) term1 -> DIVISION . termino
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    termino                        shift and go to state 81
+    factor                         shift and go to state 39
+    varcte                         shift and go to state 41
+
+state 65
+
+    (37) termino -> factor term1 .
+
+    SUMA            reduce using rule 37 (termino -> factor term1 .)
+    RESTA           reduce using rule 37 (termino -> factor term1 .)
+    MAYOR           reduce using rule 37 (termino -> factor term1 .)
+    MENOR           reduce using rule 37 (termino -> factor term1 .)
+    DIFERENTE       reduce using rule 37 (termino -> factor term1 .)
+    CTESTRING       reduce using rule 37 (termino -> factor term1 .)
+    PARENTESISI     reduce using rule 37 (termino -> factor term1 .)
+    ID              reduce using rule 37 (termino -> factor term1 .)
+    CTEI            reduce using rule 37 (termino -> factor term1 .)
+    CTEF            reduce using rule 37 (termino -> factor term1 .)
+    PUNTOYCOMA      reduce using rule 37 (termino -> factor term1 .)
+    PARENTESISD     reduce using rule 37 (termino -> factor term1 .)
+
+
+state 66
+
+    (43) factor -> RESTA varcte .
+
+    MULTIP          reduce using rule 43 (factor -> RESTA varcte .)
+    DIVISION        reduce using rule 43 (factor -> RESTA varcte .)
+    SUMA            reduce using rule 43 (factor -> RESTA varcte .)
+    RESTA           reduce using rule 43 (factor -> RESTA varcte .)
+    CTESTRING       reduce using rule 43 (factor -> RESTA varcte .)
+    PARENTESISI     reduce using rule 43 (factor -> RESTA varcte .)
+    ID              reduce using rule 43 (factor -> RESTA varcte .)
+    CTEI            reduce using rule 43 (factor -> RESTA varcte .)
+    CTEF            reduce using rule 43 (factor -> RESTA varcte .)
+    PUNTOYCOMA      reduce using rule 43 (factor -> RESTA varcte .)
+    PARENTESISD     reduce using rule 43 (factor -> RESTA varcte .)
+    MAYOR           reduce using rule 43 (factor -> RESTA varcte .)
+    MENOR           reduce using rule 43 (factor -> RESTA varcte .)
+    DIFERENTE       reduce using rule 43 (factor -> RESTA varcte .)
+
+
+state 67
 
     (20) escritura -> PRINT PARENTESISI escr1 PARENTESISD . PUNTOYCOMA
 
-    PUNTOYCOMA      shift and go to state 88
+    PUNTOYCOMA      shift and go to state 82
 
 
-state 74
+state 68
+
+    (33) exp1 -> vacio .
+
+    MAYOR           reduce using rule 33 (exp1 -> vacio .)
+    MENOR           reduce using rule 33 (exp1 -> vacio .)
+    DIFERENTE       reduce using rule 33 (exp1 -> vacio .)
+    CTESTRING       reduce using rule 33 (exp1 -> vacio .)
+    PARENTESISI     reduce using rule 33 (exp1 -> vacio .)
+    SUMA            reduce using rule 33 (exp1 -> vacio .)
+    RESTA           reduce using rule 33 (exp1 -> vacio .)
+    ID              reduce using rule 33 (exp1 -> vacio .)
+    CTEI            reduce using rule 33 (exp1 -> vacio .)
+    CTEF            reduce using rule 33 (exp1 -> vacio .)
+    PUNTOYCOMA      reduce using rule 33 (exp1 -> vacio .)
+    PARENTESISD     reduce using rule 33 (exp1 -> vacio .)
+
+
+state 69
+
+    (31) exp1 -> SUMA . exp
+    (30) exp -> . termino exp1
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    exp                            shift and go to state 83
+    varcte                         shift and go to state 41
+    termino                        shift and go to state 43
+    factor                         shift and go to state 39
+
+state 70
+
+    (30) exp -> termino exp1 .
+
+    MAYOR           reduce using rule 30 (exp -> termino exp1 .)
+    MENOR           reduce using rule 30 (exp -> termino exp1 .)
+    DIFERENTE       reduce using rule 30 (exp -> termino exp1 .)
+    PARENTESISD     reduce using rule 30 (exp -> termino exp1 .)
+    PUNTOYCOMA      reduce using rule 30 (exp -> termino exp1 .)
+    CTESTRING       reduce using rule 30 (exp -> termino exp1 .)
+    PARENTESISI     reduce using rule 30 (exp -> termino exp1 .)
+    SUMA            reduce using rule 30 (exp -> termino exp1 .)
+    RESTA           reduce using rule 30 (exp -> termino exp1 .)
+    ID              reduce using rule 30 (exp -> termino exp1 .)
+    CTEI            reduce using rule 30 (exp -> termino exp1 .)
+    CTEF            reduce using rule 30 (exp -> termino exp1 .)
+
+
+state 71
+
+    (32) exp1 -> RESTA . exp
+    (30) exp -> . termino exp1
+    (37) termino -> . factor term1
+    (41) factor -> . PARENTESISI expresion PARENTESISD
+    (42) factor -> . SUMA varcte
+    (43) factor -> . RESTA varcte
+    (44) factor -> . varcte
+    (45) varcte -> . ID
+    (46) varcte -> . CTEI
+    (47) varcte -> . CTEF
+
+    PARENTESISI     shift and go to state 36
+    SUMA            shift and go to state 32
+    RESTA           shift and go to state 40
+    ID              shift and go to state 38
+    CTEI            shift and go to state 44
+    CTEF            shift and go to state 34
+
+    exp                            shift and go to state 84
+    varcte                         shift and go to state 41
+    termino                        shift and go to state 43
+    factor                         shift and go to state 39
+
+state 72
 
     (19) asignacion -> ID IGUAL expresion PUNTOYCOMA .
 
@@ -1196,39 +1170,83 @@ state 74
     LLAVED          reduce using rule 19 (asignacion -> ID IGUAL expresion PUNTOYCOMA .)
 
 
+state 73
+
+    (34) condicion -> IF PARENTESISI expresion PARENTESISD . bloque cond1 PUNTOYCOMA
+    (13) bloque -> . LLAVEI bloque1 LLAVED
+
+    LLAVEI          shift and go to state 8
+
+    bloque                         shift and go to state 85
+
+state 74
+
+    (5) var1 -> var2 DOSPUNTOS tipo PUNTOYCOMA . var3
+    (9) var3 -> . var1
+    (10) var3 -> . vacio
+    (5) var1 -> . var2 DOSPUNTOS tipo PUNTOYCOMA var3
+    (48) vacio -> .
+    (6) var2 -> . ID var21
+
+    LLAVEI          reduce using rule 48 (vacio -> .)
+    ID              shift and go to state 22
+
+    vacio                          shift and go to state 86
+    var1                           shift and go to state 87
+    var2                           shift and go to state 20
+    var3                           shift and go to state 88
+
 state 75
 
-    (9) var3 -> var1 .
+    (23) escr2 -> COMA escr1 .
 
-    LLAVEI          reduce using rule 9 (var3 -> var1 .)
+    PARENTESISD     reduce using rule 23 (escr2 -> COMA escr1 .)
 
 
 state 76
 
-    (5) var1 -> var2 DOSPUNTOS tipo PUNTOYCOMA var3 .
+    (28) expres1 -> DIFERENTE exp .
 
-    LLAVEI          reduce using rule 5 (var1 -> var2 DOSPUNTOS tipo PUNTOYCOMA var3 .)
+    CTESTRING       reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    PARENTESISI     reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    SUMA            reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    RESTA           reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    ID              reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    CTEI            reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    CTEF            reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    PUNTOYCOMA      reduce using rule 28 (expres1 -> DIFERENTE exp .)
+    PARENTESISD     reduce using rule 28 (expres1 -> DIFERENTE exp .)
 
 
 state 77
 
-    (10) var3 -> vacio .
+    (27) expres1 -> MENOR exp .
 
-    LLAVEI          reduce using rule 10 (var3 -> vacio .)
+    CTESTRING       reduce using rule 27 (expres1 -> MENOR exp .)
+    PARENTESISI     reduce using rule 27 (expres1 -> MENOR exp .)
+    SUMA            reduce using rule 27 (expres1 -> MENOR exp .)
+    RESTA           reduce using rule 27 (expres1 -> MENOR exp .)
+    ID              reduce using rule 27 (expres1 -> MENOR exp .)
+    CTEI            reduce using rule 27 (expres1 -> MENOR exp .)
+    CTEF            reduce using rule 27 (expres1 -> MENOR exp .)
+    PUNTOYCOMA      reduce using rule 27 (expres1 -> MENOR exp .)
+    PARENTESISD     reduce using rule 27 (expres1 -> MENOR exp .)
 
 
 state 78
 
-    (34) condicion -> IF PARENTESISI expresion PARENTESISD bloque . cond1 PUNTOYCOMA
-    (35) cond1 -> . ELSE bloque
-    (36) cond1 -> . vacio
-    (48) vacio -> .
+    (26) expres1 -> MAYOR exp .
 
-    ELSE            shift and go to state 90
-    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
+    CTESTRING       reduce using rule 26 (expres1 -> MAYOR exp .)
+    PARENTESISI     reduce using rule 26 (expres1 -> MAYOR exp .)
+    SUMA            reduce using rule 26 (expres1 -> MAYOR exp .)
+    RESTA           reduce using rule 26 (expres1 -> MAYOR exp .)
+    ID              reduce using rule 26 (expres1 -> MAYOR exp .)
+    CTEI            reduce using rule 26 (expres1 -> MAYOR exp .)
+    CTEF            reduce using rule 26 (expres1 -> MAYOR exp .)
+    PUNTOYCOMA      reduce using rule 26 (expres1 -> MAYOR exp .)
+    PARENTESISD     reduce using rule 26 (expres1 -> MAYOR exp .)
 
-    cond1                          shift and go to state 89
-    vacio                          shift and go to state 91
 
 state 79
 
@@ -1238,118 +1256,19 @@ state 79
     DIVISION        reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     SUMA            reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     RESTA           reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
-    MAYOR           reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
-    MENOR           reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
-    DIFERENTE       reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
-    PARENTESISD     reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     CTESTRING       reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     PARENTESISI     reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     ID              reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     CTEI            reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     CTEF            reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
     PUNTOYCOMA      reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
+    PARENTESISD     reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
+    MAYOR           reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
+    MENOR           reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
+    DIFERENTE       reduce using rule 41 (factor -> PARENTESISI expresion PARENTESISD .)
 
 
 state 80
-
-    (32) exp1 -> RESTA exp .
-
-    MAYOR           reduce using rule 32 (exp1 -> RESTA exp .)
-    MENOR           reduce using rule 32 (exp1 -> RESTA exp .)
-    DIFERENTE       reduce using rule 32 (exp1 -> RESTA exp .)
-    PARENTESISD     reduce using rule 32 (exp1 -> RESTA exp .)
-    CTESTRING       reduce using rule 32 (exp1 -> RESTA exp .)
-    PARENTESISI     reduce using rule 32 (exp1 -> RESTA exp .)
-    SUMA            reduce using rule 32 (exp1 -> RESTA exp .)
-    RESTA           reduce using rule 32 (exp1 -> RESTA exp .)
-    ID              reduce using rule 32 (exp1 -> RESTA exp .)
-    CTEI            reduce using rule 32 (exp1 -> RESTA exp .)
-    CTEF            reduce using rule 32 (exp1 -> RESTA exp .)
-    PUNTOYCOMA      reduce using rule 32 (exp1 -> RESTA exp .)
-
-
-state 81
-
-    (31) exp1 -> SUMA exp .
-
-    MAYOR           reduce using rule 31 (exp1 -> SUMA exp .)
-    MENOR           reduce using rule 31 (exp1 -> SUMA exp .)
-    DIFERENTE       reduce using rule 31 (exp1 -> SUMA exp .)
-    PARENTESISD     reduce using rule 31 (exp1 -> SUMA exp .)
-    CTESTRING       reduce using rule 31 (exp1 -> SUMA exp .)
-    PARENTESISI     reduce using rule 31 (exp1 -> SUMA exp .)
-    SUMA            reduce using rule 31 (exp1 -> SUMA exp .)
-    RESTA           reduce using rule 31 (exp1 -> SUMA exp .)
-    ID              reduce using rule 31 (exp1 -> SUMA exp .)
-    CTEI            reduce using rule 31 (exp1 -> SUMA exp .)
-    CTEF            reduce using rule 31 (exp1 -> SUMA exp .)
-    PUNTOYCOMA      reduce using rule 31 (exp1 -> SUMA exp .)
-
-
-state 82
-
-    (28) expres1 -> DIFERENTE exp .
-
-    PARENTESISD     reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    CTESTRING       reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    PARENTESISI     reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    SUMA            reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    RESTA           reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    ID              reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    CTEI            reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    CTEF            reduce using rule 28 (expres1 -> DIFERENTE exp .)
-    PUNTOYCOMA      reduce using rule 28 (expres1 -> DIFERENTE exp .)
-
-
-state 83
-
-    (27) expres1 -> MENOR exp .
-
-    PARENTESISD     reduce using rule 27 (expres1 -> MENOR exp .)
-    CTESTRING       reduce using rule 27 (expres1 -> MENOR exp .)
-    PARENTESISI     reduce using rule 27 (expres1 -> MENOR exp .)
-    SUMA            reduce using rule 27 (expres1 -> MENOR exp .)
-    RESTA           reduce using rule 27 (expres1 -> MENOR exp .)
-    ID              reduce using rule 27 (expres1 -> MENOR exp .)
-    CTEI            reduce using rule 27 (expres1 -> MENOR exp .)
-    CTEF            reduce using rule 27 (expres1 -> MENOR exp .)
-    PUNTOYCOMA      reduce using rule 27 (expres1 -> MENOR exp .)
-
-
-state 84
-
-    (26) expres1 -> MAYOR exp .
-
-    PARENTESISD     reduce using rule 26 (expres1 -> MAYOR exp .)
-    CTESTRING       reduce using rule 26 (expres1 -> MAYOR exp .)
-    PARENTESISI     reduce using rule 26 (expres1 -> MAYOR exp .)
-    SUMA            reduce using rule 26 (expres1 -> MAYOR exp .)
-    RESTA           reduce using rule 26 (expres1 -> MAYOR exp .)
-    ID              reduce using rule 26 (expres1 -> MAYOR exp .)
-    CTEI            reduce using rule 26 (expres1 -> MAYOR exp .)
-    CTEF            reduce using rule 26 (expres1 -> MAYOR exp .)
-    PUNTOYCOMA      reduce using rule 26 (expres1 -> MAYOR exp .)
-
-
-state 85
-
-    (39) term1 -> DIVISION termino .
-
-    SUMA            reduce using rule 39 (term1 -> DIVISION termino .)
-    RESTA           reduce using rule 39 (term1 -> DIVISION termino .)
-    MAYOR           reduce using rule 39 (term1 -> DIVISION termino .)
-    MENOR           reduce using rule 39 (term1 -> DIVISION termino .)
-    DIFERENTE       reduce using rule 39 (term1 -> DIVISION termino .)
-    PARENTESISD     reduce using rule 39 (term1 -> DIVISION termino .)
-    CTESTRING       reduce using rule 39 (term1 -> DIVISION termino .)
-    PARENTESISI     reduce using rule 39 (term1 -> DIVISION termino .)
-    ID              reduce using rule 39 (term1 -> DIVISION termino .)
-    CTEI            reduce using rule 39 (term1 -> DIVISION termino .)
-    CTEF            reduce using rule 39 (term1 -> DIVISION termino .)
-    PUNTOYCOMA      reduce using rule 39 (term1 -> DIVISION termino .)
-
-
-state 86
 
     (38) term1 -> MULTIP termino .
 
@@ -1358,23 +1277,34 @@ state 86
     MAYOR           reduce using rule 38 (term1 -> MULTIP termino .)
     MENOR           reduce using rule 38 (term1 -> MULTIP termino .)
     DIFERENTE       reduce using rule 38 (term1 -> MULTIP termino .)
-    PARENTESISD     reduce using rule 38 (term1 -> MULTIP termino .)
     CTESTRING       reduce using rule 38 (term1 -> MULTIP termino .)
     PARENTESISI     reduce using rule 38 (term1 -> MULTIP termino .)
     ID              reduce using rule 38 (term1 -> MULTIP termino .)
     CTEI            reduce using rule 38 (term1 -> MULTIP termino .)
     CTEF            reduce using rule 38 (term1 -> MULTIP termino .)
     PUNTOYCOMA      reduce using rule 38 (term1 -> MULTIP termino .)
+    PARENTESISD     reduce using rule 38 (term1 -> MULTIP termino .)
 
 
-state 87
+state 81
 
-    (23) escr2 -> COMA escr1 .
+    (39) term1 -> DIVISION termino .
 
-    PARENTESISD     reduce using rule 23 (escr2 -> COMA escr1 .)
+    SUMA            reduce using rule 39 (term1 -> DIVISION termino .)
+    RESTA           reduce using rule 39 (term1 -> DIVISION termino .)
+    MAYOR           reduce using rule 39 (term1 -> DIVISION termino .)
+    MENOR           reduce using rule 39 (term1 -> DIVISION termino .)
+    DIFERENTE       reduce using rule 39 (term1 -> DIVISION termino .)
+    CTESTRING       reduce using rule 39 (term1 -> DIVISION termino .)
+    PARENTESISI     reduce using rule 39 (term1 -> DIVISION termino .)
+    ID              reduce using rule 39 (term1 -> DIVISION termino .)
+    CTEI            reduce using rule 39 (term1 -> DIVISION termino .)
+    CTEF            reduce using rule 39 (term1 -> DIVISION termino .)
+    PUNTOYCOMA      reduce using rule 39 (term1 -> DIVISION termino .)
+    PARENTESISD     reduce using rule 39 (term1 -> DIVISION termino .)
 
 
-state 88
+state 82
 
     (20) escritura -> PRINT PARENTESISI escr1 PARENTESISD PUNTOYCOMA .
 
@@ -1384,11 +1314,81 @@ state 88
     LLAVED          reduce using rule 20 (escritura -> PRINT PARENTESISI escr1 PARENTESISD PUNTOYCOMA .)
 
 
+state 83
+
+    (31) exp1 -> SUMA exp .
+
+    MAYOR           reduce using rule 31 (exp1 -> SUMA exp .)
+    MENOR           reduce using rule 31 (exp1 -> SUMA exp .)
+    DIFERENTE       reduce using rule 31 (exp1 -> SUMA exp .)
+    CTESTRING       reduce using rule 31 (exp1 -> SUMA exp .)
+    PARENTESISI     reduce using rule 31 (exp1 -> SUMA exp .)
+    SUMA            reduce using rule 31 (exp1 -> SUMA exp .)
+    RESTA           reduce using rule 31 (exp1 -> SUMA exp .)
+    ID              reduce using rule 31 (exp1 -> SUMA exp .)
+    CTEI            reduce using rule 31 (exp1 -> SUMA exp .)
+    CTEF            reduce using rule 31 (exp1 -> SUMA exp .)
+    PUNTOYCOMA      reduce using rule 31 (exp1 -> SUMA exp .)
+    PARENTESISD     reduce using rule 31 (exp1 -> SUMA exp .)
+
+
+state 84
+
+    (32) exp1 -> RESTA exp .
+
+    MAYOR           reduce using rule 32 (exp1 -> RESTA exp .)
+    MENOR           reduce using rule 32 (exp1 -> RESTA exp .)
+    DIFERENTE       reduce using rule 32 (exp1 -> RESTA exp .)
+    CTESTRING       reduce using rule 32 (exp1 -> RESTA exp .)
+    PARENTESISI     reduce using rule 32 (exp1 -> RESTA exp .)
+    SUMA            reduce using rule 32 (exp1 -> RESTA exp .)
+    RESTA           reduce using rule 32 (exp1 -> RESTA exp .)
+    ID              reduce using rule 32 (exp1 -> RESTA exp .)
+    CTEI            reduce using rule 32 (exp1 -> RESTA exp .)
+    CTEF            reduce using rule 32 (exp1 -> RESTA exp .)
+    PUNTOYCOMA      reduce using rule 32 (exp1 -> RESTA exp .)
+    PARENTESISD     reduce using rule 32 (exp1 -> RESTA exp .)
+
+
+state 85
+
+    (34) condicion -> IF PARENTESISI expresion PARENTESISD bloque . cond1 PUNTOYCOMA
+    (35) cond1 -> . ELSE bloque
+    (36) cond1 -> . vacio
+    (48) vacio -> .
+
+    ELSE            shift and go to state 90
+    PUNTOYCOMA      reduce using rule 48 (vacio -> .)
+
+    vacio                          shift and go to state 89
+    cond1                          shift and go to state 91
+
+state 86
+
+    (10) var3 -> vacio .
+
+    LLAVEI          reduce using rule 10 (var3 -> vacio .)
+
+
+state 87
+
+    (9) var3 -> var1 .
+
+    LLAVEI          reduce using rule 9 (var3 -> var1 .)
+
+
+state 88
+
+    (5) var1 -> var2 DOSPUNTOS tipo PUNTOYCOMA var3 .
+
+    LLAVEI          reduce using rule 5 (var1 -> var2 DOSPUNTOS tipo PUNTOYCOMA var3 .)
+
+
 state 89
 
-    (34) condicion -> IF PARENTESISI expresion PARENTESISD bloque cond1 . PUNTOYCOMA
+    (36) cond1 -> vacio .
 
-    PUNTOYCOMA      shift and go to state 92
+    PUNTOYCOMA      reduce using rule 36 (cond1 -> vacio .)
 
 
 state 90
@@ -1398,16 +1398,23 @@ state 90
 
     LLAVEI          shift and go to state 8
 
-    bloque                         shift and go to state 93
+    bloque                         shift and go to state 92
 
 state 91
 
-    (36) cond1 -> vacio .
+    (34) condicion -> IF PARENTESISI expresion PARENTESISD bloque cond1 . PUNTOYCOMA
 
-    PUNTOYCOMA      reduce using rule 36 (cond1 -> vacio .)
+    PUNTOYCOMA      shift and go to state 93
 
 
 state 92
+
+    (35) cond1 -> ELSE bloque .
+
+    PUNTOYCOMA      reduce using rule 35 (cond1 -> ELSE bloque .)
+
+
+state 93
 
     (34) condicion -> IF PARENTESISI expresion PARENTESISD bloque cond1 PUNTOYCOMA .
 
@@ -1416,15 +1423,8 @@ state 92
     PRINT           reduce using rule 34 (condicion -> IF PARENTESISI expresion PARENTESISD bloque cond1 PUNTOYCOMA .)
     LLAVED          reduce using rule 34 (condicion -> IF PARENTESISI expresion PARENTESISD bloque cond1 PUNTOYCOMA .)
 
-
-state 93
-
-    (35) cond1 -> ELSE bloque .
-
-    PUNTOYCOMA      reduce using rule 35 (cond1 -> ELSE bloque .)
-
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for SUMA in state 40 resolved as shift
-WARNING: shift/reduce conflict for RESTA in state 40 resolved as shift
+WARNING: shift/reduce conflict for SUMA in state 43 resolved as shift
+WARNING: shift/reduce conflict for RESTA in state 43 resolved as shift
