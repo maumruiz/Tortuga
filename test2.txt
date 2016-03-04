@@ -7,16 +7,15 @@ var ancho = 40 : int
   color_fondo(255, 228, 46) 
 
   repetir(20) { 
-    var largo = random(200) + 30 
+    var largo = random(200) + 30 : int
     repetir(2) { 
       adelante(largo) 
       derecha() 
       adelante(ancho) 
       derecha() 
-    } 
+    }   
     derecha() 
     saltar(ancho) 
     izquierda() 
   }
-  
 }

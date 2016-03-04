@@ -234,14 +234,14 @@ def t_ID(t):
     r'[a-zA-Z](_?[a-zA-Z0-9])*'
     return t
 
-def t_CTEI(t):
-    r'[0-9]+'
-    t.value = int(t.value)
-    return t
-
 def t_CTEF(t):
     r'[0-9]+\.[0-9]+'
     t.value = float(t.value)
+    return t
+
+def t_CTEI(t):
+    r'[0-9]+'
+    t.value = int(t.value)
     return t
 
 def t_CTESTRING(t):
@@ -253,8 +253,8 @@ t_ignore = ' \t'
 
 def t_ENDLINE(t):
     r'\n+'
-    print("found newline")
     t.lexer.lineno += t.value.count("\n")
+    return t
 
 def t_error(t):
     print("Lexical error: Illegal character '%s'" % t.value)
@@ -272,8 +272,7 @@ def p_programa(p):
     pass
 
 def p_dec_programa(p):
-    'dec_programa : PROGRAMA ID PUNTOYCOMA'
-    print("Programa declarado")
+    'dec_programa : PROGRAMA ID ENDLINE'
     pass
 
 def p_progvar(p):
@@ -287,7 +286,7 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino varasign DOSPUNTOS type PUNTOYCOMA'
+    'var : VAR ID arrsino varasign DOSPUNTOS type ENDLINE'
     pass
 
 def p_arrsino(p):
@@ -308,8 +307,12 @@ def p_type(p):
     pass
 
 def p_block(p):
-    'block : LLAVEI block1 LLAVED'
+    'block : LLAVEI optional_endline block1 LLAVED ENDLINE'
     pass
+
+def p_optional_endline(p):
+    '''optional_endline : ENDLINE
+                        | vacio'''
 
 def p_block1(p):
     '''block1 : statute block1
@@ -349,7 +352,7 @@ def p_params2(p):
     pass
 
 def p_assignment(p):
-    'assignment : ID arrsino IGUAL ssexp ENDLINE'
+    'assignment : ID arrsino ASIGNACION ssexp ENDLINE'
     pass
 
 def p_ssexp(p):
@@ -402,7 +405,7 @@ def p_factor(p):
     pass
 
 def p_condition(p):
-    'condition : SI PARENTESISI ssexp PARENTESISD block cond1 ENDLINE'
+    'condition : SI PARENTESISI ssexp PARENTESISD block cond1'
     pass
 
 def p_cond1(p):
@@ -411,11 +414,11 @@ def p_cond1(p):
     pass
 
 def p_while(p):
-    'while : MIENTRAS PARENTESISI ssexp PARENTESISD block ENDLINE'
+    'while : MIENTRAS PARENTESISI ssexp PARENTESISD block'
     pass
 
 def p_loop(p):
-    'loop : REPETIR PARENTESISI ssexp PARENTESISD block ENDLINE'
+    'loop : REPETIR PARENTESISI ssexp PARENTESISD block'
     pass
 
 def p_functionStmt(p):
@@ -470,7 +473,7 @@ def p_primitivefunc(p):
             | POSICION PARENTESISI ssexp COMA ssexp PARENTESISD
             | COLOR_LINEA PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD
             | GROSOR_LINEA PARENTESISI ssexp PARENTESISD
-            | COLOR_RELLENO PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD
+            | COLOR_RELLENO PARENTESISI ssexp COMA ssexp COMA ssexp COMA ssexp PARENTESISD
             | COLOR_FONDO PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD
             | SALTAR PARENTESISI ssexp PARENTESISD
             | GUARDAR_POSICION PARENTESISI PARENTESISD
@@ -479,7 +482,7 @@ def p_primitivefunc(p):
             | RESTAURAR_ESTILO PARENTESISI PARENTESISD
             | ALZAR_PLUMA PARENTESISI PARENTESISD
             | BAJAR_PLUMA PARENTESISI PARENTESISD
-            | RANDOM PARENTESISI PARENTESISD'''
+            | RANDOM PARENTESISI ssexp PARENTESISD'''
     pass
 
 def p_vacio(p):
@@ -495,19 +498,28 @@ import ply.yacc as yacc
 parser = yacc.yacc()
 
 if __name__ == '__main__':
-    data = '''
-    programa hojas
-    {
-      grosor_linea(3)
-      color_linea(255, 255, 255)
-      color_relleno(255, 44, 53)
-      derecha(180, 50)
-      derecha(90)
-      derecha(180, 50)
-      derecha(90)
-      derecha(180, 50)
-      derecha(90)
-      derecha(180, 50)
-    }
+    data = '''programa poligonos
+
+func poligono(n: int) { 
+  repetir(n) { 
+  adelante(50) 
+  derecha(360.0 / n) 
+  }
+} 
+
+{ 
+  color_linea(84, 84, 84)
+  var n = 3 : int
+  mientras(n < 14) {
+    var rojo = random(255) : int
+    var azul = random(255) : int
+    var verde = random(255) : int
+    var alfa = 1 : int
+    color_relleno(rojo,verde,azul,alfa-0.16)
+    poligono(n)
+    derecha(36) 
+    n = n+1
+  }
+}
     '''
     parser.parse(data,tracking = True)

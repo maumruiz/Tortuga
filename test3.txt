@@ -1,23 +1,23 @@
 programa poligonos
 
-func poligono(n: Int) { 
+func poligono(n: int) { 
   repetir(n) { 
   adelante(50) 
   derecha(360.0 / n) 
-  } 
+  }
 } 
 
 { 
   color_linea(84, 84, 84)
-  var n = 3 
+  var n = 3 : int
   mientras(n < 14) {
-    var rojo = random(255)
-    var azul = random(255)
-    var verde = random(255)
-    var alfa = 1
-    color_relleno(rojo,verde,azul,alfa-0.16)
+    var rojo = random(255) : int
+    var azul = random(255) : int
+    var verde = random(255) : int
+    var alfa = 1 : int
+    color_relleno(rojo, verde, azul, alfa-0.16)
     poligono(n)
     derecha(36) 
     n = n+1
-  } 
+  }
 }
