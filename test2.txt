@@ -3,7 +3,7 @@ var ancho = 40 : int
 
 {
   color_linea(211, 211, 211)
-  color_relleno(84, 84, 84) 
+  color_relleno(84, 84, 84, 1) 
   color_fondo(255, 228, 46) 
 
   repetir(20) { 

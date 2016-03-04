@@ -1,3 +1,5 @@
+import sys
+
 #Tortuga scanner y parser
 
 #Lexer rules
@@ -497,6 +499,15 @@ def p_error(p):
 import ply.yacc as yacc
 parser = yacc.yacc()
 
+def main(argv):
+    filename = sys.argv[1]
+    file = open(filename)
+    data = file.read()
+    file.close()
+
+    print(data)
+    parser.parse(data, tracking = True)
+
 if __name__ == '__main__':
     data = '''programa poligonos
 
@@ -522,4 +533,5 @@ func poligono(n: int) {
   }
 }
     '''
-    parser.parse(data,tracking = True)
+    # parser.parse(data,tracking = True)
+    main(sys.argv)
