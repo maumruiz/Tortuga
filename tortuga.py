@@ -269,12 +269,18 @@ lexer = lex.lex()
 #Parsing rules
 
 def p_programa(p):
-    'programa : dec_programa progvar progfunc block'
+    'programa : dec_programa dec_varglob progvar progfunc block'
     print("Programa terminado con exito")
     pass
 
 def p_dec_programa(p):
     'dec_programa : PROGRAMA ID ENDLINE'
+    print("Se crea el Directorio de Funciones. Nombre: " + p[2] + "   Tipo: programa")
+    pass
+
+def p_dec_varglob(p):
+    'dec_varglob :'
+    print("Se crea la tabla de variables globales. Tabla actual: global")
     pass
 
 def p_progvar(p):
@@ -289,6 +295,7 @@ def p_progfunc(p):
 
 def p_var(p):
     'var : VAR ID arrsino varasign DOSPUNTOS type ENDLINE'
+    print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
 def p_arrsino(p):
@@ -299,6 +306,7 @@ def p_arrsino(p):
 def p_varasign(p):
     '''varasign : ASIGNACION ssexp
             | vacio'''
+    p[0] = p[2]
     pass
 
 def p_type(p):
@@ -306,6 +314,7 @@ def p_type(p):
             | FLOAT arrsino
             | STRING arrsino
             | BOOL arrsino'''
+    p[0] = p[1]
     pass
 
 def p_block(p):
@@ -331,7 +340,18 @@ def p_statute(p):
     pass
 
 def p_function(p):
-    'function : FUNC ID PARENTESISI params PARENTESISD function1 block'
+    'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function1 block'
+    print("Destruye tabla local:  " + p[2] + "    Tabla actual: Global")
+    pass
+
+def p_dec_func(p):
+    'dec_func :'
+    print("Nueva funcion -- ID: " + p[-1])
+    pass
+
+def p_dec_varloc(p):
+    'dec_varloc :'
+    print("Se crea la tabla de variables local. Tabla actual: " + p[-3])
     pass
 
 def p_function1(p):
@@ -511,14 +531,14 @@ def main(argv):
 if __name__ == '__main__':
     data = '''programa poligonos
 
-func poligono(n: int) { 
-  repetir(n) { 
-  adelante(50) 
-  derecha(360.0 / n) 
+func poligono(n: int) {
+  repetir(n) {
+  adelante(50)
+  derecha(360.0 / n)
   }
-} 
+}
 
-{ 
+{
   color_linea(84, 84, 84)
   var n = 3 : int
   mientras(n < 14) {
@@ -528,7 +548,7 @@ func poligono(n: int) {
     var alfa = 1 : int
     color_relleno(rojo,verde,azul,alfa-0.16)
     poligono(n)
-    derecha(36) 
+    derecha(36)
     n = n+1
   }
 }
