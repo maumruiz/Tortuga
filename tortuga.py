@@ -265,17 +265,20 @@ def t_error(t):
 #Build lexer
 import ply.lex as lex
 lexer = lex.lex()
+from register import Register
 
 #Parsing rules
+register = Register()
 
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
     print("Programa terminado con exito")
+    register.print_table()
     pass
 
 def p_dec_programa(p):
     'dec_programa : PROGRAMA ID ENDLINE'
-    print("Se crea el Directorio de Funciones. Nombre: " + p[2] + "   Tipo: programa")
+    register.create(p[2])
     pass
 
 def p_dec_varglob(p):
@@ -295,7 +298,8 @@ def p_progfunc(p):
 
 def p_var(p):
     'var : VAR ID arrsino varasign DOSPUNTOS type ENDLINE'
-    print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
+    register.add_variable(p[2], p[6])
+    # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
 def p_arrsino(p):
@@ -340,23 +344,28 @@ def p_statute(p):
     pass
 
 def p_function(p):
-    'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function1 block'
-    print("Destruye tabla local:  " + p[2] + "    Tabla actual: Global")
+    'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function_type block'
+    register.clear_variables()
+    # print("Destruye tabla local:  " + p[2] + "    Tabla actual: Global")
     pass
 
 def p_dec_func(p):
     'dec_func :'
-    print("Nueva funcion -- ID: " + p[-1])
+    register.add_function(p[-1])
     pass
 
 def p_dec_varloc(p):
     'dec_varloc :'
-    print("Se crea la tabla de variables local. Tabla actual: " + p[-3])
+    # print("Se crea la tabla de variables local. Tabla actual: " + p[-3])
     pass
 
-def p_function1(p):
-    '''function1 : DOSPUNTOS type
+def p_function_type(p):
+    '''function_type : DOSPUNTOS type
             | vacio'''
+    if p[1] is None:
+        register.add_function_return_type('void')
+    else:
+        register.add_function_return_type(p[1])
     pass
 
 def p_params(p):
@@ -366,6 +375,7 @@ def p_params(p):
 
 def p_params1(p):
     'params1 : ID DOSPUNTOS type params2'
+    register.add_function_param(p[1], p[3])
     pass
 
 def p_params2(p):
