@@ -11,7 +11,7 @@ var i : int = 9
 var j : int = 10
 
 func uno( ) {
-    while(a = a * (b + c) / d > b - d * f) {
+    mientras (a * (b + c) / d > b - d * f) {
         a = a * ( b * (c + d) / f * g - h) / i + j
     }
 
