@@ -1,0 +1,7 @@
+Eduardo Zardain Canabal	A00813391
+Mauricio Mendez Ruiz	A00812794
+
+Avance 3:
+
+Se terminó la semántica básica de expresiones. Se crearon las tablas de funciones, las variables globales y locales. Se hizo el código de expresiones aritméticas por medio de cuádruplos.
+Todo funciona, excepto cuando se agregan parámetros a las funciones. En las pruebas donde hay funciones con parámetros arroja un error.
