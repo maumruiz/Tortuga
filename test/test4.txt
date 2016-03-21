@@ -1,0 +1,12 @@
+programa prueba_aritmetica
+var ancho : int
+var largo : int
+var x : float
+var y : float
+
+{
+  x = y
+  y = ancho + largo / x
+
+  var z : float = (ancho + largo) / y
+}

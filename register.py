@@ -1,4 +1,8 @@
 class Register:
+    INT = 0
+    FLOAT = 1
+    STRING = 2
+    BOOL = 3
 
     def __init__(self):
         self.current_scope = 0
@@ -34,7 +38,7 @@ class Register:
         # Si no se le pasa un scope asume que es el scope actual
         if scope is None:
             scope = self.current_scope
-        variable = dict(name = variable_name, type = variable_type)
+        variable = dict(name = variable_name, type = self.__type_to_int(variable_type))
         self.function_list[scope]['variables'].append(variable)
         print("Nueva variable-- ID: " + variable_name + ", Tipo: " + variable_type + ", Scope actual: " + str(scope))
 
@@ -42,6 +46,16 @@ class Register:
         self.function_list[self.current_scope]['variables'] = []
         print("Destruye las variables del scope:  " + str(self.current_scope) + "    Tabla actual: Global")
         self.current_scope = 0
+
+    # Regresa el dict con los datos de la variable basada en su nombre
+    def get_variable(self, variable_name):
+        for variable in self.function_list[self.current_scope]['variables']:
+            if variable['name'] == variable_name:
+                return variable
+        for variable in self.function_list[0]['variables']:
+            if variable['name'] == variable_name:
+                return variable
+        return None
 
     def print_table(self):
         print(self.function_list)
@@ -60,3 +74,16 @@ class Register:
             if function['name'] == function_name:
                 return True
         return False
+
+    def __type_to_int(self, type_s):
+        if type_s == 'int':
+            return Register.INT
+        elif type_s == 'float':
+            return Register.FLOAT
+        elif type_s == 'string':
+            return Register.STRING
+        elif type_s == 'bool':
+            return Register.BOOL
+        else:
+            print ('Error: unknown type')
+            return None

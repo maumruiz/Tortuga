@@ -1,4 +1,4 @@
-programa poligonos
+programa prueba
 
 func poligono(n: int) { 
   repetir(n) { 
@@ -9,12 +9,13 @@ func poligono(n: int) {
 
 { 
   color_linea(84, 84, 84)
-  var n : int = 3
+  var n : int
+  var n : float
   mientras(n < 14) {
-    var rojo : int = random(255)
-    var azul : int = random(255)
-    var verde : int = random(255)
-    var alfa : int = 1
+    var rojo = random(255) : int
+    var azul = random(255) : int
+    var verde = random(255) : int
+    var alfa = 1 : int
     color_relleno(rojo, verde, azul, alfa-0.16)
     poligono(n)
     derecha(36) 

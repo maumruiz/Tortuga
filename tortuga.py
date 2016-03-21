@@ -266,14 +266,17 @@ def t_error(t):
 import ply.lex as lex
 lexer = lex.lex()
 from register import Register
+from quadruple_register import QuadrupleRegister
 
 #Parsing rules
 register = Register()
+quadruple_reg = QuadrupleRegister()
 
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
     print("Programa terminado con exito")
     register.print_table()
+    quadruple_reg.print_quadruple()
     pass
 
 def p_dec_programa(p):
@@ -297,8 +300,7 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino varasign DOSPUNTOS type ENDLINE'
-    register.add_variable(p[2], p[6])
+    'var : VAR ID arrsino DOSPUNTOS type push_var varasign ENDLINE'
     # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
@@ -307,10 +309,18 @@ def p_arrsino(p):
             | vacio'''
     pass
 
+def p_push_var(p):
+    'push_var :'
+    register.add_variable(p[-4], p[-1])
+    variable = register.get_variable(p[-4])
+    quadruple_reg.push_operand(variable)
+    pass
+
 def p_varasign(p):
-    '''varasign : ASIGNACION ssexp
+    '''varasign : ASIGNACION push_operator ssexp
             | vacio'''
-    p[0] = p[2]
+    # p[0] = p[2]
+    quadruple_reg.assignment_check()
     pass
 
 def p_type(p):
@@ -384,56 +394,102 @@ def p_params2(p):
     pass
 
 def p_assignment(p):
-    'assignment : ID arrsino ASIGNACION ssexp ENDLINE'
+    'assignment : ID arrsino push_id ASIGNACION push_operator ssexp ENDLINE'
+    quadruple_reg.assignment_check()
     pass
 
+# Super Super Expresion
 def p_ssexp(p):
-    'ssexp : sexp ssexp2'
+    'ssexp : sexp ssexp_check ssexp2'
+    pass
+
+def p_ssexp_check(p):
+    'ssexp_check :'
+    quadruple_reg.ssexp_check()
     pass
 
 def p_ssexp2(p):
-    '''ssexp2 : AND sexp
-            | OR sexp
+    '''ssexp2 : AND push_operator sexp
+            | OR push_operator sexp
             | vacio'''
     pass
 
+# Super Expresion
 def p_sexp(p):
-    'sexp : exp sexp2'
+    'sexp : exp sexp_check sexp2'
+    pass
+
+def p_sexp_check(p):
+    'sexp_check :'
+    quadruple_reg.sexp_check()
     pass
 
 def p_sexp2(p):
-    '''sexp2 : MAYOR exp
-            | MENOR exp
-            | DIFERENTE exp
-            | IGUAL exp
+    '''sexp2 : MAYOR push_operator exp
+            | MENOR push_operator exp
+            | DIFERENTE push_operator exp
+            | IGUAL push_operator exp
             | vacio'''
     pass
 
+# Expresion
 def p_exp(p):
-    'exp : term exp1'
+    'exp : term exp_check exp1'
+    pass
+
+def p_exp_check(p):
+    'exp_check :'
+    quadruple_reg.exp_check()
     pass
 
 def p_exp1(p):
-    '''exp1 : SUMA exp
-            | RESTA exp
+    '''exp1 : SUMA push_operator exp
+            | RESTA push_operator exp
             | vacio'''
     pass
 
+# Termino
 def p_term(p):
-    'term : factor term1'
+    'term : factor term_check term1'
+    pass
+
+def p_term_check(p):
+    'term_check :'
+    quadruple_reg.term_check()
     pass
 
 def p_term1(p):
-    '''term1 : MULTIP term
-            | DIVISION term
+    '''term1 : MULTIP push_operator term
+            | DIVISION push_operator term
             | vacio'''
     pass
 
+def p_push_operator(p):
+    'push_operator :'
+    quadruple_reg.push_operator(p[-1])
+
+# Factor
 def p_factor(p):
-    '''factor : PARENTESISI ssexp PARENTESISD
-            | ID arrsino
+    '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
+            | ID arrsino push_id
             | varconst
             | functioncall'''
+    pass
+
+def p_push_id(p):
+    'push_id :'
+    variable = register.get_variable(p[-2])
+    quadruple_reg.push_operand(variable)
+    pass
+
+def p_push_fake_bottom(p):
+    'push_fake_bottom :'
+    quadruple_reg.push_fake_bottom()
+    pass
+
+def p_pop_fake_bottom(p):
+    'pop_fake_bottom :'
+    quadruple_reg.pop_fake_bottom()
     pass
 
 def p_condition(p):
@@ -478,9 +534,19 @@ def p_args2(p):
 
 def p_varconst(p):
     '''varconst : CTESTRING
-            | CTEI
-            | CTEF
+            | CTEI push_int_literal
+            | CTEF push_float_literal
             | boolvalue'''
+    pass
+
+def p_push_int_literal(p):
+    'push_int_literal :'
+    quadruple_reg.push_int_literal(int(p[-1]))
+    pass
+
+def p_push_float_literal(p):
+    'push_float_literal :'
+    quadruple_reg.push_int_literal(float(p[-1]))
     pass
 
 def p_arraccess(p):
