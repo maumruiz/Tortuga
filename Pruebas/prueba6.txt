@@ -1,0 +1,25 @@
+programa poligonos
+var a : int
+var b : int
+var c : float
+
+func uno(i: int) {
+  var k : int
+  i = k * 4
+}
+
+func dos( ) {
+    var i : int
+    var j : int
+
+    j = x + y * x
+}
+
+
+{
+  a = 3
+  b = 6
+  c = 9
+  uno(a, b, c)
+  dos(a, b, c)
+}

@@ -1,0 +1,14 @@
+programa poligonos
+
+func poligono(n: int, m: int, o: int) {
+  repetir(n) {
+      n = m * o
+  }
+}
+
+{
+  var a : int = 3
+  var b : int = 6
+  var c : int = 9
+  poligono(a, b, c)
+}

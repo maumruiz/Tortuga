@@ -1,0 +1,16 @@
+programa grafica
+var a : int = 1
+var b : int = 2
+var c : int = 3
+var i : int = 4
+var j : int = 5
+var k : int = 6
+var x : int = 7
+var y : int = 8
+var z : int = 9
+
+{
+    i = a * b / c + a - k * y
+    j = c / ( b - a * i ) * a - b / x
+    k = x + ( b + a / i ) / a + y * ( x + y * z )
+}

@@ -1,0 +1,31 @@
+programa poligonos
+var a : int = 1
+var b : int = 2
+var c : int = 3
+var d : int = 4
+var e : int = 5
+var f : int = 6
+var g : int = 7
+var h : int = 8
+var i : int = 9
+var j : int = 10
+
+func uno( ) {
+    while(a = a * (b + c) / d > b - d * f) {
+        a = a * ( b * (c + d) / f * g - h) / i + j
+    }
+
+}
+
+func dos( ) {
+    a = b * c * (d + e) / f
+}
+
+
+{
+  a = 3
+  b = 6
+  c = 9
+  uno()
+  dos()
+}
