@@ -1,0 +1,71 @@
+programa poligonos
+var a : int = 1
+var b : int = 2
+var c : int = 3
+var d : int = 4
+var f : int = 6
+
+func uno( ) {
+    var g : int = 7
+    var h : int = 8
+    var i : int = 9
+    var j : int = 10
+
+    si (a * (b + c) / d > b - d * f) {
+        a = a * ( b * (c + d) / f * g - h) / i + j
+    }
+
+}
+
+func dos( ) {
+    var e : int = 5
+
+    repetir( e ) {
+        a = b * c * (d + e) / f
+    }
+}
+
+func tres( ) {
+    var x : float
+    var y : float
+    var z : float
+
+    x = a + b + c
+    si (x > a) {
+        y = a * b / c + a - x * f
+    }
+    else {
+        y = a + x * d + (a * b + c)
+    }
+
+    mientras (y < z) {
+        poligono(x, y, z)
+        z = z + 1
+    }
+}
+
+func cuatro(m:int, n:float, o:float) {
+    m = 4
+    n = 8
+    o = 16
+
+    adelante(m)
+    derecha(n)
+    izquierda(o)
+    atras(o)
+    posicion(a+d-c,b+f)
+    escribir(c)
+    alzar_pluma()
+    bajar_pluma()
+}
+
+
+{
+  a = 3
+  b = 6
+  c = 9
+  uno()
+  dos()
+  tres()
+  cuatro(a+b,b,c)
+}

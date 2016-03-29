@@ -105,7 +105,7 @@ def t_SI(t):
     return t
 
 def t_SINO(t):
-    r'sino'
+    r'else'
     return t
 
 def t_MIENTRAS(t):
