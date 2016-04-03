@@ -41,6 +41,8 @@ tokens = (
     'DIVISION',     # /
     'MAYOR',        # >
     'MENOR',        # <
+    'MAYORIGUAL',   # >=
+    'MENORIGUAL',   # <=
     'DIFERENTE',    # !=
     'IGUAL',        # ==
     'AND',          # &&
@@ -150,6 +152,14 @@ def t_DIFERENTE(t):
 
 def t_IGUAL(t):
     r'=='
+    return t
+
+def t_MAYORIGUAL(t):
+    r'>='
+    return t
+
+def t_MENORIGUAL(t):
+    r'<='
     return t
 
 def t_AND(t):
@@ -429,6 +439,8 @@ def p_sexp2(p):
             | MENOR push_operator exp
             | DIFERENTE push_operator exp
             | IGUAL push_operator exp
+            | MAYORIGUAL push_operator exp
+            | MENORIGUAL push_operator exp
             | vacio'''
     pass
 
@@ -590,6 +602,7 @@ def p_vacio(p):
 #Manejo de errores
 def p_error(p):
     print("Syntax error at line " + str(p.lexer.lineno) + " : Unexpected token  " + str(p.value) )
+    sys.exit
     pass
 
 import ply.yacc as yacc

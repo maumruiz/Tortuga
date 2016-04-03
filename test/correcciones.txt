@@ -1,0 +1,11 @@
+programa poligonos
+var a : int = 1
+var b : float = 2
+var c : bool
+
+
+{
+  si(a && b) {
+    c = a + b - a
+  }
+}
