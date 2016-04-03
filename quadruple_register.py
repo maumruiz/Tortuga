@@ -67,16 +67,14 @@ class QuadrupleRegister:
 
     def sexp_check(self):
         operator = self.operator_stack[-1] if self.operator_stack else None
-        if operator == QuadrupleRegister.GREATER or
-           operator == QuadrupleRegister.LESSER or
-           operator == QuadrupleRegister.EQUAL or
-           operator == QuadrupleRegister.NOT_EQUAL or
-           operator == QuadrupleRegister.MAYOR_IGUAL or
-           operator == QuadrupleRegister.MENOR_IGUAL:
+        if (operator == QuadrupleRegister.GREATER or
+            operator == QuadrupleRegister.LESSER or
+            operator == QuadrupleRegister.EQUAL or
+            operator == QuadrupleRegister.NOT_EQUAL or
+            operator == QuadrupleRegister.MAYOR_IGUAL or
+            operator == QuadrupleRegister.MENOR_IGUAL):
             self.operator_stack.pop()
             self.__arithmetic_check(operator)
-            print('ya entro')
-        print('por aqui no debe ir')
 
     def ssexp_check(self):
         operator = self.operator_stack[-1] if self.operator_stack else None
