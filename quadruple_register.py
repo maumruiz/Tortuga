@@ -1,4 +1,5 @@
 from semantic_cube import SemanticCube
+import sys
 
 class QuadrupleRegister:
     FAKE_BOTTOM = -1
@@ -13,6 +14,9 @@ class QuadrupleRegister:
     AND = 8
     OR = 9
     ASSIGNMENT = 10
+    GOTO = 11
+    GOTOF = 12
+    GOTOT = 13
 
     def __init__(self):
         self.semantic_cube = SemanticCube()
@@ -21,6 +25,7 @@ class QuadrupleRegister:
         self.quadruple_list = []
         self.operand_stack = []
         self.operator_stack = []
+        self.jump_stack = []
 
     def push_operand(self, operand):
         if operand is None:
@@ -29,6 +34,7 @@ class QuadrupleRegister:
 
     def push_operator(self, operator):
         operator = self.__to_opcode(operator)
+        print('Pushing operator: ' +  str(operator))
         self.operator_stack.append(operator)
 
     def push_fake_bottom(self):
@@ -61,11 +67,13 @@ class QuadrupleRegister:
             self.__arithmetic_check(operator)
 
     def sexp_check(self):
+        print(self.operator_stack)
         operator = self.operator_stack[-1] if self.operator_stack else None
         if (operator == QuadrupleRegister.GREATER or
             operator == QuadrupleRegister.LESSER or
             operator == QuadrupleRegister.EQUAL or
             operator == QuadrupleRegister.NOT_EQUAL):
+            print('Performing sexp_check')
             self.operator_stack.pop()
             self.__arithmetic_check(operator)
 
@@ -83,12 +91,58 @@ class QuadrupleRegister:
             assigned = self.operand_stack.pop()
             self.generate(operator, operand['name'], None, assigned['name'])
 
+    def begin_if_check(self):
+        self.print_quadruple()
+        operand = self.operand_stack.pop()
+        if  operand['type'] != SemanticCube.BOOL:
+            sys.exit('Semantic error: If statement requires a bool expression')
+        else:
+            self.generate(QuadrupleRegister.GOTOF, operand, None, None)
+            self.jump_stack.append(len(self.quadruple_list) - 1)
+
+    def end_if_check(self):
+        end = self.jump_stack.pop()
+        self.fill_quadruple(end, len(self.quadruple_list))
+
+    def else_check(self):
+        self.generate(QuadrupleRegister.GOTO, None, None, None)
+        false = self.jump_stack.pop()
+        self.fill_quadruple(false, len(self.quadruple_list))
+        self.jump_stack.append(len(self.quadruple_list) - 1)
+
+    def begin_while_check(self):
+        self.jump_stack.append(len(self.quadruple_list))
+
+    def middle_while_check(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.BOOL:
+            sys.exit('Semantic error: While statement requires a bool expression')
+        else:
+            self.generate(QuadrupleRegister.GOTOF, operand, None, None)
+            self.jump_stack.append(len(self.quadruple_list) - 1)
+
+    def end_while_check(self):
+        false = self.jump_stack.pop()
+        return_point = self.jump_stack.pop()
+        self.generate(QuadrupleRegister.GOTO, None, None, return_point)
+        self.fill_quadruple(false, len(self.quadruple_list))
+
+    def begin_repeat_check(self):
+        self.jump_stack.append(len(self.quadruple_list))
+
+    def end_repeat_check(self):
+        print('Pending')
+
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)
         self.quadruple_list.append(quadruple)
         print('Added quadruple')
         print('Operators: '  + str(self.operator_stack))
         print('Operands: '  + str(self.operand_stack))
+
+    def fill_quadruple(self, index, content):
+        quadruple = self.quadruple_list[index]
+        quadruple['result'] = content
 
     def print_quadruple(self):
         for quadruple in self.quadruple_list:

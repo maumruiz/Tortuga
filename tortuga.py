@@ -9,8 +9,8 @@ tokens = (
     #Palabras reservadas
     'PROGRAMA',
     'VAR',
-    'SI',
     'SINO',
+    'SI',
     'MIENTRAS',
     'REPETIR',
     'INT',
@@ -100,12 +100,12 @@ def t_VAR(t):
     r'var'
     return t
 
-def t_SI(t):
-    r'si'
+def t_SINO(t):
+    r'sino'
     return t
 
-def t_SINO(t):
-    r'else'
+def t_SI(t):
+    r'si'
     return t
 
 def t_MIENTRAS(t):
@@ -290,7 +290,7 @@ def p_dec_varglob(p):
     pass
 
 def p_progvar(p):
-    '''progvar : var progvar
+    '''progvar : var ENDLINE progvar
             | vacio'''
     pass
 
@@ -300,7 +300,7 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino DOSPUNTOS type push_var varasign ENDLINE'
+    'var : VAR ID arrsino DOSPUNTOS type push_var varasign'
     # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
@@ -345,12 +345,12 @@ def p_block1(p):
     pass
 
 def p_statute(p):
-    '''statute : assignment
-            | var
-            | condition
-            | while
-            | loop
-            | functionStmt'''
+    '''statute : assignment ENDLINE
+            | var ENDLINE
+            | condition ENDLINE
+            | while ENDLINE
+            | loop ENDLINE
+            | functionStmt ENDLINE'''
     pass
 
 def p_function(p):
@@ -394,7 +394,7 @@ def p_params2(p):
     pass
 
 def p_assignment(p):
-    'assignment : ID arrsino push_id ASIGNACION push_operator ssexp ENDLINE'
+    'assignment : ID arrsino push_id ASIGNACION push_operator ssexp'
     quadruple_reg.assignment_check()
     pass
 
@@ -416,20 +416,20 @@ def p_ssexp2(p):
 
 # Super Expresion
 def p_sexp(p):
-    'sexp : exp sexp_check sexp2'
+    'sexp : exp sexp2'
+    pass
+
+def p_sexp2(p):
+    '''sexp2 : MAYOR push_operator exp sexp_check
+            | MENOR push_operator exp sexp_check
+            | DIFERENTE push_operator exp sexp_check
+            | IGUAL push_operator exp sexp_check
+            | vacio'''
     pass
 
 def p_sexp_check(p):
     'sexp_check :'
     quadruple_reg.sexp_check()
-    pass
-
-def p_sexp2(p):
-    '''sexp2 : MAYOR push_operator exp
-            | MENOR push_operator exp
-            | DIFERENTE push_operator exp
-            | IGUAL push_operator exp
-            | vacio'''
     pass
 
 # Expresion
@@ -493,24 +493,56 @@ def p_pop_fake_bottom(p):
     pass
 
 def p_condition(p):
-    'condition : SI PARENTESISI ssexp PARENTESISD block cond1'
+    'condition : SI PARENTESISI ssexp PARENTESISD start_if_check control_block cond1 end_if_check'
+    pass
+
+def p_start_if_check(p):
+    'start_if_check :'
+    quadruple_reg.begin_if_check()
+    pass
+
+def p_end_if_check(p):
+    'end_if_check :'
+    quadruple_reg.end_if_check()
     pass
 
 def p_cond1(p):
-    '''cond1 : SINO block
+    '''cond1 : SINO else_check control_block
             | vacio'''
     pass
 
+def p_else_check(p):
+    'else_check :'
+    quadruple_reg.else_check()
+    pass
+
 def p_while(p):
-    'while : MIENTRAS PARENTESISI ssexp PARENTESISD block'
+    'while : MIENTRAS PARENTESISI ssexp PARENTESISD control_block'
     pass
 
 def p_loop(p):
-    'loop : REPETIR PARENTESISI ssexp PARENTESISD block'
+    'loop : REPETIR PARENTESISI ssexp PARENTESISD control_block'
+    pass
+
+def p_control_block(p):
+    'control_block : LLAVEI optional_endline control_block1 LLAVED'
+    pass
+
+def p_control_block1(p):
+    '''control_block1 : control_statements block1
+            | vacio'''
+    pass
+
+def p_control_statements(p):
+    '''control_statements : assignment ENDLINE
+            | condition ENDLINE
+            | while ENDLINE
+            | loop ENDLINE
+            | functionStmt ENDLINE'''
     pass
 
 def p_functionStmt(p):
-    'functionStmt : functioncall ENDLINE'
+    'functionStmt : functioncall'
     pass
 
 def p_functioncall(p):
