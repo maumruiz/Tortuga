@@ -1,0 +1,27 @@
+programa prueba
+var ancho : int
+var largo : int
+var x : float
+var y : float
+
+
+{
+  x = y
+  y = ancho + largo / x
+
+  var z : float = (ancho + largo) / y
+
+  si (ancho > largo) {
+    y = x + 5
+  }
+
+  si (largo < ancho) {
+    y = x + z
+  } sino {
+    y = x + z + z
+  }
+
+  mientras (largo > ancho) {
+    ancho = ancho + 1
+  }
+}
