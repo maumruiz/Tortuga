@@ -59,6 +59,10 @@ class QuadrupleRegister:
         literal = dict(name = '_lit' + str(literal), type = SemanticCube.FLOAT)
         self.operand_stack.append(literal)
 
+    def push_bool_literal(self, literal):
+        literal = dict(name = '_lit' + str(literal), type = SemanticCube.BOOL)
+        self.operand_stack.append(literal)
+
     def term_check(self):
         operator = self.operator_stack[-1] if self.operator_stack else None
         if operator == QuadrupleRegister.MULTIPLICATION or operator == QuadrupleRegister.DIVISION:
@@ -95,7 +99,13 @@ class QuadrupleRegister:
             self.operator_stack.pop()
             operand = self.operand_stack.pop()
             assigned = self.operand_stack.pop()
-            self.generate(operator, operand['name'], None, assigned['name'])
+            result_type = self.semantic_cube.get_result_type(assigned['type'], operand['type'], operator)
+            print('Result Type in assignment ::::: ' + str(result_type))
+            if result_type is not None:
+                self.generate(operator, operand['name'], None, assigned['name'])
+            else:
+                print('Error: Assignment type mismatch with operands ' + assigned['name'] + ' and ' + operand['name'])
+                exit(0)
 
     def begin_if_check(self):
         self.print_quadruple()
@@ -154,8 +164,8 @@ class QuadrupleRegister:
     def print_quadruple(self):
         for quadruple in self.quadruple_list:
             print('Operator: ' + str(quadruple['operator']) +
-                ' Operand 1: ' + str(quadruple['operand_1']) +
-                ' Operand 2: ' + str(quadruple['operand_2']) +
+                ' Operand1: ' + str(quadruple['operand_1']) +
+                ' Operand2: ' + str(quadruple['operand_2']) +
                 ' Result: ' + str(quadruple['result']))
         print(self.operand_stack)
         print(self.operator_stack)
@@ -174,7 +184,7 @@ class QuadrupleRegister:
         if result_type is not None:
             self.generate(operator, operand_1['name'], operand_2['name'], self.__new_temp_var(result_type))
         else:
-            print('Error: Type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
+            print('Error: Operation type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
             exit(0)
 
     def __to_opcode(self, operator_s):

@@ -30,7 +30,7 @@ class SemanticCube:
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, BOOL]], # Not equal
             [[None, None, None, None],   [None, None, None, None],   [None, None, None, None], [None, None, None, BOOL]], # AND
             [[None, None, None, None],   [None, None, None, None],   [None, None, None, None], [None, None, None, BOOL]], # OR
-            [[INT,  None, None, None],   [None, FLOAT, None, None],  [None, None, STRING, None],[None, None, None, BOOL]], # Assignment
+            [[INT,  None, None, None],   [FLOAT, FLOAT, None, None],  [None, None, STRING, None],[None, None, None, BOOL]], # Assignment
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, None]], # MayorIgual
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, None]]] # MenorIgual
 

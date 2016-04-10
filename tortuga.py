@@ -310,7 +310,7 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino DOSPUNTOS type push_var varasign'
+    'var : VAR ID arrsino DOSPUNTOS type add_var varasign'
     # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
@@ -319,15 +319,19 @@ def p_arrsino(p):
             | vacio'''
     pass
 
+def p_add_var(p):
+    'add_var :'
+    register.add_variable(p[-4], p[-1])
+    pass
+
 def p_push_var(p):
     'push_var :'
-    register.add_variable(p[-4], p[-1])
-    variable = register.get_variable(p[-4])
+    variable = register.get_variable(p[-5])
     quadruple_reg.push_operand(variable)
     pass
 
 def p_varasign(p):
-    '''varasign : ASIGNACION push_operator ssexp
+    '''varasign : push_var ASIGNACION push_operator ssexp
             | vacio'''
     # p[0] = p[2]
     quadruple_reg.assignment_check()
@@ -419,8 +423,8 @@ def p_ssexp_check(p):
     pass
 
 def p_ssexp2(p):
-    '''ssexp2 : AND push_operator sexp
-            | OR push_operator sexp
+    '''ssexp2 : AND push_operator sexp ssexp_check
+            | OR push_operator sexp ssexp_check
             | vacio'''
     pass
 
@@ -434,6 +438,8 @@ def p_sexp2(p):
             | MENOR push_operator exp sexp_check
             | DIFERENTE push_operator exp sexp_check
             | IGUAL push_operator exp sexp_check
+            | MAYORIGUAL push_operator exp sexp_check
+            | MENORIGUAL push_operator exp sexp_check
             | vacio'''
     pass
 
@@ -481,8 +487,8 @@ def p_push_operator(p):
 # Factor
 def p_factor(p):
     '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
-            | ID arrsino push_id
             | varconst
+            | ID arrsino push_id
             | functioncall'''
     pass
 
@@ -578,7 +584,7 @@ def p_varconst(p):
     '''varconst : CTESTRING
             | CTEI push_int_literal
             | CTEF push_float_literal
-            | boolvalue'''
+            | boolvalue push_bool_literal'''
     pass
 
 def p_push_int_literal(p):
@@ -589,6 +595,12 @@ def p_push_int_literal(p):
 def p_push_float_literal(p):
     'push_float_literal :'
     quadruple_reg.push_int_literal(float(p[-1]))
+    pass
+
+def p_push_bool_literal(p):
+    'push_bool_literal :'
+    print(p[-1])
+    quadruple_reg.push_bool_literal(p[-1])
     pass
 
 def p_arraccess(p):
