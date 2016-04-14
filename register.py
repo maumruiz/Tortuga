@@ -20,7 +20,7 @@ class Register:
         function = dict(name = function_name, type = None, variables = [])
         self.function_list.append(function)
         self.current_scope = len(self.function_list) - 1
-        print("Nueva funcion -- ID: " + function_name)
+        print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
 
     def add_function_param(self, param_name, param_type):
         param = dict(name = param_name, type = param_type)

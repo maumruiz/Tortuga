@@ -284,7 +284,7 @@ quadruple_reg = QuadrupleRegister()
 
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
-    print("Programa terminado con exito")
+    print("/////////////Programa terminado con exito///////////////")
     register.print_table()
     quadruple_reg.print_quadruple()
     pass
