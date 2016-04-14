@@ -599,7 +599,6 @@ def p_push_float_literal(p):
 
 def p_push_bool_literal(p):
     'push_bool_literal :'
-    print(p[-1])
     quadruple_reg.push_bool_literal(p[-1])
     pass
 
@@ -610,6 +609,7 @@ def p_arraccess(p):
 def p_boolvalue(p):
     '''boolvalue : VERDADERO
             | FALSO'''
+    p[0] = p[1]
     pass
 
 def p_primitivefunc(p):

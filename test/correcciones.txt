@@ -1,8 +1,9 @@
 programa poligonos
 var a : int = 1
 var b : float = 2
-var c : bool = falso
+var c : bool = verdadero
 var i : float = 3.2
+var z : string
 
 {
   si(a > b) {
