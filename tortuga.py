@@ -366,6 +366,7 @@ def p_statute(p):
 def p_function(p):
     'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function_type block'
     register.clear_variables()
+    quadruple_reg.generate_return();
     # print("Destruye tabla local:  " + p[2] + "    Tabla actual: Global")
     pass
 
@@ -386,6 +387,7 @@ def p_function_type(p):
         register.add_function_return_type('void')
     else:
         register.add_function_return_type(p[1])
+    register.set_starting_quadruple(quadruple_reg.get_next_quadruple)
     pass
 
 def p_params(p):
@@ -548,16 +550,13 @@ def p_control_statements(p):
             | condition ENDLINE
             | while ENDLINE
             | loop ENDLINE
-            | functionStmt ENDLINE'''
-    pass
-
-def p_functionStmt(p):
-    'functionStmt : functioncall'
+            | functioncall ENDLINE'''
     pass
 
 def p_functioncall(p):
     '''functioncall : ID PARENTESISI args PARENTESISD
             | primitivefunc'''
+    quadruple_reg.generate_gosub
     pass
 
 def p_args(p):
@@ -566,7 +565,7 @@ def p_args(p):
     pass
 
 def p_args1(p):
-    'args1 : ssexp args2'
+    'args1 : ssexp initialize_argument args2'
     pass
 
 def p_args2(p):

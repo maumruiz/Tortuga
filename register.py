@@ -25,6 +25,7 @@ class Register:
     def add_function_param(self, param_name, param_type):
         param = dict(name = param_name, type = param_type)
         self.function_list[self.current_scope]['variables'].append(param)
+        self.function_list[self.current_scope]['params'].append(param)
         print("Parametro de funcion: " + param_name)
 
     def add_function_return_type(self, return_type):
@@ -56,6 +57,9 @@ class Register:
             if variable['name'] == variable_name:
                 return variable
         return None
+
+    def set_starting_quadruple(self, quadruple):
+        self.function_list[self.current_scope]['starting_quadruple'] = quadruple
 
     def print_table(self):
         print(self.function_list)

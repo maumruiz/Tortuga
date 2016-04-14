@@ -139,6 +139,9 @@ class QuadrupleRegister:
     def end_repeat_check(self):
         print('Pending')
 
+    def generate_return(self):
+        print('Pending')
+
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)
         self.quadruple_list.append(quadruple)
@@ -159,6 +162,9 @@ class QuadrupleRegister:
                 ' Result: ' + str(quadruple['result']))
         print(self.operand_stack)
         print(self.operator_stack)
+
+    def get_next_quadruple(self):
+        return len(self.quadruple_list)
 
     def __new_temp_var(self, var_type):
         var = dict(name = 't' + str(self.temp_count), type = var_type)
