@@ -281,12 +281,14 @@ from quadruple_register import QuadrupleRegister
 #Parsing rules
 register = Register()
 quadruple_reg = QuadrupleRegister()
+register.set_address_handler(quadruple_reg.address_handler)
 
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
     print("/////////////Programa terminado con exito///////////////")
     register.print_table()
-    quadruple_reg.print_quadruple()
+    quadruple_reg.print_debug_quadruples()
+    quadruple_reg.print_quadruples()
     pass
 
 def p_dec_programa(p):
@@ -581,10 +583,15 @@ def p_args2(p):
     pass
 
 def p_varconst(p):
-    '''varconst : CTESTRING
+    '''varconst : CTESTRING push_string_literal
             | CTEI push_int_literal
             | CTEF push_float_literal
             | boolvalue push_bool_literal'''
+    pass
+
+def p_push_string_literal(p):
+    'push_string_literal :'
+    quadruple_reg.push_string_literal(p[-1])
     pass
 
 def p_push_int_literal(p):
@@ -660,29 +667,4 @@ def main(argv):
     parser.parse(data, tracking = True)
 
 if __name__ == '__main__':
-    data = '''programa poligonos
-
-func poligono(n: int) {
-  repetir(n) {
-  adelante(50)
-  derecha(360.0 / n)
-  }
-}
-
-{
-  color_linea(84, 84, 84)
-  var n = 3 : int
-  mientras(n < 14) {
-    var rojo = random(255) : int
-    var azul = random(255) : int
-    var verde = random(255) : int
-    var alfa = 1 : int
-    color_relleno(rojo,verde,azul,alfa-0.16)
-    poligono(n)
-    derecha(36)
-    n = n+1
-  }
-}
-    '''
-    # parser.parse(data,tracking = True)
     main(sys.argv)
