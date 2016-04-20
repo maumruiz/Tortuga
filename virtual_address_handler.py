@@ -9,7 +9,7 @@ class VirtualAddressHandler:
     INT_CONSTANT_BASE = 1000
     FLOAT_CONSTANT_BASE = 2000
     STRING_CONSTANT_BASE = 3000
-    
+
     INT_BASE = 10000
     FLOAT_BASE = 11000
     STRING_BASE = 12000
@@ -176,4 +176,3 @@ class VirtualAddressHandler:
         address = VirtualAddressHandler.TEMP_BOOL_BASE + self.temp_bool_count
         self.temp_bool_count += 1
         return address
-
