@@ -292,6 +292,8 @@ def p_programa(p):
     quadruple_reg.print_constants()
     print('##')
     quadruple_reg.print_quadruples()
+    print('##')
+    quadruple_reg.execute_quadruples()
     pass
 
 def p_dec_programa(p):

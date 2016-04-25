@@ -4,7 +4,7 @@ import sys
 
 class ConstantHandler:
     """docstring for ConstantHandler"""
-  
+
     def __init__(self, address_handler):
         self.address_handler = address_handler
         self.int_constants_list = []
@@ -31,9 +31,9 @@ class ConstantHandler:
 
     def find_or_init_int_constant(self, int_constant):
         for constant in self.int_constants_list:
-            if constant == int_constant:
+            if constant['name'] == int_constant:
                 return constant
-        
+
         new_constant = dict(name = int_constant,
                             type = SemanticCube.INT,
                             address = self.address_handler.next_int_constant_address())
@@ -42,9 +42,9 @@ class ConstantHandler:
 
     def find_or_init_float_constant(self, float_constant):
         for constant in self.float_constants_list:
-            if constant == float_constant:
+            if constant['name'] == float_constant:
                 return constant
-        
+
         new_constant = dict(name = float_constant,
                             type = SemanticCube.FLOAT,
                             address = self.address_handler.next_float_constant_address())
@@ -53,9 +53,9 @@ class ConstantHandler:
 
     def find_or_init_string_constant(self, string_constant):
         for constant in self.string_constants_list:
-            if constant == string_constant:
+            if constant['name'] == string_constant:
                 return constant
-        
+
         new_constant = dict(name = string_constant,
                             type = SemanticCube.STRING,
                             address = self.address_handler.next_string_constant_address())
@@ -75,4 +75,3 @@ class ConstantHandler:
             print('Constante desconocida')
             exit(1)
             return None
-

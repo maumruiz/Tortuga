@@ -1,22 +1,8 @@
-class VirtualMachine:
+from memory_map import MemoryMap
+from constant_table import ConstantTable
 
-    options = {0 : op_multiplication,
-                1: op_division,
-                2: op_sum,
-                3: op_substraction,
-                4: op_greater,
-                5: op_lesser,
-                6: op_equal,
-                7: op_not_equal,
-                8: op_and,
-                9: op_or,
-                10: op_assignment,
-                11: op_mayor_igual,
-                12: op_menor_igual,
-                13: op_goto,
-                14: op_gotof,
-                15: op_gotot,
-    }
+
+class VirtualMachine:
 
     FALSE_CONSTANT = 0
     TRUE_CONSTANT = 1
@@ -39,9 +25,15 @@ class VirtualMachine:
     TEMP_STRING_BASE = 32000
     TEMP_BOOL_BASE = 33000
 
-    def __init__(self, quadruples, memory):
+    POINTERS_BASE = 40000
+
+    def __init__(self, quadruples, constants):
         self.quadruple_list = quadruples
-        self.memory_map = memory
+        self.constant_table = ConstantTable()
+        #for constant in constants:
+            #self.constant_table.add_constant(constant['address'], constant['name'])
+        self.memory_map = MemoryMap(constant_table)
+        self.memory_stack = []
         self.current_quadruple = 0
 
     def execute_code(self):
@@ -52,70 +44,218 @@ class VirtualMachine:
             options[action](quadruple)
             self.current_quadruple = self.current_quadruple + 1
 
+        print("termino ejecucion de cuadruplos")
+
     def op_multiplication(self, quadruple):
         operand1_dir = quadruple['operand_1']
         operand2_dir = quadruple['operand_2']
         result_dir = quadruple['result']
 
-        if operand1_dir < VirtualMachine.FLOAT_CONSTANT_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.FLOAT_CONSTANT_BASE]
-        elif operand1_dir < VirtualMachine.STRING_CONSTANT_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.STRING_CONSTANT_BASE]
-        elif operand1_dir < VirtualMachine.FLOAT_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.FLOAT_BASE]
-        elif operand1_dir < VirtualMachine.STRING_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.STRING_BASE]
-        elif operand1_dir < VirtualMachine.LOCAL_FLOAT_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.LOCAL_FLOAT_BASE]
-        elif operand1_dir < VirtualMachine.LOCAL_STRING_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.LOCAL_STRING_BASE]
-        elif operand1_dir < VirtualMachine.TEMP_FLOAT_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.TEMP_FLOAT_BASE]
-        elif operand1_dir < VirtualMachine.TEMP_STRING_BASE:
-            operand1 = self.memory_map[operand1_dir - VirtualMachine.TEMP_STRING_BASE]
+        operand1 = memory_map.get_value(operand1_dir)
 
-        if operand2_dir < VirtualMachine.FLOAT_CONSTANT_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.FLOAT_CONSTANT_BASE]
-        elif operand2_dir < VirtualMachine.STRING_CONSTANT_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.STRING_CONSTANT_BASE]
-        elif operand2_dir < VirtualMachine.FLOAT_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.FLOAT_BASE]
-        elif operand2_dir < VirtualMachine.STRING_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.STRING_BASE]
-        elif operand2_dir < VirtualMachine.LOCAL_FLOAT_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.LOCAL_FLOAT_BASE]
-        elif operand2_dir < VirtualMachine.LOCAL_STRING_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.LOCAL_STRING_BASE]
-        elif operand2_dir < VirtualMachine.TEMP_FLOAT_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.TEMP_FLOAT_BASE]
-        elif operand2_dir < VirtualMachine.TEMP_STRING_BASE:
-            operand2 = self.memory_map[operand2_dir - VirtualMachine.TEMP_STRING_BASE]
+        operand2 = memory_map.get_value(operand2_dir)
 
         result = operand1 * operand2
-        self.global_memory[result_dir] = result
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_division(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 / operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_sum(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 + operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_substraction(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 - operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_greater(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 > operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_lesser(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 < operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_equal(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 == operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_not_equal(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 != operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_and(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 and operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_or(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 or operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_assignment(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        self.memory_map.set_value(result_dir, operand1)
+
+    def op_mayor_igual(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 >= operand2
+
+        self.memory_map.set_value(result_dir, result)
+
+    def op_menor_igual(self, quadruple):
+        operand1_dir = quadruple['operand_1']
+        operand2_dir = quadruple['operand_2']
+        result_dir = quadruple['result']
+
+        operand1 = memory_map.get_value(operand1_dir)
+
+        operand2 = memory_map.get_value(operand2_dir)
+
+        result = operand1 <= operand2
+
+        self.memory_map.set_value(result_dir, result)
 
     def op_goto(self, quad):
-        self.current_quadruple = self.global_memory[quad['result']]
+        self.current_quadruple = quad['result']
 
         quadruple = self.quadruple_list[self.current_quadruple];
         action = quadruple['operator']
         options[action](quadruple)
 
     def op_gotof(self, quad):
-        if quad['operand_1'] == 0
-            condition = False
-        elif quad['operand_1'] == 1
-            condition = True
-        elif quad['operand_1'] < VirtualMachine.LOCAL_INT_BASE:
-            condition = self.global_memory[quad['operand_1'] - VirtualMachine.INT_CONSTANT_BASE]
-        elif quad['operand_1'] < VirtualMachine.TEMP_INT_BASE:
-            condition = self.global_memory[quad['operand_1'] - VirtualMachine.LOCAL_INT_BASE]
-        else:
-            condition = self.global_memory[quad['operand_1'] - VirtualMachine.TEMP_INT_BASE]
+        operand1_dir = quad['operand_1']
+        result = quad['result']
 
-        if(not(condition))
-            self.current_quadruple = self.global_memory[quad['result']]
+        condition = memory_map.get_value(operand1_dir)
 
+        if(not(condition)):
+            self.current_quadruple = quad['result']
             quadruple = self.quadruple_list[self.current_quadruple];
             action = quadruple['operator']
             options[action](quadruple)
+
+    def op_gotot(self, quad):
+        operand1_dir = quad['operand_1']
+        result = quad['result']
+
+        condition = memory_map.get_value(operand1_dir)
+
+        if(condition):
+            self.current_quadruple = quad['result']
+            quadruple = self.quadruple_list[self.current_quadruple];
+            action = quadruple['operator']
+            options[action](quadruple)
+
+
+    options = {0 : op_multiplication,
+                1: op_division,
+                2: op_sum,
+                3: op_substraction,
+                4: op_greater,
+                5: op_lesser,
+                6: op_equal,
+                7: op_not_equal,
+                8: op_and,
+                9: op_or,
+                10: op_assignment,
+                11: op_mayor_igual,
+                12: op_menor_igual,
+                13: op_goto,
+                14: op_gotof,
+                15: op_gotot,
+    }
