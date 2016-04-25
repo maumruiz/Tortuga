@@ -288,6 +288,9 @@ def p_programa(p):
     print("/////////////Programa terminado con exito///////////////")
     register.print_table()
     quadruple_reg.print_debug_quadruples()
+    print('####################################')
+    quadruple_reg.print_constants()
+    print('##')
     quadruple_reg.print_quadruples()
     pass
 

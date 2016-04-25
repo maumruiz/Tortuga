@@ -30,6 +30,7 @@ class QuadrupleRegister:
         self.operand_stack = []
         self.operator_stack = []
         self.jump_stack = []
+        self.constant_list = []
         self.address_handler = VirtualAddressHandler()
         self.constant_handler = ConstantHandler(self.address_handler)
 
@@ -57,6 +58,7 @@ class QuadrupleRegister:
 
     def push_int_literal(self, literal):
         constant = self.constant_handler.find_or_init_int_constant(literal)
+        self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def push_float_literal(self, literal):
@@ -65,10 +67,12 @@ class QuadrupleRegister:
 
     def push_string_literal(self, literal):
         constant = self.constant_handler.find_or_init_string_constant(literal)
+        self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def push_bool_literal(self, literal):
         constant = self.constant_handler.assign_boolean_constant(literal)
+        self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def term_check(self):
@@ -177,6 +181,12 @@ class QuadrupleRegister:
                 ' Result: ' + str(quadruple['result']))
         # print(self.operand_stack)
         # print(self.operator_stack)
+
+    def print_constants(self):
+        for constant in self.constant_list:
+            address = constant['address']
+            value = constant['name']
+            print(str(address) + ' ' + str(value))
 
     def print_quadruples(self):
         for quadruple in self.quadruple_list:
