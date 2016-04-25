@@ -281,12 +281,17 @@ from quadruple_register import QuadrupleRegister
 #Parsing rules
 register = Register()
 quadruple_reg = QuadrupleRegister()
+register.set_address_handler(quadruple_reg.address_handler)
 
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
-    print("Programa terminado con exito")
+    print("/////////////Programa terminado con exito///////////////")
     register.print_table()
-    quadruple_reg.print_quadruple()
+    quadruple_reg.print_debug_quadruples()
+    print('####################################')
+    quadruple_reg.print_constants()
+    print('##')
+    quadruple_reg.print_quadruples()
     pass
 
 def p_dec_programa(p):
@@ -310,7 +315,7 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino DOSPUNTOS type push_var varasign'
+    'var : VAR ID arrsino DOSPUNTOS type add_var varasign'
     # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
@@ -319,15 +324,19 @@ def p_arrsino(p):
             | vacio'''
     pass
 
+def p_add_var(p):
+    'add_var :'
+    register.add_variable(p[-4], p[-1])
+    pass
+
 def p_push_var(p):
     'push_var :'
-    register.add_variable(p[-4], p[-1])
-    variable = register.get_variable(p[-4])
+    variable = register.get_variable(p[-5])
     quadruple_reg.push_operand(variable)
     pass
 
 def p_varasign(p):
-    '''varasign : ASIGNACION push_operator ssexp
+    '''varasign : push_var ASIGNACION push_operator ssexp
             | vacio'''
     # p[0] = p[2]
     quadruple_reg.assignment_check()
@@ -421,8 +430,8 @@ def p_ssexp_check(p):
     pass
 
 def p_ssexp2(p):
-    '''ssexp2 : AND push_operator sexp
-            | OR push_operator sexp
+    '''ssexp2 : AND push_operator sexp ssexp_check
+            | OR push_operator sexp ssexp_check
             | vacio'''
     pass
 
@@ -436,6 +445,8 @@ def p_sexp2(p):
             | MENOR push_operator exp sexp_check
             | DIFERENTE push_operator exp sexp_check
             | IGUAL push_operator exp sexp_check
+            | MAYORIGUAL push_operator exp sexp_check
+            | MENORIGUAL push_operator exp sexp_check
             | vacio'''
     pass
 
@@ -483,8 +494,8 @@ def p_push_operator(p):
 # Factor
 def p_factor(p):
     '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
-            | ID arrsino push_id
             | varconst
+            | ID arrsino push_id
             | functioncall'''
     pass
 
@@ -574,10 +585,15 @@ def p_args2(p):
     pass
 
 def p_varconst(p):
-    '''varconst : CTESTRING
+    '''varconst : CTESTRING push_string_literal
             | CTEI push_int_literal
             | CTEF push_float_literal
-            | boolvalue'''
+            | boolvalue push_bool_literal'''
+    pass
+
+def p_push_string_literal(p):
+    'push_string_literal :'
+    quadruple_reg.push_string_literal(p[-1])
     pass
 
 def p_push_int_literal(p):
@@ -590,6 +606,11 @@ def p_push_float_literal(p):
     quadruple_reg.push_int_literal(float(p[-1]))
     pass
 
+def p_push_bool_literal(p):
+    'push_bool_literal :'
+    quadruple_reg.push_bool_literal(p[-1])
+    pass
+
 def p_arraccess(p):
     'arraccess : CORCHETEI ssexp CORCHETED'
     pass
@@ -597,6 +618,7 @@ def p_arraccess(p):
 def p_boolvalue(p):
     '''boolvalue : VERDADERO
             | FALSO'''
+    p[0] = p[1]
     pass
 
 def p_primitivefunc(p):
@@ -647,29 +669,4 @@ def main(argv):
     parser.parse(data, tracking = True)
 
 if __name__ == '__main__':
-    data = '''programa poligonos
-
-func poligono(n: int) {
-  repetir(n) {
-  adelante(50)
-  derecha(360.0 / n)
-  }
-}
-
-{
-  color_linea(84, 84, 84)
-  var n = 3 : int
-  mientras(n < 14) {
-    var rojo = random(255) : int
-    var azul = random(255) : int
-    var verde = random(255) : int
-    var alfa = 1 : int
-    color_relleno(rojo,verde,azul,alfa-0.16)
-    poligono(n)
-    derecha(36)
-    n = n+1
-  }
-}
-    '''
-    # parser.parse(data,tracking = True)
     main(sys.argv)
