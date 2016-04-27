@@ -25,11 +25,22 @@ class MemoryMap:
 
     POINTER_BASE = 40000
 
-    def __init__(self, constant_table):
+    def __init__(self, constant_table, functions):
+        print(" ////////////////////////   Memory Map init ////////////////////")
+        global_variables = []
+        for function in functions:
+            if(function['name'] == "main"):
+                global_variables = function["variables"]
+
         self.memory_stack = []
-        self.global_memory = Memory(True)
+        self.global_memory = Memory(True, global_variables)
         self.memory_stack.append(self.global_memory)
         self.constant_table = constant_table
+        print( "=============== global memory ==================")
+        print(self.global_memory.register)
+        print(self.global_memory.temp_register)
+        print( "=============== constant memory ==================")
+        print(self.constant_table.table)
 
     def get_value(self, address):
         if address >= MemoryMap.INT_BASE and address < MemoryMap.LOCAL_INT_BASE:
@@ -78,7 +89,7 @@ class MemoryMap:
         elif address >= MemoryMap.BOOL_BASE and address < MemoryMap.LOCAL_INT_BASE:
             return self.global_memory.get_bool_value(address)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual global desconocida')
             return None
 
     def get_local_value(self, address):
@@ -91,7 +102,7 @@ class MemoryMap:
         elif address >= MemoryMap.LOCAL_BOOL_BASE and address < MemoryMap.TEMP_INT_BASE:
             return self.get_local_memory().get_bool_value(address)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual local desconocida')
             return None
 
     def get_temp_value(self, address):
@@ -104,7 +115,7 @@ class MemoryMap:
         elif address >= MemoryMap.TEMP_BOOL_BASE and address < MemoryMap.POINTER_BASE:
             return self.get_local_memory().get_temp_bool_value(address)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual temporal desconocida')
             return None
 
     def get_constant_value(self, address):
@@ -115,7 +126,7 @@ class MemoryMap:
         elif address >= MemoryMap.STRING_CONSTANT_BASE and address < MemoryMap.INT_BASE:
             return self.constant_table.get_string_value(address)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual constante desconocida')
             return None
 
     def set_global_value(self, address, value):
@@ -128,7 +139,7 @@ class MemoryMap:
         elif address >= MemoryMap.BOOL_BASE and address < MemoryMap.LOCAL_INT_BASE:
             return self.global_memory.set_bool_value(address, value)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual global desconocida')
             return None
 
     def set_local_value(self, address, value):
@@ -141,7 +152,7 @@ class MemoryMap:
         elif address >= MemoryMap.LOCAL_BOOL_BASE and address < MemoryMap.TEMP_INT_BASE:
             return self.get_local_memory().set_bool_value(address, value)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual local desconocida')
             return None
 
     def set_temp_value(self, address, value):
@@ -154,7 +165,7 @@ class MemoryMap:
         elif address >= MemoryMap.TEMP_BOOL_BASE and address < MemoryMap.POINTER_BASE:
             return self.get_local_memory().set_temp_bool_value(address, value)
         else:
-            print('Error de ejecucion: Direccion virtual desconocida')
+            print('Error de ejecucion: Direccion virtual temporal desconocida')
             return None
 
     def get_local_memory(self):

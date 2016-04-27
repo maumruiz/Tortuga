@@ -237,7 +237,7 @@ class QuadrupleRegister:
             print('Error: Operation type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
             exit(0)
 
-    def execute_quadruples(self):
+    def execute_quadruples(self):  
         self.vm = VirtualMachine(self.quadruple_list, self.constant_list)
         self.vm.execute_code()
 

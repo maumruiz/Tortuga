@@ -27,35 +27,45 @@ class VirtualMachine:
 
     POINTERS_BASE = 40000
 
-    def __init__(self, quadruples, constants):
-        self.quadruple_list = quadruples
+    def __init__(self, quadruples, constants, functions):
+        print("///////////////////////////// Virtual Machine init ///////////////////////")
         self.constant_table = ConstantTable()
-        #for constant in constants:
-            #self.constant_table.add_constant(constant['address'], constant['name'])
-        self.memory_map = MemoryMap(constant_table)
+        for constant in constants:
+            self.constant_table.add_constant(constant['address'], constant['name'])
+
+        self.quadruple_list = quadruples
+        self.constant_memory = self.constant_table.table
+        self.memory_map = MemoryMap(self.constant_table, functions)
         self.memory_stack = []
         self.current_quadruple = 0
 
     def execute_code(self):
-        print('Ejecutando maquina virtual')
+        print('================Ejecutando maquina virtual==========================')
         while self.current_quadruple < len(self.quadruple_list):
+            print(self.current_quadruple)
             quadruple = self.quadruple_list[self.current_quadruple];
+            print(quadruple)
             action = quadruple['operator']
-            options[action](quadruple)
+            self.options[action](self,quadruple)
             self.current_quadruple = self.current_quadruple + 1
 
         print("termino ejecucion de cuadruplos")
 
     def op_multiplication(self, quadruple):
-        operand1_dir = quadruple['operand_1']
-        operand2_dir = quadruple['operand_2']
-        result_dir = quadruple['result']
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+        result_dir = int(quadruple['result'])
 
-        operand1 = memory_map.get_value(operand1_dir)
+        print("====== op1dir: " + str(operand1_dir) + "   op2dir: " + str(operand2_dir) + "   resdir: " + str(result_dir))
 
-        operand2 = memory_map.get_value(operand2_dir)
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print("====== operand 1: " + str(operand1) )
+
+        operand2 = self.memory_map.get_value(operand2_dir)
+        print("====== operand 2: " + str(operand2) )
 
         result = operand1 * operand2
+        print("====== result: " + str(result) )
 
         self.memory_map.set_value(result_dir, result)
 
@@ -73,13 +83,14 @@ class VirtualMachine:
         self.memory_map.set_value(result_dir, result)
 
     def op_sum(self, quadruple):
-        operand1_dir = quadruple['operand_1']
-        operand2_dir = quadruple['operand_2']
-        result_dir = quadruple['result']
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+        result_dir = int(quadruple['result'])
 
-        operand1 = memory_map.get_value(operand1_dir)
+        print(str(operand1_dir))
+        operand1 = self.memory_map.get_value(operand1_dir)
 
-        operand2 = memory_map.get_value(operand2_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
 
         result = operand1 + operand2
 
@@ -180,7 +191,7 @@ class VirtualMachine:
         operand1_dir = quadruple['operand_1']
         result_dir = quadruple['result']
 
-        operand1 = memory_map.get_value(operand1_dir)
+        operand1 = self.memory_map.get_value(operand1_dir)
 
         self.memory_map.set_value(result_dir, operand1)
 

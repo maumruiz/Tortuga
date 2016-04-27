@@ -6,7 +6,7 @@ class ConstantTable:
     STRING_CONSTANT_BASE = 3000
 
     def __init__(self):
-        self.table = dict(int=[], float=[], string=[])
+        self.table = dict(int={}, float={}, string={})
 
     def add_constant(self, address, value):
         if address >= ConstantTable.INT_CONSTANT_BASE and address < ConstantTable.FLOAT_CONSTANT_BASE:
