@@ -29,7 +29,7 @@ class Memory:
             self.int_offset = Memory.INT_BASE
             self.float_offset = Memory.FLOAT_BASE
             self.string_offset = Memory.STRING_BASE
-            self.bool_base = Memory.BOOL_BASE
+            self.bool_offset = Memory.BOOL_BASE
             for variable in variables:
                 self.add_global_variable(variable['address'])
         else:
@@ -110,7 +110,7 @@ class Memory:
         self.register['int'][self.translate_address(address, self.int_offset)] = value
 
     def set_float_value(self, address, value):
-        self.register['float'][self.translate_address(address, self.int_offset)] = value
+        self.register['float'][self.translate_address(address, self.float_offset)] = value
 
     def set_string_value(self, address, value):
         self.register['string'][self.translate_address(address, self.string_offset)] = value

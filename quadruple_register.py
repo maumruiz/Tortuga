@@ -112,6 +112,7 @@ class QuadrupleRegister:
             self.operator_stack.pop()
             operand = self.operand_stack.pop()
             assigned = self.operand_stack.pop()
+            print("Assigned type: " + str(assigned['type']) + "   Operand type: " + str(operand['type']))
             result_type = self.semantic_cube.get_result_type(assigned['type'], operand['type'], operator)
             print('Result Type in assignment ::::: ' + str(result_type))
             if result_type is not None:
@@ -237,7 +238,7 @@ class QuadrupleRegister:
             print('Error: Operation type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
             exit(0)
 
-    def execute_quadruples(self):  
+    def execute_quadruples(self):
         self.vm = VirtualMachine(self.quadruple_list, self.constant_list)
         self.vm.execute_code()
 
