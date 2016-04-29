@@ -21,7 +21,7 @@ class SemanticCube:
     # El orden es: i f s b
     #       int                          float                       string                    boolean
     cube = [[[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Multiplicacion
-            [[FLOAT, FLOAT, None, None], [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Division
+            [[INT, FLOAT, None, None], [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Division
             [[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Sum
             [[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Substraction
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, None]], # Greater

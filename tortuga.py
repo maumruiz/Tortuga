@@ -282,6 +282,7 @@ import ply.lex as lex
 lexer = lex.lex()
 from register import Register
 from quadruple_register import QuadrupleRegister
+from virtual_machine import VirtualMachine
 
 #Parsing rules
 register = Register()
@@ -297,11 +298,31 @@ def p_programa(p):
     quadruple_reg.print_constants()
     print('##')
     quadruple_reg.print_quadruples()
+    print('##')
+    dir_funciones = register.function_list
+    constant_table = quadruple_reg.constant_list
+    quadruple_list = quadruple_reg.quadruple_list
+    quadruples = []
+    #get only dirs in quadruples
+    for quadruple in quadruple_list:
+        oper = quadruple['operator']
+        op_1 = quadruple['operand_1']['address']
+        op_2 = quadruple['operand_2']
+        res = quadruple['result']
+        if op_2 is not None:
+            op_2 = str(op_2['address'])
+        if isinstance(res, dict):
+            res = res['address']
+        quadruple_new = dict(operator=oper, operand_1=op_1, operand_2=op_2, result=res)
+        quadruples.append(quadruple_new)
+    vm = VirtualMachine(quadruples, constant_table, dir_funciones)
+    vm.execute_code()
     pass
 
 def p_dec_programa(p):
     'dec_programa : PROGRAMA ID ENDLINE'
-    register.create(p[2])
+    #register.create(p[2])
+    register.create("main")
     pass
 
 def p_dec_varglob(p):
