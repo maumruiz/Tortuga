@@ -7,6 +7,10 @@ class Register:
     def __init__(self):
         self.current_scope = 0
         self.function_list = []
+        self.address_handler = None
+
+    def set_address_handler(self, address_handler):
+        self.address_handler = address_handler
 
     def create(self, program_name):
         global_scope = dict(name = program_name, type = 'void', variables = [])
@@ -16,11 +20,13 @@ class Register:
     def add_function(self, function_name):
         if (self.__function_exists(function_name)):
             print('Duplicate function name')
+            exit(1)
+            return None
 
         function = dict(name = function_name, type = None, variables = [])
         self.function_list.append(function)
         self.current_scope = len(self.function_list) - 1
-        print("Nueva funcion -- ID: " + function_name)
+        print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
 
     def add_function_param(self, param_name, param_type):
         param = dict(name = param_name, type = param_type)
@@ -34,11 +40,14 @@ class Register:
     def add_variable(self, variable_name, variable_type, variable_value = None, scope = None):
         if (self.__variable_exists(variable_name)):
             print('Duplicate variable name')
+            exit(1)
+            return None
 
         # Si no se le pasa un scope asume que es el scope actual
         if scope is None:
             scope = self.current_scope
-        variable = dict(name = variable_name, type = self.__type_to_int(variable_type))
+        type_code = self.__type_to_int(variable_type)
+        variable = dict(name = variable_name, type = type_code, address = self.address_handler.next_variable_address(type_code, scope))
         self.function_list[scope]['variables'].append(variable)
         print("Nueva variable-- ID: " + variable_name + ", Tipo: " + variable_type + ", Scope actual: " + str(scope))
 
@@ -86,4 +95,5 @@ class Register:
             return Register.BOOL
         else:
             print ('Error: unknown type')
+            exit(1)
             return None

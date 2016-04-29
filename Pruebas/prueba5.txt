@@ -1,10 +1,7 @@
 programa poligonos
 
 func uno(n: int, m: int, o: int) {
-  mientras(n > m) {
-      n = m * o
-      o = n / m + m
-  }
+  dos()
 }
 
 func dos(n: int, m: int, o: int) {
@@ -12,8 +9,7 @@ func dos(n: int, m: int, o: int) {
     var b : int = 6
     var c : int = 9
 
-    n = a + m * o + (a * b + c)
-    m = b - a + c
+    a = b + c
 }
 
 

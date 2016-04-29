@@ -15,11 +15,13 @@ class SemanticCube:
     AND = 8
     OR = 9
     ASSIGNMENT = 10
+    MAYOR_IGUAL = 11
+    MENOR_IGUAL = 12
 
     # El orden es: i f s b
     #       int                          float                       string                    boolean
     cube = [[[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Multiplicacion
-            [[FLOAT, FLOAT, None, None], [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Division
+            [[INT, FLOAT, None, None], [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Division
             [[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Sum
             [[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None], [None, None, None, None], [None, None, None, None]], # Substraction
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, None]], # Greater
@@ -27,7 +29,10 @@ class SemanticCube:
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, BOOL]], # Equal
             [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, BOOL]], # Not equal
             [[None, None, None, None],   [None, None, None, None],   [None, None, None, None], [None, None, None, BOOL]], # AND
-            [[None, None, None, None],   [None, None, None, None],   [None, None, None, None], [None, None, None, BOOL]]] # OR
+            [[None, None, None, None],   [None, None, None, None],   [None, None, None, None], [None, None, None, BOOL]], # OR
+            [[INT,  None, None, None],   [FLOAT, FLOAT, None, None],  [None, None, STRING, None],[None, None, None, BOOL]], # Assignment
+            [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, None]], # MayorIgual
+            [[BOOL, BOOL, None, None],   [BOOL, BOOL, None, None],   [None, None, BOOL, None], [None, None, None, None]]] # MenorIgual
 
     def get_result_type(self, operand_1, operand_2, operation_code):
         return self.cube[operation_code][operand_1][operand_2]
