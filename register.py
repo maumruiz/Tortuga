@@ -8,6 +8,7 @@ class Register:
         self.current_scope = 0
         self.function_list = []
         self.address_handler = None
+        self.params_counter = 0
 
     def set_address_handler(self, address_handler):
         self.address_handler = address_handler
@@ -23,16 +24,22 @@ class Register:
             exit(1)
             return None
 
-        function = dict(name = function_name, type = None, variables = [])
+        size_dict = dict(int=0, float=0, string=0, bool=0, int_temp=0, float_temp=0, string_temp=0, bool_temp=0)
+        function = dict(name = function_name, type = None, size = size_dict, start_dir = None, variables = [], params = [])
         self.function_list.append(function)
         self.current_scope = len(self.function_list) - 1
         print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
 
     def add_function_param(self, param_name, param_type):
+        param_type = self.__type_to_int(param_type)
         param = dict(name = param_name, type = param_type)
         self.function_list[self.current_scope]['variables'].append(param)
-        self.function_list[self.current_scope]['params'].append(param)
+        self.function_list[self.current_scope]['params'].append(param_type)
+        self.add_variable(param_name, param_type, None, self.current_scope)
         print("Parametro de funcion: " + param_name)
+
+    def set_function_start_dir(self, quadruple):
+        self.function_list[self.current_scope]['start_dir'] = quadruple
 
     def add_function_return_type(self, return_type):
         self.function_list[self.current_scope]['type'] = return_type
@@ -89,7 +96,9 @@ class Register:
         return False
 
     def __type_to_int(self, type_s):
-        if type_s == 'int':
+        if isinstance(type_s, int):
+            return type_s
+        elif type_s == 'int':
             return Register.INT
         elif type_s == 'float':
             return Register.FLOAT
