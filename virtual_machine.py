@@ -287,6 +287,9 @@ class VirtualMachine:
             action = quadruple['operator']
             self.options[action](self, quadruple)
 
+    def op_end(self, quad):
+        print(" end ")
+
 
     options = {0 : op_multiplication,
                 1: op_division,
@@ -304,4 +307,5 @@ class VirtualMachine:
                 13: op_goto,
                 14: op_gotof,
                 15: op_gotot,
+                "end": op_end,
     }

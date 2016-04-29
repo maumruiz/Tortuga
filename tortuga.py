@@ -316,6 +316,8 @@ def p_programa(p):
             res = res['address']
         quadruple_new = dict(operator=oper, operand_1=op_1, operand_2=op_2, result=res)
         quadruples.append(quadruple_new)
+    quadruple_new = dict(operator="end", operand_1=None, operand_2=None, result=None)
+    quadruples.append(quadruple_new)
     vm = VirtualMachine(quadruples, constant_table, dir_funciones)
     vm.execute_code()
     pass
@@ -565,7 +567,22 @@ def p_else_check(p):
     pass
 
 def p_while(p):
-    'while : MIENTRAS PARENTESISI ssexp PARENTESISD control_block'
+    'while : MIENTRAS start_while_check PARENTESISI ssexp PARENTESISD mid_while_check control_block end_while_check'
+    pass
+
+def p_start_while_check(p):
+    'start_while_check :'
+    quadruple_reg.begin_while_check()
+    pass
+
+def p_mid_while_check(p):
+    'mid_while_check :'
+    quadruple_reg.middle_while_check()
+    pass
+
+def p_end_while_check(p):
+    'end_while_check :'
+    quadruple_reg.end_while_check()
     pass
 
 def p_loop(p):
