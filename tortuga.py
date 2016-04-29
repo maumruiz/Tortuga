@@ -287,11 +287,15 @@ register.set_address_handler(quadruple_reg.address_handler)
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
     print("/////////////Programa terminado con exito///////////////")
+    print(" ######### Register table  ###########")
     register.print_table()
+    print(" ####### Debug Quadruples ############")
     quadruple_reg.print_debug_quadruples()
-    print('####################################')
+    print('########## Constants ###########')
     quadruple_reg.print_constants()
-    print('##')
+    print('########## Quadruple names ###########')
+    quadruple_reg.print_name_quadruples()
+    print('########## Quadruple dirs ###########')
     quadruple_reg.print_quadruples()
     print('##')
     dir_funciones = register.function_list
@@ -301,9 +305,11 @@ def p_programa(p):
     #get only dirs in quadruples
     for quadruple in quadruple_list:
         oper = quadruple['operator']
-        op_1 = quadruple['operand_1']['address']
+        op_1 = quadruple['operand_1']
         op_2 = quadruple['operand_2']
         res = quadruple['result']
+        if isinstance(op_1, dict):
+            op_1 = op_1['address']
         if op_2 is not None:
             op_2 = str(op_2['address'])
         if isinstance(res, dict):

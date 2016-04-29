@@ -176,13 +176,14 @@ class QuadrupleRegister:
         quadruple['result'] = content
 
     def print_debug_quadruples(self):
+        counter = 0
         for quadruple in self.quadruple_list:
-            print('Operator: ' + str(quadruple['operator']) +
+            print('* Quadruple ' + str(counter))
+            print(' Operator: ' + str(quadruple['operator']) +
                 ' Operand1: ' + str(quadruple['operand_1']) +
                 ' Operand2: ' + str(quadruple['operand_2']) +
                 ' Result: ' + str(quadruple['result']))
-        # print(self.operand_stack)
-        # print(self.operator_stack)
+            counter = counter + 1
 
     def print_constants(self):
         for constant in self.constant_list:
@@ -191,19 +192,38 @@ class QuadrupleRegister:
             print(str(address) + ' ' + str(value))
 
     def print_quadruples(self):
+        counter = 0
         for quadruple in self.quadruple_list:
             operator = quadruple['operator']
-            operand_1 = quadruple['operand_1']['address']
+            operand_1 = quadruple['operand_1']
             operand_2 = quadruple['operand_2']
             operand_2_address = ''
             result = quadruple['result']
+            if isinstance(operand_1, dict):
+                operand_1 = operand_1['address']
             if operand_2 is not None:
                 operand_2_address = str(operand_2['address'])
             if isinstance(result, dict):
                 result = result['address']
-            print(str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            counter = counter + 1
 
-
+    def print_name_quadruples(self):
+        counter = 0
+        for quadruple in self.quadruple_list:
+            operator = quadruple['operator']
+            operand_1 = quadruple['operand_1']
+            operand_2 = quadruple['operand_2']
+            operand_2_address = ''
+            result = quadruple['result']
+            if isinstance(operand_1, dict):
+                operand_1 = operand_1['name']
+            if operand_2 is not None:
+                operand_2_address = str(operand_2['name'])
+            if isinstance(result, dict):
+                result = result['name']
+            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            counter = counter + 1
 
     def __new_temp_var(self, var_type):
         if var_type == SemanticCube.INT:

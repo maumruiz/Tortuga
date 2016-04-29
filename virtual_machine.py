@@ -264,7 +264,7 @@ class VirtualMachine:
         condition = self.memory_map.get_value(operand1_dir)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * GoToF: " + str(result) + "  condition: " + str(result))
+        print(" * GoToF: " + str(result) + "  condition: " + str(operand1_dir))
 
         if(not(condition)):
             self.current_quadruple = quad['result']
@@ -279,7 +279,7 @@ class VirtualMachine:
         condition = self.memory_map.get_value(operand1_dir)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * GoToT: " + str(result) + "  condition: " + str(result))
+        print(" * GoToT: " + str(result) + "  condition: " + str(operand1_dir))
 
         if(condition):
             self.current_quadruple = quad['result']
