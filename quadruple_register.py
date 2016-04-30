@@ -31,6 +31,7 @@ class QuadrupleRegister:
         self.operand_stack = []
         self.operator_stack = []
         self.jump_stack = []
+        self.repeat_stack = []
         self.constant_list = []
         self.address_handler = VirtualAddressHandler()
         self.constant_handler = ConstantHandler(self.address_handler)
@@ -158,10 +159,32 @@ class QuadrupleRegister:
         self.fill_quadruple(false, len(self.quadruple_list))
 
     def begin_repeat_check(self):
-        self.jump_stack.append(len(self.quadruple_list))
+        operand = self.operand_stack.pop()
+        if operand['type'] == SemanticCube.INT:
+            repeat_temp = self.__new_temp_var(SemanticCube.INT)
+            self.generate(QuadrupleRegister.ASSIGNMENT, operand, None, repeat_temp)
+
+            self.jump_stack.append(len(self.quadruple_list))
+            c_zero = self.constant_handler.find_or_init_int_constant(0)
+            self.constant_list.append(c_zero)
+            temp_result = self.__new_temp_var(SemanticCube.BOOL)
+            self.generate(QuadrupleRegister.GREATER, repeat_temp, c_zero, temp_result)
+
+            self.generate(QuadrupleRegister.GOTOF, temp_result, None, None)
+            self.jump_stack.append(len(self.quadruple_list) - 1)
+
+            c_one = self.constant_handler.find_or_init_int_constant(1)
+            self.constant_list.append(c_one)
+            temp_result = self.__new_temp_var(SemanticCube.INT)
+            self.generate(QuadrupleRegister.SUBSTRACTION, repeat_temp, c_one, repeat_temp)
+        else:
+            sys.exit('Semantic Error: Repeat statement requires an int expression')
 
     def end_repeat_check(self):
-        print('Pending')
+        false = self.jump_stack.pop()
+        return_point = self.jump_stack.pop()
+        self.generate(QuadrupleRegister.GOTO, None, None, return_point)
+        self.fill_quadruple(false, len(self.quadruple_list))
 
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)
@@ -257,10 +280,6 @@ class QuadrupleRegister:
         else:
             print('Error: Operation type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
             exit(0)
-
-    def execute_quadruples(self):
-        self.vm = VirtualMachine(self.quadruple_list, self.constant_list)
-        self.vm.execute_code()
 
     def __to_opcode(self, operator_s):
         if operator_s == '*':

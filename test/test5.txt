@@ -31,4 +31,21 @@ var y : float
   mientras (ancho > largo) {
     largo = largo + 1
   }
+
+  repetir(5) {
+    x = x + 4
+    y = y + 2
+  }
+
+  repetir(ancho) {
+    y = y + 0.5
+  }
+
+  repetir(largo + 3) {
+    y = y + 0.5
+  }
+
+  repetir(0) {
+    x = x - 2
+  }
 }

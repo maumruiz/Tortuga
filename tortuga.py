@@ -586,7 +586,17 @@ def p_end_while_check(p):
     pass
 
 def p_loop(p):
-    'loop : REPETIR PARENTESISI ssexp PARENTESISD control_block'
+    'loop : REPETIR PARENTESISI ssexp PARENTESISD start_repeat_check control_block end_repeat_check'
+    pass
+
+def p_start_repeat_check(p):
+    'start_repeat_check :'
+    quadruple_reg.begin_repeat_check()
+    pass
+
+def p_end_repeat_check(p):
+    'end_repeat_check :'
+    quadruple_reg.end_repeat_check()
     pass
 
 def p_control_block(p):
