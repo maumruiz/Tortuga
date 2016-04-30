@@ -72,10 +72,6 @@ class VirtualMachine:
         operand1 = self.memory_map.get_value(operand1_dir)
         operand2 = self.memory_map.get_value(operand2_dir)
 
-        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * op1dir: " + str(operand1_dir) + "   op2dir: " + str(operand2_dir) + "   resdir: " + str(result_dir))
-        print(" * " + str(operand1) + " / " + str(operand2))
-
         result = operand1 / operand2
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
