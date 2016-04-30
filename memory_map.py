@@ -32,10 +32,13 @@ class MemoryMap:
             if(function['name'] == "main"):
                 global_variables = function["variables"]
 
+        self.functions_table = functions
         self.memory_stack = []
         self.global_memory = Memory(True, global_variables)
         self.memory_stack.append(self.global_memory)
         self.constant_table = constant_table
+        print( "=============== functions dir ==================")
+        print(self.functions_table)
         print( "=============== global memory ==================")
         print(self.global_memory.register)
         print(self.global_memory.temp_register)

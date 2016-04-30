@@ -68,13 +68,14 @@ class QuadrupleRegister:
         self.operand_stack.append(constant)
 
     def push_string_literal(self, literal):
-        constant = self.constant_handler.find_or_init_string_constant(literal)
+        string_lit = literal[1:-1]
+        constant = self.constant_handler.find_or_init_string_constant(string_lit)
         self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def push_bool_literal(self, literal):
         constant = self.constant_handler.assign_boolean_constant(literal)
-        self.constant_list.append(constant)
+        #self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def term_check(self):

@@ -257,7 +257,7 @@ def t_CTEI(t):
     return t
 
 def t_CTESTRING(t):
-    r'\'([ a-zA-Z0-9_,;:\{\}\(\)=+\-*/\>\<\t\n])*\''
+    r'("[^"]*")|(\'[^\']*\')'
     return t
 
 #Caracteres ignorados
@@ -648,7 +648,7 @@ def p_varconst(p):
 
 def p_push_string_literal(p):
     'push_string_literal :'
-    quadruple_reg.push_string_literal(p[-1])
+    quadruple_reg.push_string_literal(str(p[-1]))
     pass
 
 def p_push_int_literal(p):

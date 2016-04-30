@@ -232,8 +232,8 @@ class VirtualMachine:
         operand2_dir = int(quadruple['operand_2'])
         result_dir = int(quadruple['result'])
 
-        operand1 = memory_map.get_value(operand1_dir)
-        operand2 = memory_map.get_value(operand2_dir)
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
         result = operand1 <= operand2
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")

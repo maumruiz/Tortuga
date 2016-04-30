@@ -1,0 +1,14 @@
+programa cadenas
+var nombre : string
+var apellido : string
+var edad : string
+var padre : string
+var madre : string
+
+{
+    nombre = "maximo"
+    apellido = "santana"
+    edad = "treinta y ocho"
+    padre = " N_L_C John"
+    madre = " Jane "
+}
