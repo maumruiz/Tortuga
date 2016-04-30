@@ -53,6 +53,9 @@ class MemoryMap:
         local_memory = Memory(False, new_local_variables)
         self.memory_stack.append(local_memory)
 
+    def pop_local(self):
+        self.memory_stack.pop()
+
     def get_value(self, address):
         if address >= MemoryMap.INT_BASE and address < MemoryMap.LOCAL_INT_BASE:
             return self.get_global_value(address)

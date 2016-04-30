@@ -309,12 +309,24 @@ class VirtualMachine:
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         print(" * retorno: ")
         print(self.return_stack)
-        
+
         self.MemoryMap.pop_local()
         self.current_quadruple = self.return_stack.pop()
         quadruple = self.quadruple_list[self.current_quadruple];
         action = quadruple['operator']
         self.options[action](self, quadruple)
+
+    def op_param(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        result_dir = int(quadruple['result'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * op1dir: " + str(operand1_dir) + "   resdir: " + str(result_dir))
+        print(" * param: " + str(result_dir) + " = " + str(operand1))
+
+        self.memory_map.set_value(result_dir, operand1)
 
     def op_end(self, quad):
         print(" end ")
