@@ -37,6 +37,8 @@ class Memory:
             self.float_offset = Memory.LOCAL_FLOAT_BASE
             self.string_offset = Memory.LOCAL_STRING_BASE
             self.bool_base = Memory.LOCAL_BOOL_BASE
+            for variable in variables:
+                self.add_local_variable(variable['address'])
         self.temp_int_offset = Memory.TEMP_INT_BASE
         self.temp_float_offset = Memory.TEMP_FLOAT_BASE
         self.temp_string_offset = Memory.TEMP_STRING_BASE

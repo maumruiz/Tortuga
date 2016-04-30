@@ -37,6 +37,7 @@ class MemoryMap:
         self.global_memory = Memory(True, global_variables)
         self.memory_stack.append(self.global_memory)
         self.constant_table = constant_table
+
         print( "=============== functions dir ==================")
         print(self.functions_table)
         print( "=============== global memory ==================")
@@ -44,6 +45,13 @@ class MemoryMap:
         print(self.global_memory.temp_register)
         print( "=============== constant memory ==================")
         print(self.constant_table.table)
+
+    def push_local(self, function_name):
+        for function in self.functions_table:
+            if(function['name'] == function_name):
+                new_local_variables = function['variables']
+        local_memory = Memory(False, new_local_variables)
+        self.memory_stack.append(local_memory)
 
     def get_value(self, address):
         if address >= MemoryMap.INT_BASE and address < MemoryMap.LOCAL_INT_BASE:
