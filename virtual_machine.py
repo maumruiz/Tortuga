@@ -305,6 +305,17 @@ class VirtualMachine:
         action = quadruple['operator']
         self.options[action](self, quadruple)
 
+    def op_retorno(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * retorno: ")
+        print(self.return_stack)
+        
+        self.MemoryMap.pop_local()
+        self.current_quadruple = self.return_stack.pop()
+        quadruple = self.quadruple_list[self.current_quadruple];
+        action = quadruple['operator']
+        self.options[action](self, quadruple)
+
     def op_end(self, quad):
         print(" end ")
 
