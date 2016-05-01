@@ -22,6 +22,11 @@ class QuadrupleRegister:
     GOTO = 13
     GOTOF = 14
     GOTOT = 15
+    PARAM = 16
+    ERA = 17
+    GOSUB = 18
+    RET = 19
+    RETURN = 20
 
     def __init__(self):
         self.semantic_cube = SemanticCube()
@@ -125,7 +130,7 @@ class QuadrupleRegister:
         self.print_quadruples()
         operand = self.operand_stack.pop()
         if  operand['type'] != SemanticCube.BOOL:
-            sys.exit('Semantic error: If statement requires a bool expression')
+            sys.exit('Error Semanticp: El estatuto if requiere una expresión booleana')
         else:
             self.generate(QuadrupleRegister.GOTOF, operand, None, None)
             self.jump_stack.append(len(self.quadruple_list) - 1)
@@ -163,8 +168,28 @@ class QuadrupleRegister:
     def end_repeat_check(self):
         print('Pending')
 
-    def generate_return(self):
-        print('Pending')
+    def generate_return_statement(self):
+        operand = self.operand_stack.pop()
+        self.generate(QuadrupleRegister.RETURN, operand, None, None)
+
+    def generate_era(self, function_name):
+        self.generate(QuadrupleRegister.ERA, dict(address=function_name), None, None)
+
+    def generate_return_action(self):
+        self.generate(QuadrupleRegister.RET, None, None, None)
+
+    def generate_gosub(self, start_quad):
+        self.generate(QuadrupleRegister.GOSUB, dict(address=start_quad), None, None)
+
+    def verify_and_generate_argument(self, arg_type, arg_count):
+        operand = self.operand_stack.pop()
+        if operand['type'] != arg_type:
+            print('Semantic error: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(QuadrupleRegister.PARAM, operand, arg_count, None)
+            print("Argumento agregado: " + str(arg_count))
+
 
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)
@@ -196,15 +221,20 @@ class QuadrupleRegister:
     def print_quadruples(self):
         for quadruple in self.quadruple_list:
             operator = quadruple['operator']
-            operand_1 = quadruple['operand_1']['address']
+            operand_1 = quadruple['operand_1']
             operand_2 = quadruple['operand_2']
             operand_2_address = ''
             result = quadruple['result']
+            if operand_1 is not None:
+                operand_1 = quadruple['operand_1']['address']
             if operand_2 is not None:
-                operand_2_address = str(operand_2['address'])
+                if isinstance(operand_2, dict):
+                    operand_2_address = str(operand_2['address'])
+                else:
+                    operand_2_address = operand_2
             if isinstance(result, dict):
                 result = result['address']
-            print(str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            print(str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2_address) + ' ' + str(result))
 
 
 

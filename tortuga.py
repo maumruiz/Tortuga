@@ -20,7 +20,7 @@ tokens = (
     'VERDADERO',
     'FALSO',
     'FUNC',
-    'REGRESA'
+    'REGRESA',
 
     #Separadores
     'COMA',         # ,
@@ -306,11 +306,16 @@ def p_programa(p):
     #get only dirs in quadruples
     for quadruple in quadruple_list:
         oper = quadruple['operator']
-        op_1 = quadruple['operand_1']['address']
+        op_1 = quadruple['operand_1']
         op_2 = quadruple['operand_2']
         res = quadruple['result']
+        if op_1 is not None:
+            op_1 = quadruple['operand_1']['address']
         if op_2 is not None:
-            op_2 = str(op_2['address'])
+            if isinstance(op_2, dict):
+                op_2 = str(op_2['address'])
+            else:
+                op_2 = str(op_2)
         if isinstance(res, dict):
             res = res['address']
         quadruple_new = dict(operator=oper, operand_1=op_1, operand_2=op_2, result=res)
@@ -395,13 +400,13 @@ def p_statute(p):
             | condition ENDLINE
             | while ENDLINE
             | loop ENDLINE
-            | functionStmt ENDLINE'''
+            | function_call ENDLINE'''
     pass
 
 def p_function(p):
     'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function_type func_block'
     register.clear_variables()
-    quadruple_reg.generate_return()
+    quadruple_reg.generate_return_action()
     # print("Destruye tabla local:  " + p[2] + "    Tabla actual: Global")
     pass
 
@@ -433,11 +438,11 @@ def p_function_type(p):
     else:
         register.add_function_return_type(p[2])
     quadruple = quadruple_reg.get_next_quadruple()
-    register.set_function_start_dir(quadruple)
+    register.set_starting_quadruple(quadruple)
     pass
 
 def p_func_block(p):
-    'func_block : LLAVEI optional_endline func_block1 LLAVED'
+    'func_block : LLAVEI optional_endline func_block1 LLAVED optional_endline'
     pass
 
 def p_func_block1(p):
@@ -451,7 +456,7 @@ def p_func_statements(p):
             | condition ENDLINE
             | while ENDLINE
             | loop ENDLINE
-            | functioncall ENDLINE
+            | function_call ENDLINE
             | return ENDLINE'''
     pass
 
@@ -547,7 +552,7 @@ def p_factor(p):
     '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
             | varconst
             | ID arrsino push_id
-            | functioncall'''
+            | function_call'''
     pass
 
 def p_push_id(p):
@@ -612,25 +617,27 @@ def p_control_statements(p):
             | condition ENDLINE
             | while ENDLINE
             | loop ENDLINE
-            | functioncall ENDLINE'''
+            | function_call ENDLINE'''
     pass
 
-def p_functioncall(p):
-    '''functioncall : ID function_check PARENTESISI generate_era args PARENTESISD generate_function_call
+def p_function_call(p):
+    '''function_call : ID function_check PARENTESISI generate_era args PARENTESISD
             | primitivefunc'''
-    function_name = p[1]
-    start_dir = register.get_function_start_dir(function_name)
-    quadruple_reg.generate_gosub(function_name, start_dir)
+    start_dir = register.get_function_starting_quadruple()
+    register.verify_params_count()
+    quadruple_reg.generate_gosub(start_dir)
     pass
 
 def p_function_check(p):
     'function_check :'
-    register.check_function_existence(p[-1])
+    print("Entering func check")
+    function_name = p[-1]
+    register.set_current_function_call(function_name)
     pass
 
 def p_generate_era(p):
     'generate_era :'
-    function_name = p[-3]
+    function_name = register.get_current_functon_name()
     quadruple_reg.generate_era(function_name)
     register.params_counter = 1
     pass
@@ -646,20 +653,18 @@ def p_args1(p):
 
 def p_init_argument(p):
     'init_argument :'
-    arg_type = register.verify_argument()
-    quadruple_reg.generate_param(arg_type)
-    register.params_counter += 1
+    arg_type = register.get_expected_arg_type()
+    quadruple_reg.verify_and_generate_argument(arg_type, register.params_counter)
     pass
 
 def p_args2(p):
-    '''args2 : COMA args1
+    '''args2 : COMA increment_counter args1
             | vacio'''
     pass
 
-def p_generate_function_call(p):
-    'generate_function_call :'
-    register.verify_params_count()
-    quadruple_reg.generate_gosub()
+def p_increment_counter(p):
+    'increment_counter : '
+    register.params_counter += 1
     pass
 
 def p_varconst(p):

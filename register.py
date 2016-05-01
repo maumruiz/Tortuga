@@ -9,6 +9,7 @@ class Register:
         self.function_list = []
         self.address_handler = None
         self.params_counter = 0
+        self.current_function_call = 0
 
     def set_address_handler(self, address_handler):
         self.address_handler = address_handler
@@ -31,10 +32,10 @@ class Register:
         print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
 
     def add_function_param(self, param_name, param_type):
-        param_type = self.__type_to_int(param_type)
-        param = dict(name = param_name, type = param_type)
+        type_code = self.__type_to_int(param_type)
+        param = dict(name = param_name, type = type_code)
         self.function_list[self.current_scope]['variables'].append(param)
-        self.function_list[self.current_scope]['params'].append(param_type)
+        self.function_list[self.current_scope]['params'].append(type_code)
         self.add_variable(param_name, param_type, None, self.current_scope)
         print("Parametro de funcion: " + param_name)
 
@@ -76,6 +77,35 @@ class Register:
 
     def set_starting_quadruple(self, quadruple):
         self.function_list[self.current_scope]['starting_quadruple'] = quadruple
+
+    def get_function_starting_quadruple(self):
+        return self.function_list[self.current_function_call]['start_dir']
+
+    def set_current_function_call(self, function_name):
+        for index, function in enumerate(self.function_list):
+            if function_name == function['name']:
+                self.current_function_call = index
+                print("Current function index: " + str(index))
+                return index
+        print("Error: Funcion no declarada: " + function_name)
+        print(self.function_list)
+        exit(1)
+
+    def get_expected_arg_type(self):
+        print(self.function_list[self.current_function_call]['params'])
+        return self.function_list[self.current_function_call]['params'][self.params_counter - 1]
+
+    def get_current_functon_name(self):
+        return self.function_list[self.current_function_call]['name']
+
+    def verify_params_count(self):
+        expected_count = len(self.function_list[self.current_function_call]['params'])
+        if self.params_counter != expected_count:
+            print(expected_count)
+            print(self.params_counter)
+            print("Error: El numero de los parametros es incorrecto")
+            exit(1)
+
 
     def print_table(self):
         print(self.function_list)
