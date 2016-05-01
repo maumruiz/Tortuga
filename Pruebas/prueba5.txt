@@ -1,7 +1,7 @@
 programa poligonos
 
 func uno(n: int, m: int, o: int) {
-  dos()
+    var x : int = 3
 }
 
 func dos(n: int, m: int, o: int) {
@@ -11,7 +11,6 @@ func dos(n: int, m: int, o: int) {
 
     a = b + c
 }
-
 
 {
     var a : int = 3
