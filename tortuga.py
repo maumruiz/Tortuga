@@ -252,17 +252,17 @@ def t_ID(t):
     return t
 
 def t_CTEF(t):
-    r'[0-9]+\.[0-9]+'
+    r'-?[0-9]+\.[0-9]+'
     t.value = float(t.value)
     return t
 
 def t_CTEI(t):
-    r'[0-9]+'
+    r'-?[0-9]+'
     t.value = int(t.value)
     return t
 
 def t_CTESTRING(t):
-    r'\'([ a-zA-Z0-9_,;:\{\}\(\)=+\-*/\>\<\t\n])*\''
+    r'("[^"]*")|(\'[^\']*\')'
     return t
 
 #Caracteres ignorados
@@ -292,11 +292,15 @@ register.set_address_handler(quadruple_reg.address_handler)
 def p_programa(p):
     'programa : dec_programa dec_varglob progvar progfunc block'
     print("/////////////Programa terminado con exito///////////////")
+    print(" ######### Register table  ###########")
     register.print_table()
+    print(" ####### Debug Quadruples ############")
     quadruple_reg.print_debug_quadruples()
-    print('####################################')
+    print('########## Constants ###########')
     quadruple_reg.print_constants()
-    print('##')
+    print('########## Quadruple names ###########')
+    quadruple_reg.print_name_quadruples()
+    print('########## Quadruple dirs ###########')
     quadruple_reg.print_quadruples()
     print('##')
     dir_funciones = register.function_list
@@ -309,8 +313,8 @@ def p_programa(p):
         op_1 = quadruple['operand_1']
         op_2 = quadruple['operand_2']
         res = quadruple['result']
-        if op_1 is not None:
-            op_1 = quadruple['operand_1']['address']
+        if isinstance(op_1, dict):
+            op_1 = op_1['address']
         if op_2 is not None:
             if isinstance(op_2, dict):
                 op_2 = str(op_2['address'])
@@ -320,6 +324,8 @@ def p_programa(p):
             res = res['address']
         quadruple_new = dict(operator=oper, operand_1=op_1, operand_2=op_2, result=res)
         quadruples.append(quadruple_new)
+    quadruple_new = dict(operator="end", operand_1=None, operand_2=None, result=None)
+    quadruples.append(quadruple_new)
     vm = VirtualMachine(quadruples, constant_table, dir_funciones)
     vm.execute_code()
     pass
@@ -596,11 +602,36 @@ def p_else_check(p):
     pass
 
 def p_while(p):
-    'while : MIENTRAS PARENTESISI ssexp PARENTESISD control_block'
+    'while : MIENTRAS start_while_check PARENTESISI ssexp PARENTESISD mid_while_check control_block end_while_check'
+    pass
+
+def p_start_while_check(p):
+    'start_while_check :'
+    quadruple_reg.begin_while_check()
+    pass
+
+def p_mid_while_check(p):
+    'mid_while_check :'
+    quadruple_reg.middle_while_check()
+    pass
+
+def p_end_while_check(p):
+    'end_while_check :'
+    quadruple_reg.end_while_check()
     pass
 
 def p_loop(p):
-    'loop : REPETIR PARENTESISI ssexp PARENTESISD control_block'
+    'loop : REPETIR PARENTESISI ssexp PARENTESISD start_repeat_check control_block end_repeat_check'
+    pass
+
+def p_start_repeat_check(p):
+    'start_repeat_check :'
+    quadruple_reg.begin_repeat_check()
+    pass
+
+def p_end_repeat_check(p):
+    'end_repeat_check :'
+    quadruple_reg.end_repeat_check()
     pass
 
 def p_control_block(p):
@@ -676,7 +707,7 @@ def p_varconst(p):
 
 def p_push_string_literal(p):
     'push_string_literal :'
-    quadruple_reg.push_string_literal(p[-1])
+    quadruple_reg.push_string_literal(str(p[-1]))
     pass
 
 def p_push_int_literal(p):

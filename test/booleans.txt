@@ -1,0 +1,40 @@
+programa cadenas
+var mayor : bool = verdadero
+var menor : bool = falso
+var vivo : bool
+var moviendo : bool
+var saltando : bool
+
+{
+    var aux : int = 20
+    var uax : int = 40
+    var xau : float = 10.8
+    var xua : float = 15.4
+
+    var posX : float = 0
+    var posY : float = 0
+
+    vivo = verdadero
+    moviendo = verdadero
+
+    vivo = aux < uax
+    moviendo = xau <= xua
+    saltando = mayor != menor
+
+    si(vivo) {
+      saltando = aux >= uax
+      moviendo = xau > posX
+      vivo = moviendo == saltando
+    } sino {
+      xau = xau + 0.25
+      xua = xua + 0.14
+    }
+
+    mientras( moviendo ) {
+      posX = posX + 0.5
+      posY = posY - uax
+      si ( posX > xua) {
+        moviendo = falso
+      }
+    }
+}

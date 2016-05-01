@@ -13,7 +13,7 @@ class ConstantTable:
             self.table['int'][self.translate_address(address, ConstantTable.INT_CONSTANT_BASE)] = value
         elif address >= ConstantTable.FLOAT_CONSTANT_BASE and address < ConstantTable.STRING_CONSTANT_BASE:
             self.table['float'][self.translate_address(address, ConstantTable.FLOAT_CONSTANT_BASE)] = value
-        elif address >= ConstantTable.STRING_CONSTANT_BASE and address < ConstantTable.INT_BASE:
+        elif address >= ConstantTable.STRING_CONSTANT_BASE:
             self.table['string'][self.translate_address(address, ConstantTable.STRING_CONSTANT_BASE)] = value
         else:
             print('Error de ejecucion: Direccion virtual desconocida')
@@ -26,7 +26,8 @@ class ConstantTable:
         return self.table['float'][self.translate_address(address, ConstantTable.FLOAT_CONSTANT_BASE)]
 
     def get_string_value(self, address):
-        return self.table['string'][self.translate_address(address, ConstantTable.BOOL_CONSTANT_BASE)]
+        print(self.table)
+        return self.table['string'][self.translate_address(address, ConstantTable.STRING_CONSTANT_BASE)]
 
     def translate_address(self, address, offset):
         return address - offset

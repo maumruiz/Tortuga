@@ -36,8 +36,8 @@ class VirtualMachine:
         self.quadruple_list = quadruples
         self.constant_memory = self.constant_table.table
         self.memory_map = MemoryMap(self.constant_table, functions)
-        self.memory_stack = []
         self.current_quadruple = 0
+        self.return_stack = []
 
     def execute_code(self):
         print('================Ejecutando maquina virtual==========================')
@@ -71,10 +71,6 @@ class VirtualMachine:
 
         operand1 = self.memory_map.get_value(operand1_dir)
         operand2 = self.memory_map.get_value(operand2_dir)
-
-        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * op1dir: " + str(operand1_dir) + "   op2dir: " + str(operand2_dir) + "   resdir: " + str(result_dir))
-        print(" * " + str(operand1) + " / " + str(operand2))
 
         result = operand1 / operand2
 
@@ -236,8 +232,8 @@ class VirtualMachine:
         operand2_dir = int(quadruple['operand_2'])
         result_dir = int(quadruple['result'])
 
-        operand1 = memory_map.get_value(operand1_dir)
-        operand2 = memory_map.get_value(operand2_dir)
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
         result = operand1 <= operand2
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
@@ -264,7 +260,7 @@ class VirtualMachine:
         condition = self.memory_map.get_value(operand1_dir)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * GoToF: " + str(result) + "  condition: " + str(result))
+        print(" * GoToF: " + str(result) + "  condition: " + str(operand1_dir))
 
         if(not(condition)):
             self.current_quadruple = quad['result']
@@ -279,13 +275,61 @@ class VirtualMachine:
         condition = self.memory_map.get_value(operand1_dir)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * GoToT: " + str(result) + "  condition: " + str(result))
+        print(" * GoToT: " + str(result) + "  condition: " + str(operand1_dir))
 
         if(condition):
             self.current_quadruple = quad['result']
             quadruple = self.quadruple_list[self.current_quadruple];
             action = quadruple['operator']
             self.options[action](self, quadruple)
+
+    def op_era(self, quadruple):
+        func_name = quadruple['operand_1']
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * era: " + str(func_name))
+
+        self.memory_map.push_local(func_name)
+
+    def op_gosub(self, quadruple):
+        func_dir = int(quadruple['operand_1'])
+
+        self.return_stack.append(self.current_quadruple + 1)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * era: " + str(func_name))
+        print(self.return_stack)
+
+        self.current_quadruple = func_dir
+        quadruple = self.quadruple_list[self.current_quadruple];
+        action = quadruple['operator']
+        self.options[action](self, quadruple)
+
+    def op_retorno(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * retorno: ")
+        print(self.return_stack)
+
+        self.MemoryMap.pop_local()
+        self.current_quadruple = self.return_stack.pop()
+        quadruple = self.quadruple_list[self.current_quadruple];
+        action = quadruple['operator']
+        self.options[action](self, quadruple)
+
+    def op_param(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        result_dir = int(quadruple['result'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * op1dir: " + str(operand1_dir) + "   resdir: " + str(result_dir))
+        print(" * param: " + str(result_dir) + " = " + str(operand1))
+
+        self.memory_map.set_value(result_dir, operand1)
+
+    def op_end(self, quad):
+        print(" end ")
 
 
     options = {0 : op_multiplication,
@@ -304,4 +348,9 @@ class VirtualMachine:
                 13: op_goto,
                 14: op_gotof,
                 15: op_gotot,
+                16: op_era,
+                17: op_gosub,
+                18: op_param,
+                19: op_retorno,
+                "end": op_end,
     }

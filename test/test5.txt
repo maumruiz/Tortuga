@@ -6,6 +6,9 @@ var y : float
 
 
 {
+  ancho = 10
+  largo = 5
+  y = 10
   x = y
   y = ancho + largo / x
 
@@ -23,5 +26,26 @@ var y : float
 
   mientras (largo > ancho) {
     ancho = ancho + 1
+  }
+
+  mientras (ancho > largo) {
+    largo = largo + 1
+  }
+
+  repetir(5) {
+    x = x + 4
+    y = y + 2
+  }
+
+  repetir(ancho) {
+    y = y + 0.5
+  }
+
+  repetir(largo + 3) {
+    y = y + 0.5
+  }
+
+  repetir(0) {
+    x = x - 2
   }
 }

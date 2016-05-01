@@ -1,0 +1,23 @@
+programa fuciones
+
+func poligono(n: int) {
+  repetir(n) {
+    adelante(50)
+    derecha(360.0 / n)
+  }
+}
+
+{
+  color_linea(84, 84, 84)
+  var n : int = 3
+  mientras(n < 14) {
+    var rojo : int = random(255)
+    var azul : int = random(255)
+    var verde : int = random(255)
+    var alfa : int = 1
+    color_relleno(rojo, verde, azul, alfa-0.16)
+    poligono(n)
+    derecha(36)
+    n = n+1
+  }
+}

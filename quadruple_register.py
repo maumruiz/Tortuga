@@ -36,6 +36,7 @@ class QuadrupleRegister:
         self.operand_stack = []
         self.operator_stack = []
         self.jump_stack = []
+        self.repeat_stack = []
         self.constant_list = []
         self.address_handler = VirtualAddressHandler()
         self.constant_handler = ConstantHandler(self.address_handler)
@@ -72,13 +73,14 @@ class QuadrupleRegister:
         self.operand_stack.append(constant)
 
     def push_string_literal(self, literal):
-        constant = self.constant_handler.find_or_init_string_constant(literal)
+        string_lit = literal[1:-1]
+        constant = self.constant_handler.find_or_init_string_constant(string_lit)
         self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def push_bool_literal(self, literal):
         constant = self.constant_handler.assign_boolean_constant(literal)
-        self.constant_list.append(constant)
+        #self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def term_check(self):
@@ -163,23 +165,45 @@ class QuadrupleRegister:
         self.fill_quadruple(false, len(self.quadruple_list))
 
     def begin_repeat_check(self):
-        self.jump_stack.append(len(self.quadruple_list))
+        operand = self.operand_stack.pop()
+        if operand['type'] == SemanticCube.INT:
+            repeat_temp = self.__new_temp_var(SemanticCube.INT)
+            self.generate(QuadrupleRegister.ASSIGNMENT, operand, None, repeat_temp)
+
+            self.jump_stack.append(len(self.quadruple_list))
+            c_zero = self.constant_handler.find_or_init_int_constant(0)
+            self.constant_list.append(c_zero)
+            temp_result = self.__new_temp_var(SemanticCube.BOOL)
+            self.generate(QuadrupleRegister.GREATER, repeat_temp, c_zero, temp_result)
+
+            self.generate(QuadrupleRegister.GOTOF, temp_result, None, None)
+            self.jump_stack.append(len(self.quadruple_list) - 1)
+
+            c_one = self.constant_handler.find_or_init_int_constant(1)
+            self.constant_list.append(c_one)
+            temp_result = self.__new_temp_var(SemanticCube.INT)
+            self.generate(QuadrupleRegister.SUBSTRACTION, repeat_temp, c_one, repeat_temp)
+        else:
+            sys.exit('Semantic Error: Repeat statement requires an int expression')
 
     def end_repeat_check(self):
-        print('Pending')
+        false = self.jump_stack.pop()
+        return_point = self.jump_stack.pop()
+        self.generate(QuadrupleRegister.GOTO, None, None, return_point)
+        self.fill_quadruple(false, len(self.quadruple_list))
 
     def generate_return_statement(self):
         operand = self.operand_stack.pop()
         self.generate(QuadrupleRegister.RETURN, operand, None, None)
 
     def generate_era(self, function_name):
-        self.generate(QuadrupleRegister.ERA, dict(address=function_name), None, None)
+        self.generate(QuadrupleRegister.ERA, dict(name=function_name, address=function_name), None, None)
 
     def generate_return_action(self):
         self.generate(QuadrupleRegister.RET, None, None, None)
 
     def generate_gosub(self, start_quad):
-        self.generate(QuadrupleRegister.GOSUB, dict(address=start_quad), None, None)
+        self.generate(QuadrupleRegister.GOSUB, dict(name=start_quad, address=start_quad), None, None)
 
     def verify_and_generate_argument(self, arg_type, arg_count):
         operand = self.operand_stack.pop()
@@ -187,7 +211,7 @@ class QuadrupleRegister:
             print('Semantic error: El tipo de argumento no coincide')
             exit(1)
         else:
-            self.generate(QuadrupleRegister.PARAM, operand, arg_count, None)
+            self.generate(QuadrupleRegister.PARAM, operand, dict(name=arg_count, address=arg_count), None)
             print("Argumento agregado: " + str(arg_count))
 
 
@@ -203,14 +227,18 @@ class QuadrupleRegister:
         quadruple = self.quadruple_list[index]
         quadruple['result'] = content
 
+    def get_next_quadruple(self):
+        return len(self.quadruple_list)
+
     def print_debug_quadruples(self):
+        counter = 0
         for quadruple in self.quadruple_list:
-            print('Operator: ' + str(quadruple['operator']) +
+            print('* Quadruple ' + str(counter))
+            print(' Operator: ' + str(quadruple['operator']) +
                 ' Operand1: ' + str(quadruple['operand_1']) +
                 ' Operand2: ' + str(quadruple['operand_2']) +
                 ' Result: ' + str(quadruple['result']))
-        # print(self.operand_stack)
-        # print(self.operator_stack)
+            counter = counter + 1
 
     def print_constants(self):
         for constant in self.constant_list:
@@ -219,14 +247,15 @@ class QuadrupleRegister:
             print(str(address) + ' ' + str(value))
 
     def print_quadruples(self):
+        counter = 0
         for quadruple in self.quadruple_list:
             operator = quadruple['operator']
             operand_1 = quadruple['operand_1']
             operand_2 = quadruple['operand_2']
             operand_2_address = ''
             result = quadruple['result']
-            if operand_1 is not None:
-                operand_1 = quadruple['operand_1']['address']
+            if isinstance(operand_1, dict):
+                operand_1 = operand_1['address']
             if operand_2 is not None:
                 if isinstance(operand_2, dict):
                     operand_2_address = str(operand_2['address'])
@@ -234,12 +263,25 @@ class QuadrupleRegister:
                     operand_2_address = operand_2
             if isinstance(result, dict):
                 result = result['address']
-            print(str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2_address) + ' ' + str(result))
+            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            counter = counter + 1
 
-
-
-    def get_next_quadruple(self):
-        return len(self.quadruple_list)
+    def print_name_quadruples(self):
+        counter = 0
+        for quadruple in self.quadruple_list:
+            operator = quadruple['operator']
+            operand_1 = quadruple['operand_1']
+            operand_2 = quadruple['operand_2']
+            operand_2_address = ''
+            result = quadruple['result']
+            if isinstance(operand_1, dict):
+                operand_1 = operand_1['name']
+            if operand_2 is not None:
+                operand_2_address = str(operand_2['name'])
+            if isinstance(result, dict):
+                result = result['name']
+            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            counter = counter + 1
 
     def __new_temp_var(self, var_type):
         if var_type == SemanticCube.INT:
@@ -273,10 +315,6 @@ class QuadrupleRegister:
         else:
             print('Error: Operation type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
             exit(0)
-
-    def execute_quadruples(self):
-        self.vm = VirtualMachine(self.quadruple_list, self.constant_list)
-        self.vm.execute_code()
 
     def __to_opcode(self, operator_s):
         if operator_s == '*':
