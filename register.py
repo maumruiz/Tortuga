@@ -10,6 +10,7 @@ class Register:
         self.address_handler = None
         self.params_counter = 0
         self.current_function_call = 0
+        self.main_goto_quadruple = 0
 
     def set_address_handler(self, address_handler):
         self.address_handler = address_handler
@@ -76,7 +77,7 @@ class Register:
         return None
 
     def set_starting_quadruple(self, quadruple):
-        self.function_list[self.current_scope]['starting_quadruple'] = quadruple
+        self.function_list[self.current_scope]['start_dir'] = quadruple
 
     def get_function_starting_quadruple(self):
         return self.function_list[self.current_function_call]['start_dir']
@@ -95,7 +96,7 @@ class Register:
         print(self.function_list[self.current_function_call]['params'])
         return self.function_list[self.current_function_call]['params'][self.params_counter - 1]
 
-    def get_current_functon_name(self):
+    def get_current_function_name(self):
         return self.function_list[self.current_function_call]['name']
 
     def verify_params_count(self):

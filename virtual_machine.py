@@ -1,6 +1,7 @@
 from memory_map import MemoryMap
 from constant_table import ConstantTable
 from semantic_cube import SemanticCube
+import sys
 
 
 class VirtualMachine:
@@ -298,7 +299,7 @@ class VirtualMachine:
         self.return_stack.append(self.current_quadruple + 1)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * era: " + str(func_name))
+        print(" * gosub: " + str(func_dir))
         print(self.return_stack)
 
         self.current_quadruple = func_dir
@@ -331,20 +332,23 @@ class VirtualMachine:
 
     def read(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
-        value = raw_input('')
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * read: " + str(operand1_dir))
+        value = input()
+        print(" * read: " + str(value) + '->' + str(operand1_dir))
 
-        self.memory_map.set_value(result_dir, operand1)
+        self.memory_map.set_value(operand1_dir, value)
 
     def write(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
         operand1 = self.memory_map.get_value(operand1_dir)
-        print(str(operand1))
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * read: " + str(operand1_dir))
+        print(str(operand1))
+        print(" * write: " + str(operand1_dir))
+
+    def op_return(self, quadruple):
+        pass
 
     def op_end(self, quad):
         print(" end ")
@@ -370,7 +374,7 @@ class VirtualMachine:
                 17: op_era,
                 18: op_gosub,
                 19: op_ret_act,
-                20: op_return
+                20: op_return,
                 101: read,
                 102: write,
                 "end": op_end,

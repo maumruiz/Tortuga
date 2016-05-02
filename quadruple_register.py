@@ -220,11 +220,11 @@ class QuadrupleRegister:
 
     def generate_write(self):
         operand = self.operand_stack.pop()
-        if operand['type'] != SemanticCube.STRING:
-            print('Error semántico: El tipo de argumento no coincide')
-            exit(1)
-        else:
+        if operand['type'] == SemanticCube.STRING or operand['type'] == SemanticCube.FLOAT or operand['type'] == SemanticCube.INT:
             self.generate(OpCodes.WRITE, operand, None, None)
+        else:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1) 
 
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)

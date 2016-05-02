@@ -71,6 +71,7 @@ class MemoryMap:
             return True
         else:
             print('Error de ejecucion: Direccion virtual desconocida')
+            exit(1)
             return None
 
     def set_value(self, address, value):

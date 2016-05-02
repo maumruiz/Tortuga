@@ -287,15 +287,17 @@ import ply.lex as lex
 lexer = lex.lex()
 from register import Register
 from quadruple_register import QuadrupleRegister
+from op_codes import OpCodes
 from virtual_machine import VirtualMachine
 
 #Parsing rules
 register = Register()
 quadruple_reg = QuadrupleRegister()
 register.set_address_handler(quadruple_reg.address_handler)
+main_goto_quadruple = 0
 
 def p_programa(p):
-    'programa : dec_programa dec_varglob progvar progfunc block'
+    'programa : dec_programa progvar main_goto progfunc main_block'
     print("/////////////Programa terminado con exito///////////////")
     print(" ######### Register table  ###########")
     register.print_table()
@@ -341,15 +343,15 @@ def p_dec_programa(p):
     register.create("main")
     pass
 
-def p_dec_varglob(p):
-    'dec_varglob :'
-    print("Se crea la tabla de variables globales. Tabla actual: global")
-    pass
-
 def p_progvar(p):
     '''progvar : var ENDLINE progvar
             | vacio'''
     pass
+
+def p_main_goto(p):
+    'main_goto :'
+    register.main_goto_quadruple = quadruple_reg.get_next_quadruple()
+    quadruple_reg.generate(OpCodes.GOTO, None, None, None)
 
 def p_progfunc(p):
     '''progfunc : function progfunc
@@ -392,9 +394,13 @@ def p_type(p):
     p[0] = p[1]
     pass
 
-def p_block(p):
-    'block : LLAVEI optional_endline block1 LLAVED ENDLINE'
+def p_main_block(p):
+    'main_block : fill_goto block1'
     pass
+
+def p_fill_goto(p):
+    'fill_goto :'
+    quadruple_reg.fill_quadruple(register.main_goto_quadruple, quadruple_reg.get_next_quadruple())
 
 def p_optional_endline(p):
     '''optional_endline : ENDLINE
@@ -419,7 +425,6 @@ def p_function(p):
     'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function_type func_block'
     register.clear_variables()
     quadruple_reg.generate_return_action()
-    # print("Destruye tabla local:  " + p[2] + "    Tabla actual: Global")
     pass
 
 def p_dec_func(p):
@@ -662,7 +667,6 @@ def p_control_statements(p):
 
 def p_function_call(p):
     '''function_call : ID function_check PARENTESISI generate_era args PARENTESISD'''
-    print("entro aqui")
     start_dir = register.get_function_starting_quadruple()
     register.verify_params_count()
     quadruple_reg.generate_gosub(start_dir)
@@ -670,14 +674,13 @@ def p_function_call(p):
 
 def p_function_check(p):
     'function_check :'
-    print("Entering func check")
     function_name = p[-1]
     register.set_current_function_call(function_name)
     pass
 
 def p_generate_era(p):
     'generate_era :'
-    function_name = register.get_current_functon_name()
+    function_name = register.get_current_function_name()
     quadruple_reg.generate_era(function_name)
     register.params_counter = 1
     pass

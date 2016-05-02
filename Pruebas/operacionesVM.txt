@@ -12,31 +12,31 @@ var e : bool
 var f : bool
 
 func uno(str : string) {
-    escribe("hola")
+    lee(c)
+    escribe(c)
 }
 
 
-{
-    var x : float
-    var y : float
+var x : float
+var y : float
 
-    area = ancho * largo
-    ancho = ancho / doble
-    largo = largo - doble
-    area = ancho + largo
-    perimetro = ancho + ancho + largo + largo
+area = ancho * largo
+ancho = ancho / doble
+largo = largo - doble
+area = ancho + largo
+perimetro = ancho + ancho + largo + largo
 
-    x = a + b + 50
-    y = b - a + 200
+x = a + b + 50
+y = b - a + 200
 
-    si ( x < y) {
-        y = a * b
-    }
-
-    a = -40.5
-    b = 20
-
-    x = a * b
-    y = a / b
-
+si ( x < y) {
+    y = a * b
 }
+
+a = -40.5
+b = 20
+
+x = a * b
+y = a / b
+
+uno()
