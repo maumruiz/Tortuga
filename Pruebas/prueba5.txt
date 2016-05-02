@@ -12,10 +12,8 @@ func dos(n: int, m: int, o: int) {
     a = b + c
 }
 
-{
-    var a : int = 3
-    var b : int = 6
-    var c : int = 9
-    uno(a, b, c)
-    dos(a, b, c)
-}
+var a : int = 3
+var b : int = 6
+var c : int = 9
+uno(a, b, c)
+dos(a, b, c)

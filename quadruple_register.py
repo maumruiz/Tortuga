@@ -83,6 +83,10 @@ class QuadrupleRegister:
         #self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
+    def push_function_return(self, return_type, function_variable):
+        temp_var = self.__new_temp_var(return_type)
+        self.generate(OpCodes.ASSIGNMENT, function_variable, None, temp_var)
+
     def term_check(self):
         operator = self.operator_stack[-1] if self.operator_stack else None
         if operator == QuadrupleRegister.MULTIPLICATION or operator == QuadrupleRegister.DIVISION:
@@ -192,9 +196,9 @@ class QuadrupleRegister:
         self.generate(QuadrupleRegister.GOTO, None, None, return_point)
         self.fill_quadruple(false, len(self.quadruple_list))
 
-    def generate_return_statement(self):
+    def generate_return_statement(self, function_variable):
         operand = self.operand_stack.pop()
-        self.generate(QuadrupleRegister.RETURN, operand, None, None)
+        self.generate(OpCodes.ASSIGNMENT, operand, None, function_variable)
 
     def generate_era(self, function_name):
         self.generate(QuadrupleRegister.ERA, dict(name=function_name, address=function_name), None, None)
@@ -433,7 +437,7 @@ class QuadrupleRegister:
             var = dict(name = 'tb' + str(self.address_handler.temp_bool_count), type = var_type,
                        address = self.address_handler.next_temp_bool_address())
         else:
-            print('Error desconocido')
+            print('Error: Tipo ' + str(var_type) + ' desconocido')
             exit(2)
             return None
 

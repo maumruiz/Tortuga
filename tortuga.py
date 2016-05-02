@@ -473,7 +473,7 @@ def p_func_block(p):
     pass
 
 def p_func_block1(p):
-    '''func_block1 : func_statements block1
+    '''func_block1 : func_statements func_block1
             | vacio'''
     pass
 
@@ -489,8 +489,10 @@ def p_func_statements(p):
     pass
 
 def p_return(p):
-    'return : REGRESA ssexp ENDLINE'
-    quadruple_reg.generate_return_statement()
+    'return : REGRESA ssexp'
+    function = register.function_list[register.current_scope]
+    function_variable = register.get_variable(function['name'])
+    quadruple_reg.generate_return_statement(function_variable)
     pass
 
 def p_dec_varloc(p):
@@ -580,9 +582,16 @@ def p_factor(p):
     '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
             | varconst
             | ID arrsino push_id
-            | function_call
+            | function_call push_function_return
             | primitive_func ENDLINE'''
     pass
+
+def p_push_function_return(p):
+    'push_function_return :'
+    function = p[-1]
+    return_type = function['type']
+    function_variable = register.get_variable(function['name'])
+    quadruple_reg.push_function_return(return_type, function_variable)
 
 def p_push_id(p):
     'push_id :'
@@ -672,7 +681,8 @@ def p_control_statements(p):
             | while ENDLINE
             | loop ENDLINE
             | function_call ENDLINE
-            | primitive_func ENDLINE'''
+            | primitive_func ENDLINE
+            | return ENDLINE'''
     pass
 
 def p_function_call(p):
@@ -680,6 +690,9 @@ def p_function_call(p):
     start_dir = register.get_function_starting_quadruple()
     register.verify_params_count()
     quadruple_reg.generate_gosub(start_dir)
+    p[0] = register.get_current_function()
+    # pop
+    print("Function called")
     pass
 
 def p_function_check(p):
@@ -690,9 +703,10 @@ def p_function_check(p):
 
 def p_generate_era(p):
     'generate_era :'
-    function_name = register.get_current_function_name()
+    function_name = register.get_current_function()['name']
     quadruple_reg.generate_era(function_name)
     register.params_counter = 0
+    print(register.get_current_function())
     pass
 
 def p_args(p):

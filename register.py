@@ -23,12 +23,12 @@ class Register:
 
     def add_function(self, function_name):
         if (self.__function_exists(function_name)):
-            print('Duplicate function name')
+            print('Error de semántica: Nombre de funcion ' + function_name + ' duplicado')
             exit(1)
             return None
 
         size_dict = dict(int=0, float=0, string=0, bool=0, int_temp=0, float_temp=0, string_temp=0, bool_temp=0)
-        function = dict(name = function_name, type = None, size = size_dict, start_dir = None, variables = [], params = [], param_size = 0)
+        function = dict(name = function_name, type = None, size = size_dict, start_dir = None, variables = [], params = [], param_size = 0, return_register = None)
         self.function_list.append(function)
         self.current_scope = len(self.function_list) - 1
         print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
@@ -40,18 +40,23 @@ class Register:
         self.function_list[self.current_scope]['variables'].append(param)
         param['param_num'] = self.add_param_counter
         self.function_list[self.current_scope]['params'].append(param)
+        self.function_list[self.current_scope]['param_size'] = self.add_param_counter
         print("Parametro de funcion: " + param_name)
 
     def set_function_start_dir(self, quadruple):
         self.function_list[self.current_scope]['start_dir'] = quadruple
 
     def add_function_return_type(self, return_type):
-        self.function_list[self.current_scope]['type'] = return_type
+        if return_type != 'void':
+            type_code = self.__type_to_int(return_type)
+            self.function_list[self.current_scope]['type'] = type_code
+            function_address = self.add_variable(self.function_list[self.current_scope]['name'], type_code, None, 0)
+            self.function_list[self.current_scope]['return_register'] = function_address
         print("Tipo de la funcion: " + return_type)
 
     def add_variable(self, variable_name, variable_type, variable_value = None, scope = None):
         if (self.__variable_exists(variable_name)):
-            print('Duplicate variable name')
+            print('Error de semántica: Nombre de variable ' + variable_name + ' duplicado')
             exit(1)
             return None
 
@@ -61,11 +66,11 @@ class Register:
         type_code = self.__type_to_int(variable_type)
         variable = dict(name = variable_name, type = type_code, address = self.address_handler.next_variable_address(type_code, scope))
         self.function_list[scope]['variables'].append(variable)
-        print("Nueva variable-- ID: " + variable_name + ", Tipo: " + variable_type + ", Scope actual: " + str(scope))
+        print("Nueva variable-- ID: " + variable_name + ", Tipo: " + str(variable_type) + ", Scope actual: " + str(scope))
+        return variable['address']
 
     def clear_variables(self):
         #self.function_list[self.current_scope]['variables'] = []
-        self.function_list[self.current_scope]['param_size'] = self.add_param_counter
         print("Destruye las variables del scope:  " + str(self.current_scope) + "    Tabla actual: Global")
         self.current_scope = 0
         self.add_param_counter = 0
@@ -105,8 +110,8 @@ class Register:
     def get_param_max(self):
         return self.function_list[self.current_function_call]['param_size']
 
-    def get_current_function_name(self):
-        return self.function_list[self.current_function_call]['name']
+    def get_current_function(self):
+        return self.function_list[self.current_function_call]
 
     def verify_params_count(self):
         expected_count = len(self.function_list[self.current_function_call]['params'])
@@ -147,6 +152,6 @@ class Register:
         elif type_s == 'bool':
             return Register.BOOL
         else:
-            print ('Error: unknown type')
+            print ('Error: Tipo de dato ' + type_s + ' desconocido')
             exit(1)
             return None

@@ -11,11 +11,15 @@ var d : string
 var e : bool
 var f : bool
 
-func uno(str : string) {
-    lee(c)
-    escribe(c)
+func uno(str : string, str2 : string) {
+    escribe(str)
+    escribe(str2)
 }
 
+func dos(x : int, y : int) : int {
+    uno("funcion!!!!!", "aaaaaaaaaa")
+    regresa x * y
+}
 
 var x : float
 var y : float
@@ -39,4 +43,7 @@ b = 20
 x = a * b
 y = a / b
 
-uno()
+uno("hola", "mundo")
+
+var res : int = dos(4, 5)
+escribe(res)
