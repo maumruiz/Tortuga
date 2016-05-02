@@ -741,7 +741,7 @@ def p_push_int_literal(p):
 
 def p_push_float_literal(p):
     'push_float_literal :'
-    quadruple_reg.push_int_literal(float(p[-1]))
+    quadruple_reg.push_float_literal(float(p[-1]))
     pass
 
 def p_push_bool_literal(p):

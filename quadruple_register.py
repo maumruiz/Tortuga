@@ -70,6 +70,7 @@ class QuadrupleRegister:
 
     def push_float_literal(self, literal):
         constant = self.constant_handler.find_or_init_float_constant(literal)
+        self.constant_list.append(constant)
         self.operand_stack.append(constant)
 
     def push_string_literal(self, literal):
