@@ -132,7 +132,7 @@ class QuadrupleRegister:
         self.print_quadruples()
         operand = self.operand_stack.pop()
         if  operand['type'] != SemanticCube.BOOL:
-            sys.exit('Error Semanticp: El estatuto if requiere una expresión booleana')
+            sys.exit('Error Semantico: El estatuto if requiere una expresión booleana')
         else:
             self.generate(QuadrupleRegister.GOTOF, operand, None, None)
             self.jump_stack.append(len(self.quadruple_list) - 1)
@@ -205,13 +205,16 @@ class QuadrupleRegister:
     def generate_gosub(self, start_quad):
         self.generate(QuadrupleRegister.GOSUB, dict(name=start_quad, address=start_quad), None, None)
 
-    def verify_and_generate_argument(self, arg_type, arg_count):
+    def verify_and_generate_argument(self, arg, arg_count, param_max):
+        if(arg_count > param_max):
+            sys.exit(" Error: el número de parámetros es incorrecto")
+
         operand = self.operand_stack.pop()
-        if operand['type'] != arg_type:
+        if operand['type'] != arg['type']:
             print('Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
-            self.generate(QuadrupleRegister.PARAM, operand, dict(name=arg_count, address=arg_count), None)
+            self.generate(QuadrupleRegister.PARAM, operand, None, arg['address'])
             print("Argumento agregado: " + str(arg_count))
 
 ######################## FUNCIONES PRIMITIVAS ##################################
@@ -350,7 +353,6 @@ class QuadrupleRegister:
             exit(1)
         else:
             self.generate(OpCodes.RANDOM, operand, None, None)
-
 
 
     def generate(self, operator, operand_1, operand_2, result):

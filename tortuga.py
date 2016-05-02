@@ -443,8 +443,13 @@ def p_params(p):
     pass
 
 def p_params1(p):
-    'params1 : ID DOSPUNTOS type params2'
-    register.add_function_param(p[1], p[3])
+    'params1 : ID DOSPUNTOS type add_param params2'
+    pass
+
+def p_add_param(p):
+    'add_param : '
+    register.add_param_counter += 1
+    register.add_function_param(p[-3], p[-1])
     pass
 
 def p_params2(p):
@@ -687,7 +692,7 @@ def p_generate_era(p):
     'generate_era :'
     function_name = register.get_current_function_name()
     quadruple_reg.generate_era(function_name)
-    register.params_counter = 1
+    register.params_counter = 0
     pass
 
 def p_args(p):
@@ -696,17 +701,19 @@ def p_args(p):
     pass
 
 def p_args1(p):
-    'args1 : ssexp init_argument args2'
+    'args1 : ssexp increment_counter init_argument args2'
     pass
 
 def p_init_argument(p):
     'init_argument :'
     arg_type = register.get_expected_arg_type()
-    quadruple_reg.verify_and_generate_argument(arg_type, register.params_counter)
+    params_counter = register.params_counter
+    param_max = register.get_param_max()
+    quadruple_reg.verify_and_generate_argument(arg_type, params_counter, param_max)
     pass
 
 def p_args2(p):
-    '''args2 : COMA increment_counter args1
+    '''args2 : COMA args1
             | vacio'''
     pass
 
@@ -717,8 +724,8 @@ def p_increment_counter(p):
 
 def p_varconst(p):
     '''varconst : CTESTRING push_string_literal
-            | CTEI push_int_literal
             | CTEF push_float_literal
+            | CTEI push_int_literal
             | boolvalue push_bool_literal'''
     pass
 
