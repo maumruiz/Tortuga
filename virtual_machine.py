@@ -1,5 +1,6 @@
 from memory_map import MemoryMap
 from constant_table import ConstantTable
+from semantic_cube import SemanticCube
 
 
 class VirtualMachine:
@@ -305,12 +306,12 @@ class VirtualMachine:
         action = quadruple['operator']
         self.options[action](self, quadruple)
 
-    def op_retorno(self, quadruple):
+    def op_ret_act(self, quadruple):
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * retorno: ")
+        print(" * ret: ")
         print(self.return_stack)
 
-        self.MemoryMap.pop_local()
+        self.memory_map.pop_local()
         self.current_quadruple = self.return_stack.pop()
         quadruple = self.quadruple_list[self.current_quadruple];
         action = quadruple['operator']
@@ -327,6 +328,23 @@ class VirtualMachine:
         print(" * param: " + str(result_dir) + " = " + str(operand1))
 
         self.memory_map.set_value(result_dir, operand1)
+
+    def read(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        value = raw_input('')
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * read: " + str(operand1_dir))
+
+        self.memory_map.set_value(result_dir, operand1)
+
+    def write(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(str(operand1))
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * read: " + str(operand1_dir))
 
     def op_end(self, quad):
         print(" end ")
@@ -348,9 +366,12 @@ class VirtualMachine:
                 13: op_goto,
                 14: op_gotof,
                 15: op_gotot,
-                16: op_era,
-                17: op_gosub,
-                18: op_param,
-                19: op_retorno,
+                16: op_param,
+                17: op_era,
+                18: op_gosub,
+                19: op_ret_act,
+                20: op_return
+                101: read,
+                102: write,
                 "end": op_end,
     }

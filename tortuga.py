@@ -50,11 +50,12 @@ tokens = (
     'OR',           # ||
 
     #Primitivas
+    'LEE',
+    'ESCRIBE',
     'ADELANTE',
     'ATRAS',
     'DERECHA',
     'IZQUIERDA',
-    'ESCRIBIR',
     'POSICION',
     'COLOR_LINEA',
     'GROSOR_LINEA',
@@ -175,6 +176,14 @@ def t_OR(t):
     r'\|\|'
     return t
 
+def t_LEE(t):
+    r'lee'
+    return t
+
+def t_ESCRIBE(t):
+    r'escribe'
+    return t
+
 def t_ADELANTE(t):
     r'adelante'
     return t
@@ -189,10 +198,6 @@ def t_DERECHA(t):
 
 def t_IZQUIERDA(t):
     r'izquierda'
-    return t
-
-def t_ESCRIBIR(t):
-    r'escribir'
     return t
 
 def t_POSICION(t):
@@ -406,7 +411,8 @@ def p_statute(p):
             | condition ENDLINE
             | while ENDLINE
             | loop ENDLINE
-            | function_call ENDLINE'''
+            | function_call ENDLINE
+            | primitive_func ENDLINE'''
     pass
 
 def p_function(p):
@@ -463,6 +469,7 @@ def p_func_statements(p):
             | while ENDLINE
             | loop ENDLINE
             | function_call ENDLINE
+            | primitive_func ENDLINE
             | return ENDLINE'''
     pass
 
@@ -558,7 +565,8 @@ def p_factor(p):
     '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
             | varconst
             | ID arrsino push_id
-            | function_call'''
+            | function_call
+            | primitive_func ENDLINE'''
     pass
 
 def p_push_id(p):
@@ -648,12 +656,13 @@ def p_control_statements(p):
             | condition ENDLINE
             | while ENDLINE
             | loop ENDLINE
-            | function_call ENDLINE'''
+            | function_call ENDLINE
+            | primitive_func ENDLINE'''
     pass
 
 def p_function_call(p):
-    '''function_call : ID function_check PARENTESISI generate_era args PARENTESISD
-            | primitivefunc'''
+    '''function_call : ID function_check PARENTESISI generate_era args PARENTESISD'''
+    print("entro aqui")
     start_dir = register.get_function_starting_quadruple()
     register.verify_params_count()
     quadruple_reg.generate_gosub(start_dir)
@@ -735,8 +744,10 @@ def p_boolvalue(p):
     p[0] = p[1]
     pass
 
-def p_primitivefunc(p):
-    '''primitivefunc : ADELANTE PARENTESISI ssexp PARENTESISD
+def p_primitive_func(p):
+    '''primitive_func : ADELANTE PARENTESISI ssexp PARENTESISD
+            | ESCRIBE PARENTESISI ssexp generate_write PARENTESISD
+            | LEE PARENTESISI ssexp PARENTESISD generate_read
             | ATRAS PARENTESISI ssexp PARENTESISD
             | DERECHA PARENTESISI PARENTESISD
             | DERECHA PARENTESISI ssexp PARENTESISD
@@ -744,7 +755,6 @@ def p_primitivefunc(p):
             | IZQUIERDA PARENTESISI PARENTESISD
             | IZQUIERDA PARENTESISI ssexp PARENTESISD
             | IZQUIERDA PARENTESISI ssexp COMA ssexp PARENTESISD
-            | ESCRIBIR PARENTESISI ssexp PARENTESISD
             | POSICION PARENTESISI ssexp COMA ssexp PARENTESISD
             | COLOR_LINEA PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD
             | GROSOR_LINEA PARENTESISI ssexp PARENTESISD
@@ -759,6 +769,14 @@ def p_primitivefunc(p):
             | BAJAR_PLUMA PARENTESISI PARENTESISD
             | RANDOM PARENTESISI ssexp PARENTESISD'''
     pass
+
+def p_generate_read(p):
+    'generate_read :'
+    quadruple_reg.generate_read()
+
+def p_generate_write(p):
+    'generate_write :'
+    quadruple_reg.generate_write()
 
 def p_vacio(p):
     'vacio :'

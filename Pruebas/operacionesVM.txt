@@ -11,6 +11,11 @@ var d : string
 var e : bool
 var f : bool
 
+func uno(str : string) {
+    escribe("hola")
+}
+
+
 {
     var x : float
     var y : float
@@ -28,7 +33,7 @@ var f : bool
         y = a * b
     }
 
-    a = 40.5
+    a = -40.5
     b = 20
 
     x = a * b

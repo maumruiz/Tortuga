@@ -1,7 +1,7 @@
 from semantic_cube import SemanticCube
 from virtual_address_handler import VirtualAddressHandler
 from constant_handler import ConstantHandler
-from virtual_machine import VirtualMachine
+from op_codes import OpCodes
 import sys
 
 class QuadrupleRegister:
@@ -208,12 +208,23 @@ class QuadrupleRegister:
     def verify_and_generate_argument(self, arg_type, arg_count):
         operand = self.operand_stack.pop()
         if operand['type'] != arg_type:
-            print('Semantic error: El tipo de argumento no coincide')
+            print('Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(QuadrupleRegister.PARAM, operand, dict(name=arg_count, address=arg_count), None)
             print("Argumento agregado: " + str(arg_count))
 
+    def generate_read(self):
+        operand = self.operand_stack.pop()
+        self.generate(OpCodes.READ, operand, None, None)
+
+    def generate_write(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.STRING:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.WRITE, operand, None, None)
 
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)
