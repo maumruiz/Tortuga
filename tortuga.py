@@ -719,8 +719,8 @@ def p_increment_counter(p):
 
 def p_varconst(p):
     '''varconst : CTESTRING push_string_literal
-            | CTEI push_int_literal
             | CTEF push_float_literal
+            | CTEI push_int_literal
             | boolvalue push_bool_literal'''
     pass
 

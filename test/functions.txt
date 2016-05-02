@@ -1,18 +1,29 @@
 programa fuciones
 
-func poligono() {
-  var lados : int = 5
-  var vertices : float = 3
+func cuadrado() {
+  var lados : int = 4
+  var perimetro : int
+  perimetro = 4 * lados
+}
 
-  repetir(2) {
-    lados = lados + 1
-    vertices = vertices + 2
+func perimTriangulo(largo:float) {
+  var area : float
+  repetir(3) {
+    area = area + largo
   }
 }
 
-  var algo : float = 6
-  var n : int = 3
-  mientras(n < 14) {
-    poligono()
-    n = n+1
+func poligono(n:int, largo:float) {
+  var lados : int = n
+  var perimetro : float
+  repetir(n) {
+    perimetro = perimetro + largo
   }
+}
+
+var triangulo : float = 3.5
+var n : int = 6
+
+cuadrado()
+perimTriangulo(triangulo)
+poligono(n, 5.2)
