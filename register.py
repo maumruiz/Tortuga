@@ -11,6 +11,7 @@ class Register:
         self.params_counter = 0
         self.current_function_call = 0
         self.main_goto_quadruple = 0
+        self.add_param_counter = 0
 
     def set_address_handler(self, address_handler):
         self.address_handler = address_handler
@@ -27,17 +28,18 @@ class Register:
             return None
 
         size_dict = dict(int=0, float=0, string=0, bool=0, int_temp=0, float_temp=0, string_temp=0, bool_temp=0)
-        function = dict(name = function_name, type = None, size = size_dict, start_dir = None, variables = [], params = [])
+        function = dict(name = function_name, type = None, size = size_dict, start_dir = None, variables = [], params = [], param_size = 0)
         self.function_list.append(function)
         self.current_scope = len(self.function_list) - 1
         print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
 
     def add_function_param(self, param_name, param_type):
         type_code = self.__type_to_int(param_type)
-        param = dict(name = param_name, type = type_code)
+        scope = self.current_scope
+        param = dict(name = param_name, type = type_code, address = self.address_handler.next_variable_address(type_code, scope))
         self.function_list[self.current_scope]['variables'].append(param)
-        self.function_list[self.current_scope]['params'].append(type_code)
-        self.add_variable(param_name, param_type, None, self.current_scope)
+        param['param_num'] = self.add_param_counter
+        self.function_list[self.current_scope]['params'].append(param)
         print("Parametro de funcion: " + param_name)
 
     def set_function_start_dir(self, quadruple):
@@ -62,9 +64,11 @@ class Register:
         print("Nueva variable-- ID: " + variable_name + ", Tipo: " + variable_type + ", Scope actual: " + str(scope))
 
     def clear_variables(self):
-        self.function_list[self.current_scope]['variables'] = []
+        #self.function_list[self.current_scope]['variables'] = []
+        self.function_list[self.current_scope]['param_size'] = self.add_param_counter
         print("Destruye las variables del scope:  " + str(self.current_scope) + "    Tabla actual: Global")
         self.current_scope = 0
+        self.add_param_counter = 0
 
     # Regresa el dict con los datos de la variable basada en su nombre
     def get_variable(self, variable_name):
@@ -93,8 +97,13 @@ class Register:
         exit(1)
 
     def get_expected_arg_type(self):
-        print(self.function_list[self.current_function_call]['params'])
-        return self.function_list[self.current_function_call]['params'][self.params_counter - 1]
+        for arg in self.function_list[self.current_function_call]['params']:
+            if(int(arg['param_num']) == int(self.params_counter)):
+                return arg
+        return None
+
+    def get_param_max(self):
+        return self.function_list[self.current_function_call]['param_size']
 
     def get_current_function_name(self):
         return self.function_list[self.current_function_call]['name']
@@ -112,7 +121,7 @@ class Register:
         print(self.function_list)
 
     def __variable_exists(self, var_name):
-        return self.__is_in_scope(0, var_name) and self.__is_in_scope(self.current_scope, var_name)
+        return self.__is_in_scope(0, var_name) and self.__is_in_scope(self.current_scope, var_name) or self.__is_in_scope(self.current_scope, var_name)
 
     def __is_in_scope(self, scope, var_name):
         for variable in self.function_list[scope]['variables']:

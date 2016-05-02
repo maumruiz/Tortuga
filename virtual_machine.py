@@ -300,7 +300,7 @@ class VirtualMachine:
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         print(" * gosub: " + str(func_dir))
-        print(self.return_stack)
+        print(" * Return stack: " + str(self.return_stack))
 
         self.current_quadruple = func_dir
         quadruple = self.quadruple_list[self.current_quadruple];
@@ -309,8 +309,8 @@ class VirtualMachine:
 
     def op_ret_act(self, quadruple):
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(" * ret: ")
-        print(self.return_stack)
+        print(" * return to func call: ")
+        print(" * return stack: " + str(self.return_stack))
 
         self.memory_map.pop_local()
         self.current_quadruple = self.return_stack.pop()

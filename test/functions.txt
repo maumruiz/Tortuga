@@ -1,23 +1,17 @@
 programa fuciones
 
-func poligono(n: int) {
+func poligono(n: int, m: float) {
+  var lados : int = 5
+  var vertices : float = m
   repetir(n) {
-    adelante(50)
-    derecha(360.0 / n)
+    lados = lados + 1
+    vertices = vertices + 2
   }
 }
 
-{
-  color_linea(84, 84, 84)
+  var algo : float = 6
   var n : int = 3
   mientras(n < 14) {
-    var rojo : int = random(255)
-    var azul : int = random(255)
-    var verde : int = random(255)
-    var alfa : int = 1
-    color_relleno(rojo, verde, azul, alfa-0.16)
-    poligono(n)
-    derecha(36)
+    poligono(2, algo, 25)
     n = n+1
   }
-}
