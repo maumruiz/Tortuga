@@ -45,6 +45,7 @@ class VirtualMachine:
 
     def execute_code(self):
         print('================Ejecutando maquina virtual==========================')
+        turtle.mode("logo")
         while self.current_quadruple < len(self.quadruple_list):
             quadruple = self.quadruple_list[self.current_quadruple];
             action = quadruple['operator']
@@ -491,6 +492,17 @@ class VirtualMachine:
         print(" * random: " + str(operand1))
         # turtle.pensize(operand1)
 
+    def circle(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * circle: " + str(operand1) + ' ' + str(operand1))
+        turtle.circle(operand1, operand2)
+
     def op_end(self, quad):
         turtle.done()
         print(" end ")
@@ -537,5 +549,6 @@ class VirtualMachine:
                 118: save_pos,
                 119: restore_pos,
                 120: random,
+                121: circle,
                 "end": op_end,
     }

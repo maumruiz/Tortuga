@@ -42,3 +42,4 @@ class OpCodes:
     SAVE_POS = 118
     RESTORE_POS = 119
     RANDOM = 120
+    CIRCLE = 121

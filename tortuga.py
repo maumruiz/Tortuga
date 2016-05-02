@@ -70,6 +70,7 @@ tokens = (
     'GUARDAR_POSICION',
     'RESTAURAR_POSICION',
     'RANDOM',
+    'CIRCULO',
 
     #Regex
     'ID',
@@ -255,6 +256,10 @@ def t_RESTAURAR_POSICION(t):
 
 def t_RANDOM(t):
     r'random'
+    return t
+
+def t_CIRCULO(t):
+    r'circulo'
     return t
 
 def t_ID(t):
@@ -779,7 +784,8 @@ def p_primitive_func(p):
             | COLOR_FONDO PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD generate_background_color
             | GUARDAR_POSICION PARENTESISI PARENTESISD generate_save_position
             | RESTAURAR_POSICION PARENTESISI PARENTESISD generate_restore_position
-            | RANDOM PARENTESISI ssexp PARENTESISD generate_random'''
+            | RANDOM PARENTESISI ssexp PARENTESISD generate_random
+            | CIRCULO PARENTESISI ssexp COMA ssexp PARENTESISD generate_circle '''
     pass
 
 def p_generate_read(p):
@@ -861,6 +867,10 @@ def p_generate_restore_position(p):
 def p_generate_random(p):
     'generate_random :'
     quadruple_reg.generate_random()
+
+def p_generate_circle(p):
+    'generate_circle :'
+    quadruple_reg.generate_circle()
 
 def p_vacio(p):
     'vacio :'

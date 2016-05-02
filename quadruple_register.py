@@ -355,6 +355,14 @@ class QuadrupleRegister:
         else:
             self.generate(OpCodes.RANDOM, operand, None, None)
 
+    def generate_circle(self):
+        operand_2 = self.operand_stack.pop()
+        operand_1 = self.operand_stack.pop()
+        if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.CIRCLE, operand_1, operand_2, None)
 
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)

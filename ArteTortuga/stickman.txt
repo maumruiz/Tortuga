@@ -1,0 +1,68 @@
+programa stickman
+var tamano : int
+
+func brazo() {
+  adelante(tamano * 3)
+  izquierda(90)
+  circulo(tamano / 3, 360)
+  derecha(90)
+  atras(tamano * 3)
+}
+
+func vee() {
+  izquierda(45)
+  brazo()
+  derecha(90)
+  brazo()
+  izquierda(45)
+}
+
+func persona() {
+  derecha(180)
+  adelante(tamano)
+  vee()
+  derecha(180)
+  adelante(tamano * 2)
+  vee()
+  adelante(tamano * 3)
+  izquierda(90)
+  circulo(tamano, 360)
+  derecha(90)
+}
+
+func padre() {
+  alzar_pluma()
+  posicion(-130,0)
+  bajar_pluma()
+  color_linea(0,102,204)
+  tamano = 50
+  persona()
+}
+
+func madre() {
+  alzar_pluma()
+  posicion(-20,-10)
+  bajar_pluma()
+  color_linea(255,153,255)
+  tamano = 43
+  persona()
+}
+
+func hijo() {
+  alzar_pluma()
+  posicion(80,-40)
+  bajar_pluma()
+  color_linea(255,51,51)
+  tamano = 30
+  persona()
+}
+
+func familia() {
+  padre()
+  madre()
+  hijo()
+}
+
+color_fondo(224,224,224)
+grosor_linea(6)
+familia()
