@@ -687,7 +687,7 @@ def p_generate_era(p):
     'generate_era :'
     function_name = register.get_current_function_name()
     quadruple_reg.generate_era(function_name)
-    register.params_counter = 1
+    register.params_counter = 0
     pass
 
 def p_args(p):
@@ -696,7 +696,7 @@ def p_args(p):
     pass
 
 def p_args1(p):
-    'args1 : ssexp init_argument args2'
+    'args1 : ssexp increment_counter init_argument args2'
     pass
 
 def p_init_argument(p):
@@ -708,7 +708,7 @@ def p_init_argument(p):
     pass
 
 def p_args2(p):
-    '''args2 : COMA increment_counter args1
+    '''args2 : COMA args1
             | vacio'''
     pass
 

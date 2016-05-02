@@ -1,9 +1,10 @@
 programa fuciones
 
-func poligono(n: int, m: float) {
+func poligono() {
   var lados : int = 5
-  var vertices : float = m
-  repetir(n) {
+  var vertices : float = 3
+
+  repetir(2) {
     lados = lados + 1
     vertices = vertices + 2
   }
@@ -12,6 +13,6 @@ func poligono(n: int, m: float) {
   var algo : float = 6
   var n : int = 3
   mientras(n < 14) {
-    poligono(2, algo, 25)
+    poligono()
     n = n+1
   }
