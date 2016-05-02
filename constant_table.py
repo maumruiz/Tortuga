@@ -26,7 +26,6 @@ class ConstantTable:
         return self.table['float'][self.translate_address(address, ConstantTable.FLOAT_CONSTANT_BASE)]
 
     def get_string_value(self, address):
-        print(self.table)
         return self.table['string'][self.translate_address(address, ConstantTable.STRING_CONSTANT_BASE)]
 
     def translate_address(self, address, offset):

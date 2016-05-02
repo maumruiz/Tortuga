@@ -3,7 +3,9 @@ programa fuciones
 func cuadrado() {
   var lados : int = 4
   var perimetro : int
+  var quad : string
   perimetro = 4 * lados
+  quad = "Este es un cuadrado"
 }
 
 func perimTriangulo(largo:float) {
@@ -23,6 +25,7 @@ func poligono(n:int, largo:float) {
 
 var triangulo : float = 3.5
 var n : int = 6
+var mensaje : string = "Las funciones sirven"
 
 cuadrado()
 perimTriangulo(triangulo)
