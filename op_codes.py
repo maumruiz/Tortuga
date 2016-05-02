@@ -24,3 +24,21 @@ class OpCodes:
 
     READ = 101
     WRITE = 102
+    FORWARD = 103
+    BACKWARD = 104
+    RIGHT = 105
+    LEFT = 106
+    POS = 107
+    POS_X = 108
+    POS_Y = 109
+    LINE_COLOR = 110
+    LINE_WIDTH = 111
+    PEN_UP = 112
+    PEN_DOWN = 113
+    FILL_TRUE = 114
+    FILL_FALSE = 115
+    FILL_COLOR = 116
+    BACKGROUND_COLOR = 117
+    SAVE_POS = 118
+    RESTORE_POS = 119
+    RANDOM = 120

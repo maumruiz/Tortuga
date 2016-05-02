@@ -2,6 +2,7 @@ from memory_map import MemoryMap
 from constant_table import ConstantTable
 from semantic_cube import SemanticCube
 import sys
+import turtle
 
 
 class VirtualMachine:
@@ -40,6 +41,7 @@ class VirtualMachine:
         self.memory_map = MemoryMap(self.constant_table, functions)
         self.current_quadruple = 0
         self.return_stack = []
+        self.saved_position = (0, 0)
 
     def execute_code(self):
         print('================Ejecutando maquina virtual==========================')
@@ -318,6 +320,9 @@ class VirtualMachine:
         action = quadruple['operator']
         self.options[action](self, quadruple)
 
+    def op_return(self, quadruple):
+        pass
+
     def op_param(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
         result_dir = int(quadruple['result'])
@@ -347,10 +352,147 @@ class VirtualMachine:
         print(str(operand1))
         print(" * write: " + str(operand1_dir))
 
-    def op_return(self, quadruple):
-        pass
+    def forward(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * forward: " + str(operand1))
+        turtle.forward(operand1)
+
+    def backward(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * backward: " + str(operand1))
+        turtle.backward(operand1)
+
+    def right(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * right: " + str(operand1))
+        turtle.right(operand1)
+
+    def left(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * left: " + str(operand1))
+        turtle.left(operand1)
+
+    def pos(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * pos: " + str(operand1) + ' ' + str(operand1))
+        turtle.setposition(operand1, operand2)
+
+    def pos_x(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * pos_x: " + str(operand1))
+        turtle.setx(operand1)
+
+    def pos_y(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * pos_y: " + str(operand1))
+        turtle.sety(operand1)
+
+    def line_color(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+        operand3_dir = int(quadruple['result'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
+        operand3 = self.memory_map.get_value(operand3_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * line_color: " + str(operand1) + ' ' + str(operand1) + ' ' + str(operand3))
+        turtle.colormode(255)
+        turtle.pencolor(operand1, operand2, operand3)
+
+    def line_width(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * line_width: " + str(operand1))
+        turtle.pensize(operand1)
+
+    def pen_up(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * pen_up: ")
+        turtle.penup()
+
+    def pen_down(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * pen_down: ")
+        turtle.pendown()
+
+    def fill_true(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * fill_true: ")
+        turtle.fill(True)
+
+    def fill_false(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * fill_false: ")
+        turtle.fill(False)
+
+    def fill_color(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+        operand3_dir = int(quadruple['result'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
+        operand3 = self.memory_map.get_value(operand3_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * fill_color: " + str(operand1) + ' ' + str(operand1) + ' ' + str(operand3))
+        turtle.colormode(255)
+        turtle.fillcolor(operand1, operand2, operand3)
+
+    def background_color(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand2_dir = int(quadruple['operand_2'])
+        operand3_dir = int(quadruple['result'])
+
+        operand1 = self.memory_map.get_value(operand1_dir)
+        operand2 = self.memory_map.get_value(operand2_dir)
+        operand3 = self.memory_map.get_value(operand3_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * background_color: " + str(operand1) + ' ' + str(operand1) + ' ' + str(operand3))
+        turtle.colormode(255)
+        turtle.bgcolor(operand1, operand2, operand3)
+
+    def save_pos(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * fill_true: ")
+        self.saved_position = turtle.pos()
+
+    def restore_pos(self, quadruple):
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * fill_true: ")
+        turtle.setposition(self.saved_position[0], self.saved_position[1])
+
+    def random(self, quadruple):
+        operand1_dir = int(quadruple['operand_1'])
+        operand1 = self.memory_map.get_value(operand1_dir)
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * random: " + str(operand1))
+        # turtle.pensize(operand1)
 
     def op_end(self, quad):
+        turtle.done()
         print(" end ")
 
 
@@ -377,5 +519,23 @@ class VirtualMachine:
                 20: op_return,
                 101: read,
                 102: write,
+                103: forward,
+                104: backward,
+                105: right,
+                106: left,
+                107: pos,
+                108: pos_x,
+                109: pos_y,
+                110: line_color,
+                111: line_width,
+                112: pen_up,
+                113: pen_down,
+                114: fill_true,
+                115: fill_false,
+                116: fill_color,
+                117: background_color,
+                118: save_pos,
+                119: restore_pos,
+                120: random,
                 "end": op_end,
     }

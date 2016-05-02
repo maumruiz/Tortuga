@@ -1,22 +1,19 @@
 programa grafica
 var ancho : int = 40
 
-{
-  color_linea(211, 211, 211)
-  color_relleno(84, 84, 84, 1)
-  color_fondo(255, 228, 46)
-  var largo : int
+color_linea(211, 211, 211)
+color_relleno(84, 84, 84, 1)
+color_fondo(255, 228, 46)
+var largo : int
 
-  repetir(20) {
-    largo = random(200) + 30
-    repetir(2) {
-      adelante(largo)
-      derecha()
-      adelante(ancho)
-      derecha()
-    }
-    derecha()
-    saltar(ancho)
-    izquierda()
+repetir(20) {
+  largo = 30
+  repetir(2) {
+    adelante(largo)
+    derecha(90)
+    adelante(ancho)
+    derecha(90)
   }
+  derecha(10)
+  izquierda(10)
 }
