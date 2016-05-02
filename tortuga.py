@@ -57,17 +57,18 @@ tokens = (
     'DERECHA',
     'IZQUIERDA',
     'POSICION',
+    'POSICION_X',
+    'POSICION_Y',
     'COLOR_LINEA',
     'GROSOR_LINEA',
-    'COLOR_RELLENO',
-    'COLOR_FONDO',
-    'SALTAR',
-    'GUARDAR_POSICION',
-    'RESTAURAR_POSICION',
-    'GUARDAR_ESTILO',
-    'RESTAURAR_ESTILO',
     'ALZAR_PLUMA',
     'BAJAR_PLUMA',
+    'ACTIVAR_RELLENO',
+    'DESACTIVAR_RELLENO',
+    'COLOR_RELLENO',
+    'COLOR_FONDO',
+    'GUARDAR_POSICION',
+    'RESTAURAR_POSICION',
     'RANDOM',
 
     #Regex
@@ -204,12 +205,36 @@ def t_POSICION(t):
     r'posicion'
     return t
 
+def t_POSICION_X(t):
+    r'posicion_x'
+    return t
+
+def t_POSICION_Y(t):
+    r'posicion_y'
+    return t
+
 def t_COLOR_LINEA(t):
     r'color_linea'
     return t
 
 def t_GROSOR_LINEA(t):
     r'grosor_linea'
+    return t
+
+def t_ALZAR_PLUMA(t):
+    r'alzar_pluma'
+    return t
+
+def t_BAJAR_PLUMA(t):
+    r'bajar_pluma'
+    return t
+
+def t_ACTIVAR_RELLENO(t):
+    r'activar_relleno'
+    return t
+
+def t_DESACTIVAR_RELLENO(t):
+    r'desactivar_relleno'
     return t
 
 def t_COLOR_RELLENO(t):
@@ -220,32 +245,12 @@ def t_COLOR_FONDO(t):
     r'color_fondo'
     return t
 
-def t_SALTAR(t):
-    r'saltar'
-    return t
-
 def t_GUARDAR_POSICION(t):
     r'guardar_posicion'
     return t
 
 def t_RESTAURAR_POSICION(t):
     r'restaurar_posicion'
-    return t
-
-def t_GUARDAR_ESTILO(t):
-    r'guardar_estilo'
-    return t
-
-def t_RESTAURAR_ESTILO(t):
-    r'restaurar_estilo'
-    return t
-
-def t_ALZAR_PLUMA(t):
-    r'alzar_pluma'
-    return t
-
-def t_BAJAR_PLUMA(t):
-    r'bajar_pluma'
     return t
 
 def t_RANDOM(t):
@@ -755,29 +760,26 @@ def p_boolvalue(p):
     pass
 
 def p_primitive_func(p):
-    '''primitive_func : ADELANTE PARENTESISI ssexp PARENTESISD
-            | ESCRIBE PARENTESISI ssexp generate_write PARENTESISD
+    '''primitive_func : ESCRIBE PARENTESISI ssexp PARENTESISD generate_write
             | LEE PARENTESISI ssexp PARENTESISD generate_read
-            | ATRAS PARENTESISI ssexp PARENTESISD
-            | DERECHA PARENTESISI PARENTESISD
-            | DERECHA PARENTESISI ssexp PARENTESISD
-            | DERECHA PARENTESISI ssexp COMA ssexp PARENTESISD
-            | IZQUIERDA PARENTESISI PARENTESISD
-            | IZQUIERDA PARENTESISI ssexp PARENTESISD
-            | IZQUIERDA PARENTESISI ssexp COMA ssexp PARENTESISD
-            | POSICION PARENTESISI ssexp COMA ssexp PARENTESISD
-            | COLOR_LINEA PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD
-            | GROSOR_LINEA PARENTESISI ssexp PARENTESISD
-            | COLOR_RELLENO PARENTESISI ssexp COMA ssexp COMA ssexp COMA ssexp PARENTESISD
-            | COLOR_FONDO PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD
-            | SALTAR PARENTESISI ssexp PARENTESISD
-            | GUARDAR_POSICION PARENTESISI PARENTESISD
-            | RESTAURAR_POSICION PARENTESISI PARENTESISD
-            | GUARDAR_ESTILO PARENTESISI PARENTESISD
-            | RESTAURAR_ESTILO PARENTESISI PARENTESISD
-            | ALZAR_PLUMA PARENTESISI PARENTESISD
-            | BAJAR_PLUMA PARENTESISI PARENTESISD
-            | RANDOM PARENTESISI ssexp PARENTESISD'''
+            | ADELANTE PARENTESISI ssexp PARENTESISD generate_forward
+            | ATRAS PARENTESISI ssexp PARENTESISD generate_backward
+            | DERECHA PARENTESISI ssexp PARENTESISD generate_right
+            | IZQUIERDA PARENTESISI ssexp PARENTESISD generate_left
+            | POSICION PARENTESISI ssexp COMA ssexp PARENTESISD generate_pos
+            | POSICION_X PARENTESISI ssexp PARENTESISD generate_pos_x
+            | POSICION_Y PARENTESISI ssexp PARENTESISD generate_pos_y
+            | COLOR_LINEA PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD generate_line_color
+            | GROSOR_LINEA PARENTESISI ssexp PARENTESISD generate_line_width
+            | ALZAR_PLUMA PARENTESISI PARENTESISD generate_pen_up
+            | BAJAR_PLUMA PARENTESISI PARENTESISD generate_pen_down
+            | ACTIVAR_RELLENO PARENTESISI PARENTESISD generate_fill_true
+            | DESACTIVAR_RELLENO PARENTESISI PARENTESISD generate_fill_false
+            | COLOR_RELLENO PARENTESISI ssexp COMA ssexp COMA ssexp COMA ssexp PARENTESISD generate_fill_color
+            | COLOR_FONDO PARENTESISI ssexp COMA ssexp COMA ssexp PARENTESISD generate_background_color
+            | GUARDAR_POSICION PARENTESISI PARENTESISD generate_save_position
+            | RESTAURAR_POSICION PARENTESISI PARENTESISD generate_restore_position
+            | RANDOM PARENTESISI ssexp PARENTESISD generate_random'''
     pass
 
 def p_generate_read(p):
@@ -787,6 +789,78 @@ def p_generate_read(p):
 def p_generate_write(p):
     'generate_write :'
     quadruple_reg.generate_write()
+
+def p_generate_forward(p):
+    'generate_forward :'
+    quadruple_reg.generate_forward()
+
+def p_generate_backward(p):
+    'generate_backward :'
+    quadruple_reg.generate_backward()
+
+def p_generate_right(p):
+    'generate_right :'
+    quadruple_reg.generate_right()
+
+def p_generate_left(p):
+    'generate_left :'
+    quadruple_reg.generate_left()
+
+def p_generate_pos(p):
+    'generate_pos :'
+    quadruple_reg.generate_pos()
+
+def p_generate_pos_x(p):
+    'generate_pos_x :'
+    quadruple_reg.generate_pos_x()
+
+def p_generate_pos_y(p):
+    'generate_pos_y :'
+    quadruple_reg.generate_pos_y()
+
+def p_generate_line_color(p):
+    'generate_line_color :'
+    quadruple_reg.generate_line_color()
+
+def p_generate_line_width(p):
+    'generate_line_width :'
+    quadruple_reg.generate_line_width()
+
+def p_generate_pen_up(p):
+    'generate_pen_up :'
+    quadruple_reg.generate_pen_up()
+
+def p_generate_pen_down(p):
+    'generate_pen_down :'
+    quadruple_reg.generate_pen_down()
+
+def p_generate_fill_true(p):
+    'generate_fill_true :'
+    quadruple_reg.generate_fill_true()
+
+def p_generate_fill_false(p):
+    'generate_fill_false :'
+    quadruple_reg.generate_fill_false()
+
+def p_generate_fill_color(p):
+    'generate_fill_color :'
+    quadruple_reg.generate_fill_color()
+
+def p_generate_background_color(p):
+    'generate_background_color :'
+    quadruple_reg.generate_background_color()
+
+def p_generate_save_position(p):
+    'generate_save_position :'
+    quadruple_reg.generate_save_position()
+
+def p_generate_restore_position(p):
+    'generate_restore_position :'
+    quadruple_reg.generate_restore_position()
+
+def p_generate_random(p):
+    'generate_random :'
+    quadruple_reg.generate_random()
 
 def p_vacio(p):
     'vacio :'

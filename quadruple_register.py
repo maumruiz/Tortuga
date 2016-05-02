@@ -217,6 +217,8 @@ class QuadrupleRegister:
             self.generate(QuadrupleRegister.PARAM, operand, None, arg['address'])
             print("Argumento agregado: " + str(arg_count))
 
+######################## FUNCIONES PRIMITIVAS ##################################
+
     def generate_read(self):
         operand = self.operand_stack.pop()
         self.generate(OpCodes.READ, operand, None, None)
@@ -229,13 +231,133 @@ class QuadrupleRegister:
             print('Error semántico: El tipo de argumento no coincide')
             exit(1)
 
+    def generate_forward(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.FORWARD, operand, None, None)
+
+    def generate_backward(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.BACKWARD, operand, None, None)
+
+    def generate_right(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.RIGHT, operand, None, None)
+
+    def generate_left(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.LEFT, operand, None, None)
+
+    def generate_pos(self):
+        operand_2 = self.operand_stack.pop()
+        operand_1 = self.operand_stack.pop()
+        if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.POS, operand_1, operand_2, None)
+
+    def generate_pos_x(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.POS_X, operand, None, None)
+
+    def generate_pos_y(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.POS_Y, operand, None, None)
+
+    def generate_line_color(self):
+        operand_3 = self.operand_stack.pop()
+        operand_2 = self.operand_stack.pop()
+        operand_1 = self.operand_stack.pop()
+        if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT or operand_3['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.LINE_COLOR, operand_1, operand_2, operand_3)
+
+    def generate_line_width(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            print('Generando line width')
+            self.generate(OpCodes.LINE_WIDTH, operand, None, None)
+
+    def generate_pen_up(self):
+        self.generate(OpCodes.PEN_UP, None, None, None)
+
+    def generate_pen_down(self):
+        self.generate(OpCodes.PEN_DOWN, None, None, None)
+
+    def generate_fill_true(self):
+        self.generate(OpCodes.FILL_TRUE, None, None, None)
+
+    def generate_fill_false(self):
+        self.generate(OpCodes.FILL_FALSE, None, None, None)
+
+    def generate_fill_color(self):
+        operand_3 = self.operand_stack.pop()
+        operand_2 = self.operand_stack.pop()
+        operand_1 = self.operand_stack.pop()
+        if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT or operand_3['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.FILL_COLOR, operand_1, operand_2, operand_3)
+
+    def generate_background_color(self):
+        operand_3 = self.operand_stack.pop()
+        operand_2 = self.operand_stack.pop()
+        operand_1 = self.operand_stack.pop()
+        if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT or operand_3['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            print('Generando background color')
+            self.generate(OpCodes.BACKGROUND_COLOR, operand_1, operand_2, operand_3)
+
+    def generate_save_position(self):
+        self.generate(OpCodes.SAVE_POS, None, None, None)
+
+    def generate_restore_position(self):
+        self.generate(OpCodes.RESTORE_POS, None, None, None)
+
+    def generate_random(self):
+        operand = self.operand_stack.pop()
+        if operand['type'] != SemanticCube.INT:
+            print('Error semántico: El tipo de argumento no coincide')
+            exit(1)
+        else:
+            self.generate(OpCodes.RANDOM, operand, None, None)
+
+
     def generate(self, operator, operand_1, operand_2, result):
         quadruple = dict(operator = operator, operand_1 = operand_1, operand_2 = operand_2, result = result)
         self.quadruple_list.append(quadruple)
-        #print('Added quadruple')
-        #print('Operators: '  + str(self.operator_stack))
-        #print('Operands: '  + str(self.operand_stack))
-        #print(self.quadruple_list)
 
     def fill_quadruple(self, index, content):
         quadruple = self.quadruple_list[index]

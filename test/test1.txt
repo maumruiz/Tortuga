@@ -1,13 +1,9 @@
 programa hojas
-{
-  grosor_linea(3) 
-  color_linea(255, 255, 255) 
-  color_relleno(255, 44, 53, 1) 
-  derecha(180, 50) 
-  derecha(90) 
-  derecha(180, 50) 
-  derecha(90) 
-  derecha(180, 50) 
-  derecha(90) 
-  derecha(180, 50)
-}
+
+grosor_linea(3) 
+color_linea(255, 255, 255) 
+color_relleno(255, 44, 53, 1) 
+derecha(90)  
+derecha(90)  
+derecha(90)
+
