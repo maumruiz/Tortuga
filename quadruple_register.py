@@ -1,3 +1,4 @@
+import ply.lex as lex
 from semantic_cube import SemanticCube
 from virtual_address_handler import VirtualAddressHandler
 from constant_handler import ConstantHandler
@@ -28,10 +29,10 @@ class QuadrupleRegister:
     RET = 19
     RETURN = 20
 
-    def __init__(self):
+    def __init__(self, lexer):
+        self.lexer = lexer
         self.semantic_cube = SemanticCube()
         self.temp_count = 1
-        self.count = 0
         self.quadruple_list = []
         self.operand_stack = []
         self.operator_stack = []
@@ -43,7 +44,7 @@ class QuadrupleRegister:
 
     def push_operand(self, operand):
         if operand is None:
-            print('Error: undefined variable')
+            print(str(self.lexer.lineno) + ': ' + 'Error: Variable no definida')
             exit(0)
         self.operand_stack.append(operand)
 
@@ -197,6 +198,15 @@ class QuadrupleRegister:
         self.generate(QuadrupleRegister.GOTO, None, None, return_point)
         self.fill_quadruple(false, len(self.quadruple_list))
 
+    def array_check(self):
+        variable = self.operand_stack.pop()
+        if variable['upper_limit'] is None:
+            print('Error de semántica: La variable no es dimensionada')
+            exit(1)
+        else:
+            self.push_fake_bottom()
+            return variable
+
     def generate_return_statement(self, function_variable):
         operand = self.operand_stack.pop()
         self.generate(OpCodes.ASSIGNMENT, operand, None, function_variable)
@@ -221,6 +231,16 @@ class QuadrupleRegister:
         else:
             self.generate(QuadrupleRegister.PARAM, operand, None, arg['address'])
             print("Argumento agregado: " + str(arg_count))
+
+    def generate_array_access(self, base_address, size):
+        index = self.operand_stack[-1]
+        self.generate(OpCodes.VERIFY, 0, size, index)
+        aux = self.operand_stack.pop()
+        pointer = self.new_pointer()
+        self.generate(OpCodes.SUM, aux, base_address, pointer)
+        self.operand_stack.append(pointer)
+        self.pop_fake_bottom()
+
 
 ######################## FUNCIONES PRIMITIVAS ##################################
 
@@ -405,14 +425,11 @@ class QuadrupleRegister:
             result = quadruple['result']
             if isinstance(operand_1, dict):
                 operand_1 = operand_1['address']
-            if operand_2 is not None:
-                if isinstance(operand_2, dict):
-                    operand_2_address = str(operand_2['address'])
-                else:
-                    operand_2_address = operand_2
+            if isinstance(operand_2, dict):
+                operand_2 = operand_2['name']
             if isinstance(result, dict):
                 result = result['address']
-            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' ' + str(result))
             counter = counter + 1
 
     def print_name_quadruples(self):
@@ -425,12 +442,17 @@ class QuadrupleRegister:
             result = quadruple['result']
             if isinstance(operand_1, dict):
                 operand_1 = operand_1['name']
-            if operand_2 is not None:
-                operand_2_address = str(operand_2['name'])
+            if isinstance(operand_2, dict):
+                operand_2 = operand_2['name']
             if isinstance(result, dict):
                 result = result['name']
-            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + operand_2_address + ' ' + str(result))
+            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' ' + str(result))
             counter = counter + 1
+
+    def new_pointer(self):
+        var = dict(name = 'ptr' + str(self.address_handler.pointer_count), type = SemanticCube.INT,
+                   address = self.address_handler.next_pointer_address())
+        return var
 
     def __new_temp_var(self, var_type):
         if var_type == SemanticCube.INT:

@@ -28,7 +28,7 @@ class VirtualMachine:
     TEMP_STRING_BASE = 32000
     TEMP_BOOL_BASE = 33000
 
-    POINTERS_BASE = 40000
+    POINTER_BASE = 40000
 
     def __init__(self, quadruples, constants, functions):
         print("///////////////////////////// Virtual Machine init ///////////////////////")
@@ -93,6 +93,10 @@ class VirtualMachine:
         operand1 = self.memory_map.get_value(operand1_dir)
         operand2 = self.memory_map.get_value(operand2_dir)
         result = operand1 + operand2
+
+        if result_dir >= MemoryMap.POINTER_BASE:
+            operand2 = operand2_dir
+            result = operand1 + operand2
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         print(" * op1dir: " + str(operand1_dir) + "   op2dir: " + str(operand2_dir) + "   resdir: " + str(result_dir))
@@ -211,6 +215,9 @@ class VirtualMachine:
 
         operand1 = self.memory_map.get_value(operand1_dir)
 
+        if result_dir >= MemoryMap.POINTER_BASE:
+            result_dir = self.memory_map.get_pointer_address(result_dir)
+
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         print(" * op1dir: " + str(operand1_dir) + "   resdir: " + str(result_dir))
         print(" * " + str(result_dir) + " = " + str(operand1))
@@ -300,7 +307,7 @@ class VirtualMachine:
 
     def op_gosub(self, quadruple):
         self.memory_map.nested_call_level -= 1
-        
+
         func_dir = int(quadruple['operand_1'])
 
         self.return_stack.append(self.current_quadruple + 1)
@@ -340,6 +347,20 @@ class VirtualMachine:
 
         self.memory_map.set_value(result_dir, param_value)
 
+    def op_verify(self, quadruple):
+        operand1 = int(quadruple['operand_1'])
+        operand2 = int(quadruple['operand_2'])
+        subject_dir = int(quadruple['result'])
+
+        value = self.memory_map.get_value(subject_dir)
+
+        print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
+        print(" * verify: " + str(value) + " | " + str(operand1) + '-' + str(operand2))
+
+        if value < operand1 or value >= operand2:
+            print('Error: Indice fuera de los limites')
+            exit(1)
+
     def read(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
 
@@ -354,8 +375,8 @@ class VirtualMachine:
         operand1 = self.memory_map.get_value(operand1_dir)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        print(str(operand1))
         print(" * write: " + str(operand1_dir))
+        print(str(operand1)) 
 
     def forward(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
@@ -533,6 +554,7 @@ class VirtualMachine:
                 18: op_gosub,
                 19: op_ret_act,
                 20: op_return,
+                21: op_verify,
                 101: read,
                 102: write,
                 103: forward,

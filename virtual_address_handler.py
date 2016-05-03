@@ -25,6 +25,8 @@ class VirtualAddressHandler:
     TEMP_STRING_BASE = 32000
     TEMP_BOOL_BASE = 33000
 
+    POINTER_BASE = 40000
+
     def __init__(self):
         self.int_constant_count = 0
         self.float_constant_count = 0
@@ -41,6 +43,7 @@ class VirtualAddressHandler:
         self.temp_float_count = 0
         self.temp_bool_count = 0
         self.temp_string_count = 0
+        self.pointer_count = 0
 
     def reset_local_counters(self):
         self.local_int_count = 0
@@ -53,6 +56,24 @@ class VirtualAddressHandler:
         self.temp_float_count = 0
         self.temp_bool_count = 0
         self.temp_string_count = 0
+
+    def return_size_dict(self):
+        size_dict = dict(int=self.local_int_count, float=self.local_float_count,
+                         string=self.local_string_count, bool=self.local_bool_count,
+                         int_temp=self.temp_int_count, float_temp=self.temp_float_count,
+                         string_temp=self.temp_string_count, bool_temp=self.temp_bool_count)
+        self.reset_local_counters()
+        self.reset_temp_counters()
+        return size_dict
+
+    def return_global_size_dict(self):
+        size_dict = dict(int=self.int_count, float=self.float_count,
+                         string=self.string_count, bool=self.bool_count,
+                         int_temp=self.temp_int_count, float_temp=self.temp_float_count,
+                         string_temp=self.temp_string_count, bool_temp=self.temp_bool_count,
+                         pointer=self.pointer_count)
+        self.reset_temp_counters()
+        return size_dict
 
     def next_variable_address(self, variable_type, scope):
         if scope == self.GLOBAL_SCOPE:
@@ -176,3 +197,52 @@ class VirtualAddressHandler:
         address = VirtualAddressHandler.TEMP_BOOL_BASE + self.temp_bool_count
         self.temp_bool_count += 1
         return address
+
+    def next_pointer_address(self):
+        address = VirtualAddressHandler.POINTER_BASE + self.pointer_count
+        self.pointer_count += 1
+        return address
+
+    def increment_address_count(self, var_type, scope, count):
+        if scope == 0:
+            if var_type == SemanticCube.INT:
+                self.increment_int_count(count)
+            elif var_type == SemanticCube.FLOAT:
+                self.increment_float_count(count)
+            elif var_type == SemanticCube.STRING:
+                self.increment_string_count(count)
+            elif var_type == SemanticCube.BOOL:
+                self.increment_bool_count(count)
+        else:
+            if var_type == SemanticCube.INT:
+                self.increment_local_int_count(count)
+            elif var_type == SemanticCube.FLOAT:
+                self.increment_local_float_count(count)
+            elif var_type == SemanticCube.STRING:
+                self.increment_local_string_count(count)
+            elif var_type == SemanticCube.BOOL:
+                self.increment_local_bool_count(count)
+
+    def increment_int_count(self, count):
+        self.int_count += count
+
+    def increment_float_count(self, count):
+        self.float_count += count
+
+    def increment_string_count(self, count):
+        self.string_count += count
+
+    def increment_bool_count(self, count):
+        self.bool_count += count
+
+    def increment_local_int_count(self, count):
+        self.local_int_count += count
+
+    def increment_local_float_count(self, count):
+        self.local_float_count += count
+
+    def increment_local_string_count(self, count):
+        self.local_string_count += count
+
+    def increment_local_bool_count(self, count):
+        self.local_bool_count += count

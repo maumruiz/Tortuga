@@ -1,0 +1,35 @@
+programa bubble_sort
+
+var arr : int[5]
+
+arr[0] = 3
+arr[1] = 1
+arr[2] = 5
+arr[3] = 4
+arr[4] = 2
+
+var swapped : bool = verdadero
+var j : int = 0
+var i : int = 0
+var temp : int
+mientras (swapped) {
+  escribe("######################Ronda")
+  swapped = falso
+  j = j + 1
+  i = 0
+  mientras (i < 5 - j) {
+    si (arr[i] > arr[i + 1]) {
+      temp = arr[i]
+      arr[i] = arr[i + 1]
+      arr[i + 1] = temp
+      swapped = verdadero
+    }
+    i = i + 1
+  }
+}
+
+i = 0
+repetir(5) {
+  escribe(arr[i])
+  i = i + 1
+}

@@ -50,7 +50,7 @@ class Register:
         if return_type != 'void':
             type_code = self.__type_to_int(return_type)
             self.function_list[self.current_scope]['type'] = type_code
-            function_address = self.add_variable(self.function_list[self.current_scope]['name'], type_code, None, 0)
+            function_address = self.add_variable(self.function_list[self.current_scope]['name'], type_code, None, 0)['address']
             self.function_list[self.current_scope]['return_register'] = function_address
         print("Tipo de la funcion: " + return_type)
 
@@ -64,13 +64,16 @@ class Register:
         if scope is None:
             scope = self.current_scope
         type_code = self.__type_to_int(variable_type)
-        variable = dict(name = variable_name, type = type_code, address = self.address_handler.next_variable_address(type_code, scope))
+        variable = dict(name = variable_name, type = type_code, address = self.address_handler.next_variable_address(type_code, scope), upper_limit = None)
         self.function_list[scope]['variables'].append(variable)
         print("Nueva variable-- ID: " + variable_name + ", Tipo: " + str(variable_type) + ", Scope actual: " + str(scope))
-        return variable['address']
+        return variable
 
     def clear_variables(self):
         #self.function_list[self.current_scope]['variables'] = []
+        self.function_list[self.current_scope]['size_dict'] = self.address_handler.return_size_dict()
+        print('############## SIZE DICT #####################')
+        print(self.function_list[self.current_scope]['size_dict'])
         print("Destruye las variables del scope:  " + str(self.current_scope) + "    Tabla actual: Global")
         self.current_scope = 0
         self.add_param_counter = 0
@@ -120,6 +123,11 @@ class Register:
             print(self.params_counter)
             print("Error: El numero de los parametros es incorrecto")
             exit(1)
+
+    def create_array(self, variable_name, size):
+        for variable in self.function_list[self.current_scope]['variables']:
+            if variable['name'] == variable_name:
+                variable['upper_limit'] = size
 
 
     def print_table(self):

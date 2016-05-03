@@ -21,6 +21,7 @@ class OpCodes:
     GOSUB = 18
     RET = 19
     RETURN = 20
+    VERIFY = 21
 
     READ = 101
     WRITE = 102

@@ -22,27 +22,33 @@ class Memory:
 
     POINTER_BASE = 40000
 
-    def __init__(self, is_global, variables):
-        self.register = dict(int={}, float={}, string={}, bool={})
-        self.temp_register = dict(int={}, float={}, string={}, bool={})
+    def __init__(self, is_global, size_dict):
+        self.register = dict(int=[], float=[], string=[], bool=[], pointer=[])
+        self.temp_register = dict(int=[], float=[], string=[], bool=[])
         if is_global:
             self.int_offset = Memory.INT_BASE
             self.float_offset = Memory.FLOAT_BASE
             self.string_offset = Memory.STRING_BASE
             self.bool_offset = Memory.BOOL_BASE
-            for variable in variables:
-                self.add_global_variable(variable['address'])
+            self.pointer_offset = Memory.POINTER_BASE
+            self.register['pointer'] = [0 for x in range(size_dict['pointer'])]
         else:
             self.int_offset = Memory.LOCAL_INT_BASE
             self.float_offset = Memory.LOCAL_FLOAT_BASE
             self.string_offset = Memory.LOCAL_STRING_BASE
             self.bool_offset = Memory.LOCAL_BOOL_BASE
-            for variable in variables:
-                self.add_local_variable(variable['address'])
         self.temp_int_offset = Memory.TEMP_INT_BASE
         self.temp_float_offset = Memory.TEMP_FLOAT_BASE
         self.temp_string_offset = Memory.TEMP_STRING_BASE
         self.temp_bool_offset = Memory.TEMP_BOOL_BASE
+        self.register['int'] = [0 for x in range(size_dict['int'])]
+        self.register['float'] = [0 for x in range(size_dict['float'])]
+        self.register['string'] = ['' for x in range(size_dict['string'])]
+        self.register['bool'] = [False for x in range(size_dict['bool'])]
+        self.temp_register['int'] = [0 for x in range(size_dict['int_temp'])]
+        self.temp_register['float'] = [0 for x in range(size_dict['float_temp'])]
+        self.temp_register['string'] = ['' for x in range(size_dict['string_temp'])]
+        self.temp_register['bool'] = [False for x in range(size_dict['bool_temp'])]
 
     def add_global_variable(self, address):
         if address >= Memory.INT_BASE and address < Memory.FLOAT_BASE:
@@ -96,17 +102,19 @@ class Memory:
         return self.register['bool'][self.translate_address(address, self.bool_offset)]
 
     def get_temp_int_value(self, address):
-        return self.temp_register['int'][self.translate_address(address, self.int_offset)]
+        return self.temp_register['int'][self.translate_address(address, self.temp_int_offset)]
 
     def get_temp_float_value(self, address):
-        return self.temp_register['float'][self.translate_address(address, self.float_offset)]
+        return self.temp_register['float'][self.translate_address(address, self.temp_float_offset)]
 
     def get_temp_string_value(self, address):
-        return self.temp_register['string'][self.translate_address(address, self.string_offset)]
+        return self.temp_register['string'][self.translate_address(address, self.temp_string_offset)]
 
     def get_temp_bool_value(self, address):
-        return self.temp_register['bool'][self.translate_address(address, self.bool_offset)]
+        return self.temp_register['bool'][self.translate_address(address, self.temp_bool_offset)]
 
+    def get_pointer_value(self, address):
+        return self.register['pointer'][self.translate_address(address, self.pointer_offset)]
 
     def set_int_value(self, address, value):
         self.register['int'][self.translate_address(address, self.int_offset)] = value
@@ -121,16 +129,19 @@ class Memory:
         self.register['bool'][self.translate_address(address, self.bool_offset)] = value
 
     def set_temp_int_value(self, address, value):
-        self.temp_register['int'][self.translate_address(address, self.int_offset)]  = value
+        self.temp_register['int'][self.translate_address(address, self.temp_int_offset)]  = value
 
     def set_temp_float_value(self, address, value):
-        self.temp_register['float'][self.translate_address(address, self.float_offset)] = value
+        self.temp_register['float'][self.translate_address(address, self.temp_float_offset)] = value
 
     def set_temp_string_value(self, address, value):
-        self.temp_register['string'][self.translate_address(address, self.string_offset)] = value
+        self.temp_register['string'][self.translate_address(address, self.temp_string_offset)] = value
 
     def set_temp_bool_value(self, address, value):
-        self.temp_register['bool'][self.translate_address(address, self.bool_offset)] = value
+        self.temp_register['bool'][self.translate_address(address, self.temp_bool_offset)] = value
+
+    def set_pointer_value(self, address, value):
+        self.register['pointer'][self.translate_address(address, self.pointer_offset)] = value
 
     def translate_address(self, address, offset):
         return address - offset

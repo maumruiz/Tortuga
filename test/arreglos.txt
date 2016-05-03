@@ -1,0 +1,16 @@
+programa arreglos
+
+var a : int[3]
+var b : float[4]
+var c : string[6]
+
+a[0] = 1
+a[1] = 2
+a[2] = 3
+
+
+escribe(a[0])
+
+a[0] = 8375843
+
+escribe(a[0])

@@ -302,7 +302,7 @@ from virtual_machine import VirtualMachine
 
 #Parsing rules
 register = Register()
-quadruple_reg = QuadrupleRegister()
+quadruple_reg = QuadrupleRegister(lexer)
 register.set_address_handler(quadruple_reg.address_handler)
 main_goto_quadruple = 0
 
@@ -320,6 +320,7 @@ def p_programa(p):
     print('########## Quadruple dirs ###########')
     quadruple_reg.print_quadruples()
     print('##')
+    register.function_list[0]['size_dict'] = register.address_handler.return_global_size_dict()
     dir_funciones = register.function_list
     constant_table = quadruple_reg.constant_list
     quadruple_list = quadruple_reg.quadruple_list
@@ -369,18 +370,23 @@ def p_progfunc(p):
     pass
 
 def p_var(p):
-    'var : VAR ID arrsino DOSPUNTOS type add_var varasign'
+    'var : VAR ID DOSPUNTOS type add_var arrdec varasign'
     # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
     pass
 
-def p_arrsino(p):
-    '''arrsino : arraccess
+def p_arrdec(p):
+    '''arrdec : arrdec1
             | vacio'''
-    pass
+
+def p_arrdec1(p):
+    'arrdec1 : CORCHETEI CTEI CORCHETED'
+    variable = p[-1]
+    register.create_array(variable['name'], p[2])
+    register.address_handler.increment_address_count(variable['type'], register.current_scope, p[2])
 
 def p_add_var(p):
     'add_var :'
-    register.add_variable(p[-4], p[-1])
+    p[0] = register.add_variable(p[-3], p[-1])
     pass
 
 def p_push_var(p):
@@ -392,15 +398,14 @@ def p_push_var(p):
 def p_varasign(p):
     '''varasign : push_var ASIGNACION push_operator ssexp
             | vacio'''
-    # p[0] = p[2]
     quadruple_reg.assignment_check()
     pass
 
 def p_type(p):
-    '''type : INT arrsino
-            | FLOAT arrsino
-            | STRING arrsino
-            | BOOL arrsino'''
+    '''type : INT
+            | FLOAT
+            | STRING
+            | BOOL'''
     p[0] = p[1]
     pass
 
@@ -433,6 +438,7 @@ def p_statute(p):
 
 def p_function(p):
     'function : FUNC ID dec_func PARENTESISI dec_varloc params PARENTESISD function_type func_block'
+    # register.function_list[register.current_scope]['size_dict'] = register.address_handler.return_size_dict()
     register.clear_variables()
     quadruple_reg.generate_return_action()
     pass
@@ -506,7 +512,7 @@ def p_dec_varloc(p):
     pass
 
 def p_assignment(p):
-    'assignment : ID arrsino push_id ASIGNACION push_operator ssexp'
+    'assignment : ID push_id arrsino ASIGNACION push_operator ssexp'
     quadruple_reg.assignment_check()
     pass
 
@@ -586,7 +592,7 @@ def p_push_operator(p):
 def p_factor(p):
     '''factor : PARENTESISI push_fake_bottom ssexp PARENTESISD pop_fake_bottom
             | varconst
-            | ID arrsino push_id
+            | ID push_id arrsino
             | function_call push_function_return
             | primitive_func ENDLINE'''
     pass
@@ -600,7 +606,7 @@ def p_push_function_return(p):
 
 def p_push_id(p):
     'push_id :'
-    variable = register.get_variable(p[-2])
+    variable = register.get_variable(p[-1])
     quadruple_reg.push_operand(variable)
     pass
 
@@ -772,9 +778,19 @@ def p_push_bool_literal(p):
     quadruple_reg.push_bool_literal(p[-1])
     pass
 
-def p_arraccess(p):
-    'arraccess : CORCHETEI ssexp CORCHETED'
+def p_arrsino(p):
+    '''arrsino : arraccess
+            | vacio'''
     pass
+
+def p_arraccess(p):
+    'arraccess : CORCHETEI array_check ssexp CORCHETED'
+    quadruple_reg.generate_array_access(p[2]['address'], p[2]['upper_limit'])
+
+def p_array_check(p):
+    'array_check :'
+    p[0] = quadruple_reg.array_check()
+
 
 def p_boolvalue(p):
     '''boolvalue : VERDADERO
