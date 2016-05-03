@@ -289,6 +289,8 @@ class VirtualMachine:
             self.options[action](self, quadruple)
 
     def op_era(self, quadruple):
+        self.memory_map.nested_call_level += 1
+
         func_name = quadruple['operand_1']
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
@@ -297,6 +299,8 @@ class VirtualMachine:
         self.memory_map.push_local(func_name)
 
     def op_gosub(self, quadruple):
+        self.memory_map.nested_call_level -= 1
+        
         func_dir = int(quadruple['operand_1'])
 
         self.return_stack.append(self.current_quadruple + 1)
