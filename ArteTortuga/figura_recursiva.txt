@@ -1,0 +1,13 @@
+programa figuraRecursiva
+
+func figura(n: int) {
+  si(n < 10) {
+    adelante(n)
+  } sino {
+    adelante(n)
+    derecha(90)
+    figura(n - 5)
+  }
+}
+
+figura(100)
