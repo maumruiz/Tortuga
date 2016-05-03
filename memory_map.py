@@ -183,5 +183,57 @@ class MemoryMap:
             print('Error de ejecucion: Direccion virtual temporal desconocida')
             return None
 
+    def get_param_value(self, address):
+        if address < MemoryMap.INT_BASE:
+            return self.get_constant_value(address)
+        elif address >= MemoryMap.INT_BASE and address < MemoryMap.LOCAL_INT_BASE:
+            return self.get_global_value(address)
+        elif address >= MemoryMap.LOCAL_INT_BASE and address < MemoryMap.LOCAL_FLOAT_BASE:
+            return self.get_previous_memory().get_int_value(address)
+        elif address >= MemoryMap.LOCAL_FLOAT_BASE and address < MemoryMap.LOCAL_STRING_BASE:
+            return self.get_previous_memory().get_float_value(address)
+        elif address >= MemoryMap.LOCAL_STRING_BASE and address < MemoryMap.LOCAL_BOOL_BASE:
+            return self.get_previous_memory().get_string_value(address)
+        elif address >= MemoryMap.LOCAL_BOOL_BASE and address < MemoryMap.TEMP_INT_BASE:
+            return self.get_previous_memory().get_bool_value(address)
+        else:
+            print('Error de ejecucion: Direccion virtual local desconocida')
+            return None
+
     def get_local_memory(self):
         return self.memory_stack[-1]
+
+    def get_previous_memory(self):
+        return self.memory_stack[-2]
+
+    def read_by_type(self, address):
+        if address >= MemoryMap.INT_BASE and address < MemoryMap.FLOAT_BASE:
+            return self.read_int()
+        elif address >= MemoryMap.FLOAT_BASE and address < MemoryMap.STRING_BASE:
+            return self.read_float()
+        elif address >= MemoryMap.STRING_BASE and address < MemoryMap.BOOL_BASE:
+            return self.read_string()
+        elif address >= MemoryMap.LOCAL_INT_BASE and address < MemoryMap.LOCAL_FLOAT_BASE:
+            return self.read_int()
+        elif address >= MemoryMap.LOCAL_FLOAT_BASE and address < MemoryMap.LOCAL_STRING_BASE:
+            return self.read_float()
+        elif address >= MemoryMap.LOCAL_STRING_BASE and address < MemoryMap.LOCAL_BOOL_BASE:
+            return self.read_string()
+        elif address >= MemoryMap.TEMP_INT_BASE and address < MemoryMap.TEMP_FLOAT_BASE:
+            return self.read_int()
+        elif address >= MemoryMap.TEMP_FLOAT_BASE and address < MemoryMap.TEMP_STRING_BASE:
+            return self.read_float()
+        elif address >= MemoryMap.TEMP_STRING_BASE and address < MemoryMap.TEMP_BOOL_BASE:
+            return self.read_string()
+        else:
+            print('Error de ejecucion: Direccion virtual temporal desconocida o invalida')
+            return None
+
+    def read_int(self):
+        return int(input())
+
+    def read_float(self):
+        return float(input())
+
+    def read_string(self):
+        return input()

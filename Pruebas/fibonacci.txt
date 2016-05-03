@@ -1,21 +1,27 @@
 programa fibonacci
 
 func fibonacci(n :int) : int {
-  si (n == 0) {
+  var n1 : int
+  var n2 : int
+  si (n <= 0) {
     regresa 0
   } sino {
     si (n == 1) {
       regresa 1
     } sino {
-      regresa fibonacci(n - 1) + fibonacci(n - 2)
+      escribe("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+      escribe(n)
+      n1 = n - 1
+      n2 = n - 2
+      regresa fibonacci(n1) + fibonacci(n2)
     }
   }
 }
 
-var x : int = 0
+var x : int = 1
 escribe("Teclea el numero para la secuencia")
 lee(x)
 
 var res : int = fibonacci(x)
 escribe("Resultado")
-escribe(x)
+escribe(res)

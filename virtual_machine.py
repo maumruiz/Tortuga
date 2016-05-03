@@ -328,19 +328,19 @@ class VirtualMachine:
         operand1_dir = int(quadruple['operand_1'])
         result_dir = int(quadruple['result'])
 
-        operand1 = self.memory_map.get_value(operand1_dir)
+        param_value = self.memory_map.get_param_value(operand1_dir)
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         print(" * op1dir: " + str(operand1_dir) + "   resdir: " + str(result_dir))
-        print(" * param: " + str(result_dir) + " = " + str(operand1))
+        print(" * param: " + str(result_dir) + " = " + str(param_value))
 
-        self.memory_map.set_value(result_dir, operand1)
+        self.memory_map.set_value(result_dir, param_value)
 
     def read(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
 
         print(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
-        value = input()
+        value = self.memory_map.read_by_type(operand1_dir)
         print(" * read: " + str(value) + '->' + str(operand1_dir))
 
         self.memory_map.set_value(operand1_dir, value)

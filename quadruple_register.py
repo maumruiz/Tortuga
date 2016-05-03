@@ -124,7 +124,7 @@ class QuadrupleRegister:
             self.operator_stack.pop()
             operand = self.operand_stack.pop()
             assigned = self.operand_stack.pop()
-            print("Assigned type: " + str(assigned['type']) + "   Operand type: " + str(operand['type']))
+            print("Assigned type: " + str(assigned['type']) + "   Operand type: " + str(operand['type']) + '  Assigned address: ' + str(assigned['address']))
             result_type = self.semantic_cube.get_result_type(assigned['type'], operand['type'], operator)
             print('Result Type in assignment ::::: ' + str(result_type))
             if result_type is not None:

@@ -676,7 +676,7 @@ def p_control_block(p):
     pass
 
 def p_control_block1(p):
-    '''control_block1 : control_statements block1
+    '''control_block1 : control_statements control_block1
             | vacio'''
     pass
 
@@ -695,15 +695,19 @@ def p_function_call(p):
     start_dir = register.get_function_starting_quadruple()
     register.verify_params_count()
     quadruple_reg.generate_gosub(start_dir)
+    quadruple_reg.pop_fake_bottom()
     p[0] = register.get_current_function()
     # pop
     print("Function called")
+    print(p[0])
+    quadruple_reg.print_name_quadruples()
     pass
 
 def p_function_check(p):
     'function_check :'
     function_name = p[-1]
     register.set_current_function_call(function_name)
+    quadruple_reg.push_fake_bottom()
     pass
 
 def p_generate_era(p):
