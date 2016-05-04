@@ -1,0 +1,34 @@
+programa triangulos
+
+func dibuja_triangulos(longitud : int, prof : int) {
+    var i : int = 0
+    si (prof == 0) {
+        mientras (i < 3) {
+            adelante(longitud)
+            izquierda(120)
+            i = i + 1
+        }
+    } sino {
+        dibuja_triangulos(longitud / 2, prof - 1)
+        adelante(longitud / 2)
+        dibuja_triangulos(longitud / 2, prof - 1)
+        atras(longitud / 2)
+        izquierda(60)
+        adelante(longitud / 2)
+        derecha(60)
+        dibuja_triangulos(longitud / 2, prof - 1)
+        izquierda(60)
+        atras(longitud / 2)
+        derecha(60)
+    }
+}
+
+color_fondo(255, 97, 56)
+grosor_linea(3)
+color_linea(121, 189, 143)
+
+alzar_pluma()
+posicion(150, -150)
+bajar_pluma()
+
+dibuja_triangulos(500, 4)

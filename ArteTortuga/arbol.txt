@@ -1,0 +1,26 @@
+programa arbol
+
+func dibuja_arbol(largo : int, prof : int) {
+  adelante(largo)
+
+  si (prof > 1) {
+      izquierda(45)
+      dibuja_arbol(largo / 2, prof - 1)
+      izquierda(90)
+      dibuja_arbol(largo / 2, prof - 1)
+      derecha(135)
+  }
+  derecha(180)
+  adelante(largo)
+}
+
+color_fondo(100, 100, 100)
+alzar_pluma()
+posicion(0, -100)
+bajar_pluma()
+
+color_linea(0, 255, 0)
+grosor_linea(3)
+
+
+dibuja_arbol(200, 7)

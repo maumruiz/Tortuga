@@ -2,6 +2,7 @@ from memory_map import MemoryMap
 from constant_table import ConstantTable
 from semantic_cube import SemanticCube
 from logger import Logger
+from random import randint
 import sys
 import turtle
 
@@ -654,7 +655,13 @@ class VirtualMachine:
     # al mapa de memoria para conseguir su valor. Al final genera un número random
     def random(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
+        result_dir = int(quadruple['result'])
         operand1 = self.memory_map.get_value(operand1_dir)
+        
+        result = randint(0, operand1)
+
+        self.memory_map.set_value(result_dir, result)
+        
         self.log.write(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         self.log.write(" * random: " + str(operand1))
         # turtle.pensize(operand1)

@@ -3,12 +3,19 @@ programa espirales
 color_fondo(0, 0, 0)
 
 var x : int = 0
+var r : int
+var g : int
+var b : int
 
 mientras (x < 400) {
     adelante(50 + x)
     derecha(91)
 
-    color_linea(255, 0, 0)
+    r = random(255)
+    g = random(255)
+    b = random(255)
+
+    color_linea(r, g, b)
 
     x = x + 1
 }

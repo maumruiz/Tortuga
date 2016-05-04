@@ -537,7 +537,9 @@ class QuadrupleRegister:
             print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
-            self.generate(OpCodes.RANDOM, operand, None, None)
+            var = self.__new_temp_var(SemanticCube.INT)
+            self.generate(OpCodes.RANDOM, operand, None, var)
+
 
     # Saca el último y penúltimo operando de la pila de operandos y checa que los tipos sean enteros,
     # Si si son, se genera el cuádruplo circle que dibuja un círculo con el radio y ángulo dado
