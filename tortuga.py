@@ -307,33 +307,35 @@ from register import Register
 from quadruple_register import QuadrupleRegister
 from op_codes import OpCodes
 from virtual_machine import VirtualMachine
+from logger import Logger
 
 # Inicializacion de clases
 register = Register()
 quadruple_reg = QuadrupleRegister(lexer)
 register.set_address_handler(quadruple_reg.address_handler)
 main_goto_quadruple = 0
+log = Logger(False)
 
 
-#Parsing rules
+# Reglas de parsing
 
 # Sintaxis principal de todo el programa
 def p_programa(p):
     'programa : dec_programa progvar main_goto progfunc main_block'
 
-    print("/////////////Programa terminado con exito///////////////")
-    print(" ######### Register table  ###########")
+    log.write("/////////////Programa terminado con exito///////////////")
+    log.write(" ######### Register table  ###########")
     register.print_table()
-    print(" ####### Debug Quadruples ############")
+    log.write(" ####### Debug Quadruples ############")
     quadruple_reg.print_debug_quadruples()
-    print('########## Constants ###########')
+    log.write('########## Constants ###########')
     quadruple_reg.print_constants()
-    print('########## Quadruple names ###########')
+    log.write('########## Quadruple names ###########')
     quadruple_reg.print_name_quadruples()
-    print('########## Quadruple dirs ###########')
+    log.write('########## Quadruple dirs ###########')
     quadruple_reg.print_quadruples()
 
-    print('##')
+    log.write('##')
     register.function_list[0]['size_dict'] = register.address_handler.return_global_size_dict()
     # Cosigue el directorio de funciones de la clase register
     dir_funciones = register.function_list
@@ -393,7 +395,6 @@ def p_progfunc(p):
 # Declaración de variables completas
 def p_var(p):
     'var : VAR ID DOSPUNTOS type add_var arrdec varasign'
-    # print("Nueva variable-- ID: " + p[2] + "   Tipo: " + p[6] + "   Valor: " + str(p[4]))
 
 # Checa si la variable es un arreglo
 def p_arrdec(p):
@@ -544,7 +545,6 @@ def p_return(p):
 
 def p_dec_varloc(p):
     'dec_varloc :'
-    # print("Se crea la tabla de variables local. Tabla actual: " + p[-3])
 
 # Asignación de un valor a una variable previamente declarada
 def p_assignment(p):
@@ -625,7 +625,7 @@ def p_factor(p):
             | varconst
             | ID push_id arrsino
             | function_call push_function_return
-            | primitive_func ENDLINE'''
+            | primitive_func'''
 
 # Agrega el retorno de la función, con su tipo y valor a la pila de retornos de función
 def p_push_function_return(p):
@@ -738,8 +738,6 @@ def p_function_call(p):
     quadruple_reg.pop_fake_bottom()
     p[0] = register.get_current_function()
     # pop
-    print("Function called")
-    print(p[0])
     quadruple_reg.print_name_quadruples()
 
 # Se checa que la función exista con el ID dado
@@ -757,7 +755,6 @@ def p_generate_era(p):
     function_name = register.get_current_function()['name']
     quadruple_reg.generate_era(function_name)
     register.params_counter = 0
-    print(register.get_current_function())
 
 # Checa si hay argumentos en la llamada a función
 def p_args(p):
@@ -823,7 +820,7 @@ def p_arrsino(p):
 # Accesa a la direccion del arreglo dado
 def p_arraccess(p):
     'arraccess : CORCHETEI array_check ssexp CORCHETED'
-    quadruple_reg.generate_array_access(p[2]['address'], p[2]['upper_limit'])
+    quadruple_reg.generate_array_access(p[2]['address'], p[2]['upper_limit'], p[2]['type'])
 
 # Verifica el arreglo
 def p_array_check(p):
@@ -953,7 +950,7 @@ def p_vacio(p):
 
 #Manejo de errores de sintaxis
 def p_error(p):
-    print("Syntax error at line " + str(p.lexer.lineno) + " : Unexpected token  " + str(p.value) )
+    print("Error de sintaxis en la linea " + str(p.lexer.lineno) + " : Token inesperado  " + str(p.value) )
     sys.exit
 
 import ply.yacc as yacc
@@ -966,7 +963,7 @@ def main(argv):
     data = file.read()
     file.close()
 
-    print(data)
+    # print(data)
     parser.parse(data, tracking = True)
 
 if __name__ == '__main__':

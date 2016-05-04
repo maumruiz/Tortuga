@@ -94,11 +94,15 @@ class VirtualMachine:
 
         operand1 = self.memory_map.get_value(operand1_dir)
         operand2 = self.memory_map.get_value(operand2_dir)
-        result = operand1 + operand2
 
         if result_dir >= MemoryMap.POINTER_BASE:
             operand2 = operand2_dir
-            result = operand1 + operand2
+            self.log.write('############ Pointer Arithmetic ##################')
+            self.log.write('Operand 1: '+ str(operand1))
+            self.log.write('Operand 2: '+ str(operand2))
+            self.log.write('############ Pointer Arithmetic ##################')
+
+        result = operand1 + operand2
 
         self.log.write(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         self.log.write(" * op1dir: " + str(operand1_dir) + "   op2dir: " + str(operand2_dir) + "   resdir: " + str(result_dir))
@@ -335,7 +339,7 @@ class VirtualMachine:
         self.options[action](self, quadruple)
 
     def op_return(self, quadruple):
-        pass
+        self.op_ret_act(quadruple)
 
     def op_param(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
