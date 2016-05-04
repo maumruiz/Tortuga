@@ -20,6 +20,7 @@ class SemanticCube:
     MENOR_IGUAL = 12
 
     # El orden es: i f s b
+    
     #          int                             float                          string                      boolean
     cube = [[[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None],  [None, None, None, None],   [None, None, None, None]], # Multiplicacion
             [[INT, FLOAT, None, None],   [FLOAT, FLOAT, None, None],  [None, None, None, None],   [None, None, None, None]], # Division
