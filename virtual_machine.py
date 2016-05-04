@@ -7,7 +7,7 @@ import turtle
 
 
 class VirtualMachine:
-''' Clase Maquina Virtual que se encarga de la ejecución de los cuádruplos generados.
+    ''' Clase Maquina Virtual que se encarga de la ejecución de los cuádruplos generados.
     Se ocupa de la memoria en ejecución y de las acciones de las funciones primitivas
     que permiten generar output gráfico'''
 

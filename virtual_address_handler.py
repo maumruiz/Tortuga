@@ -2,7 +2,7 @@ from semantic_cube import SemanticCube
 import sys
 
 class VirtualAddressHandler:
-''' Clase que se encarga del manejo de variables virtuales.
+    ''' Clase que se encarga del manejo de variables virtuales.
     La clase crea direcciones según si son globales, locales, constantes o temporales,
     y para cada una de estas revisa si son variables enteras, flotantes, strings o booleanos'''
 
