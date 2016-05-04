@@ -28,7 +28,7 @@ grosor_linea(3)
 color_linea(121, 189, 143)
 
 alzar_pluma()
-posicion(150, -150)
+posicion(200, -200)
 bajar_pluma()
 
-dibuja_triangulos(500, 4)
+dibuja_triangulos(450, 4)
