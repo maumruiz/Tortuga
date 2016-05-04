@@ -1,0 +1,40 @@
+programa fractales_2
+
+func fractal(orden : int, tam : int) {
+  si (orden == 0) {
+    adelante(tam)
+  } sino {
+    fractal(orden - 1, tam / 3)
+    izquierda(60)
+    fractal(orden - 1, tam / 3)
+    derecha(120)
+    fractal(orden - 1, tam / 3)
+    izquierda(60)
+    fractal(orden - 1, tam / 3)
+  }
+}
+
+
+color_fondo(231, 76, 60)
+color_linea(236, 240, 241)
+grosor_linea(3)
+
+alzar_pluma()
+posicion(200, -200)
+
+
+activar_relleno()
+bajar_pluma()
+color_relleno(52, 152, 219)
+
+izquierda(90)
+
+repetir(8) {
+  fractal(3 ,100)
+  derecha(45)
+}
+
+desactivar_relleno()
+
+
+

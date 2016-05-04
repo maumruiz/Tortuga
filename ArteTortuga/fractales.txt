@@ -1,0 +1,39 @@
+programa fractales
+
+func fractal(orden : int, tam : int) {
+  si (orden == 0) {
+    adelante(tam)
+  } sino {
+    fractal(orden - 1, tam / 3)
+    izquierda(60)
+    fractal(orden - 1, tam / 3)
+    derecha(120)
+    fractal(orden - 1, tam / 3)
+    izquierda(60)
+    fractal(orden - 1, tam / 3)
+  }
+}
+
+
+color_fondo(231, 76, 60)
+color_linea(236, 240, 241)
+grosor_linea(5)
+
+alzar_pluma()
+posicion(0, -200)
+
+bajar_pluma()
+
+var tam : int = 0
+var orden : int = 0
+
+escribe("Teclea el orden")
+lee(orden)
+
+escribe("Teclea el tamaño")
+lee(tam)
+
+
+fractal(orden ,tam)
+
+

@@ -467,12 +467,12 @@ class VirtualMachine:
     def fill_true(self, quadruple):
         self.log.write(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         self.log.write(" * fill_true: ")
-        turtle.fill(True)
+        turtle.begin_fill()
 
     def fill_false(self, quadruple):
         self.log.write(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         self.log.write(" * fill_false: ")
-        turtle.fill(False)
+        turtle.end_fill()
 
     def fill_color(self, quadruple):
         operand1_dir = int(quadruple['operand_1'])
