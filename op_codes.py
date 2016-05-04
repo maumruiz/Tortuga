@@ -1,4 +1,7 @@
 class OpCodes:
+    ''' Clase que contiene las codigos de operación para todos
+        los operadores y primitivas'''
+
     FAKE_BOTTOM = -1
     MULTIPLICATION = 0
     DIVISION = 1
