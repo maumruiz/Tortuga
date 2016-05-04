@@ -384,6 +384,9 @@ class VirtualMachine:
             action = quadruple['operator']
             self.options[action](self, quadruple)
 
+    # La función op_era recibe un cuádruplo. Se incrementa en uno el nivel de
+    # llamadas anidadas. Saca la dirección del operando 1 (es una dirección de función).
+    # Se agrega a la pila de memoria, la función con el nombre encontrado
     def op_era(self, quadruple):
         self.memory_map.nested_call_level += 1
 
