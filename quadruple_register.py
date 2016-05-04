@@ -329,11 +329,7 @@ class QuadrupleRegister:
     # de la función.
     def verify_and_generate_argument(self, arg, arg_count, param_max):
         if(arg_count > param_max):
-<<<<<<< HEAD
-            sys.exit(" Error: el número de parámetros dados es mayor al esperado")
-=======
             sys.exit(str(self.lexer.lineno) + ': ' +" Error semántico: el número de parámetros dados es incorrecto")
->>>>>>> origin/master
 
         operand = self.operand_stack.pop()
         if operand['type'] != arg['type']:
