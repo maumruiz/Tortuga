@@ -7,7 +7,7 @@ import turtle
 
 
 class VirtualMachine:
-''' Clase Maquina Virtual que se encarga de la ejecución de los cuádruplos generados.
+    ''' Clase Maquina Virtual que se encarga de la ejecución de los cuádruplos generados.
     Se ocupa de la memoria en ejecución y de las acciones de las funciones primitivas
     que permiten generar output gráfico'''
 
@@ -117,11 +117,15 @@ class VirtualMachine:
 
         operand1 = self.memory_map.get_value(operand1_dir)
         operand2 = self.memory_map.get_value(operand2_dir)
-        result = operand1 + operand2
 
         if result_dir >= MemoryMap.POINTER_BASE:
             operand2 = operand2_dir
-            result = operand1 + operand2
+            self.log.write('############ Pointer Arithmetic ##################')
+            self.log.write('Operand 1: '+ str(operand1))
+            self.log.write('Operand 2: '+ str(operand2))
+            self.log.write('############ Pointer Arithmetic ##################')
+
+        result = operand1 + operand2
 
         self.log.write(" ****************** Quadruple " + str(self.current_quadruple) + " **********************")
         self.log.write(" * op1dir: " + str(operand1_dir) + "   op2dir: " + str(operand2_dir) + "   resdir: " + str(result_dir))
@@ -380,6 +384,9 @@ class VirtualMachine:
             action = quadruple['operator']
             self.options[action](self, quadruple)
 
+    # La función op_era recibe un cuádruplo. Se incrementa en uno el nivel de
+    # llamadas anidadas. Saca la dirección del operando 1 (es una dirección de función).
+    # Se agrega a la pila de memoria, la función con el nombre encontrado
     def op_era(self, quadruple):
         self.memory_map.nested_call_level += 1
 
@@ -426,7 +433,7 @@ class VirtualMachine:
         self.options[action](self, quadruple)
 
     def op_return(self, quadruple):
-        pass
+        self.op_ret_act(quadruple)
 
     # La función op_param recibe un cuádruplo. Saca la dirección del operando 1
     # y del resultado. Llama al mapa de memoria para conseguir el valor del operando 1 (parametro).

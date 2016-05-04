@@ -1,0 +1,22 @@
+programa suma_vectores
+
+var vec1 : float[3]
+var vec2 : float[3]
+
+vec1[0] = 2
+vec1[1] = 4
+vec1[2] = 6
+
+vec2[0] = 1
+vec2[1] = 3
+vec2[2] = 5
+
+var producto : float = 0
+var i : int = 0
+mientras (i < 3) {
+  producto = producto + vec1[i] + vec2[i]
+  i = i + 1
+}
+
+escribe("Producto punto: ")
+escribe(producto)

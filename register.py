@@ -1,3 +1,5 @@
+from logger import Logger
+
 class Register:
     ''' Clase que se encarga del registro de funciones y variables, esta clase contiene
         la lista de funciones, el address habdler, el scope actual de funciones y la
@@ -18,6 +20,7 @@ class Register:
         self.current_function_call = 0
         self.main_goto_quadruple = 0
         self.add_param_counter = 0
+        self.log = Logger(False)
 
     # Función que recibe un objeto de la clase address_handler y se la asigna al
     # address_handler handler de la clase register
@@ -30,7 +33,7 @@ class Register:
     def create(self, program_name):
         global_scope = dict(name = program_name, type = 'void', variables = [])
         self.function_list.append(global_scope)
-        print("Se crea el Directorio de Funciones. Nombre: " + program_name + " Tipo: programa")
+        self.log.write("Se crea el Directorio de Funciones. Nombre: " + program_name + " Tipo: programa")
 
     # La función add_function_param recibe el nombre de una función. Checa si el
     # nombre de la función ya existe. Si ya existe marca un error de semántica.
@@ -43,7 +46,7 @@ class Register:
     # scope actual con el scope de la nueva funcion
     def add_function(self, function_name):
         if (self.__function_exists(function_name)):
-            print('Error de semántica: Nombre de funcion ' + function_name + ' duplicado')
+            print(str(self.lexer.lineno) + ': ' + 'Error de semántica: Nombre de funcion ' + function_name + ' duplicado')
             exit(1)
             return None
 
@@ -51,7 +54,7 @@ class Register:
         function = dict(name = function_name, type = None, size = size_dict, start_dir = None, variables = [], params = [], param_size = 0, return_register = None)
         self.function_list.append(function)
         self.current_scope = len(self.function_list) - 1
-        print("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
+        self.log.write("Nueva funcion -- ID: " + function_name + " Scope -- " + str(self.current_scope))
 
     # La función add_function_param recibe el nombre de parámetro y el tipo de parámetro.
     # Se consigue el codigo entero del tipo con la funcion __type_to_int, se localiza
@@ -68,7 +71,7 @@ class Register:
         param['param_num'] = self.add_param_counter
         self.function_list[self.current_scope]['params'].append(param)
         self.function_list[self.current_scope]['param_size'] = self.add_param_counter
-        print("Parametro de funcion: " + param_name)
+        self.log.write("Parametro de funcion: " + param_name)
 
     # La función set_function_start_dir recibe un cuádruplo y se lo asigna
     # a la dirección de inicio de la función con el scope actual
@@ -85,7 +88,7 @@ class Register:
             self.function_list[self.current_scope]['type'] = type_code
             function_address = self.add_variable(self.function_list[self.current_scope]['name'], type_code, None, 0)['address']
             self.function_list[self.current_scope]['return_register'] = function_address
-        print("Tipo de la funcion: " + return_type)
+        self.log.write("Tipo de la funcion: " + return_type)
 
     # La función add variable recibe un nombre, un tipo, un valor y un scope.
     # Checa si el nombre de la variable existe. Si ya existe se manda un error de
@@ -94,7 +97,7 @@ class Register:
     # Esta variable se agrega a la lista de variables de la funcion con scope actual
     def add_variable(self, variable_name, variable_type, variable_value = None, scope = None):
         if (self.__variable_exists(variable_name)):
-            print('Error de semántica: Nombre de variable ' + variable_name + ' duplicado')
+            print(str(self.lexer.lineno) + ': ' + 'Error de semántica: Nombre de variable ' + variable_name + ' duplicado')
             exit(1)
             return None
 
@@ -104,7 +107,7 @@ class Register:
         type_code = self.__type_to_int(variable_type)
         variable = dict(name = variable_name, type = type_code, address = self.address_handler.next_variable_address(type_code, scope), upper_limit = None)
         self.function_list[scope]['variables'].append(variable)
-        print("Nueva variable-- ID: " + variable_name + ", Tipo: " + str(variable_type) + ", Scope actual: " + str(scope))
+        self.log.write("Nueva variable-- ID: " + variable_name + ", Tipo: " + str(variable_type) + ", Scope actual: " + str(scope))
         return variable
 
     # La función clear variables le asigna a la funcion actual el diccionario de tamaño de
@@ -112,9 +115,11 @@ class Register:
     def clear_variables(self):
         #self.function_list[self.current_scope]['variables'] = []
         self.function_list[self.current_scope]['size_dict'] = self.address_handler.return_size_dict()
-        print('############## SIZE DICT #####################')
-        print(self.function_list[self.current_scope]['size_dict'])
-        print("Destruye las variables del scope:  " + str(self.current_scope) + "    Tabla actual: Global")
+        
+        self.log.write('############## SIZE DICT #####################')
+        self.log.write(self.function_list[self.current_scope]['size_dict'])
+        self.log.write("Destruye las variables del scope:  " + str(self.current_scope) + "    Tabla actual: Global")
+        
         self.current_scope = 0
         self.add_param_counter = 0
 
@@ -145,10 +150,9 @@ class Register:
         for index, function in enumerate(self.function_list):
             if function_name == function['name']:
                 self.current_function_call = index
-                print("Current function index: " + str(index))
+                self.log.write("Current function index: " + str(index))
                 return index
-        print("Error: Funcion no declarada: " + function_name)
-        print(self.function_list)
+        self.log.write(str(self.lexer.lineno) + ': ' + "Error: Funcion no declarada: " + function_name)
         exit(1)
 
     # La función get_expected_arg_type busca en la función con function call
@@ -175,9 +179,7 @@ class Register:
     def verify_params_count(self):
         expected_count = len(self.function_list[self.current_function_call]['params'])
         if self.params_counter != expected_count:
-            print(expected_count)
-            print(self.params_counter)
-            print("Error: El numero de los parametros es incorrecto")
+            print(str(self.lexer.lineno) + ': ' + "Error: El numero de los parametros es incorrecto")
             exit(1)
 
     # La función create_array recobe el nombre de una variable y el tamaño.
@@ -191,7 +193,7 @@ class Register:
 
     # Imprime la tabla de funciones
     def print_table(self):
-        print(self.function_list)
+        self.log.write(self.function_list)
 
     # La función __variable_exists recibe un nombre de variable y revisa si
     # el nombre existe en el scope actual y global, o en el scope actual
@@ -228,6 +230,6 @@ class Register:
         elif type_s == 'bool':
             return Register.BOOL
         else:
-            print ('Error: Tipo de dato ' + type_s + ' desconocido')
+            print (str(self.lexer.lineno) + ': ' + 'Error: Tipo de dato ' + type_s + ' desconocido')
             exit(1)
             return None

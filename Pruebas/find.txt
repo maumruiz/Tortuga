@@ -1,0 +1,31 @@
+programa find
+
+var arr : string[5]
+
+func busca(str : string) : int {
+  var i : int = 0
+  mientras (i < 5) {
+    si (arr[i] == str) {
+      regresa i
+    }
+    i = i + 1
+  }
+  regresa -1
+}
+
+
+arr[0] = "Compiladores"
+arr[1] = "Algoritmos"
+arr[2] = "Estructuras"
+arr[3] = "Física"
+arr[4] = "Matemáticas"
+
+var str : string
+
+escribe("Compiladores Algoritmos Estructuras Fisica Matematicas")
+
+escribe("Escribe la palabra que quieres buscar")
+lee(str)
+
+escribe("Tu palabra esta en la posicion: ")
+escribe(busca(str))

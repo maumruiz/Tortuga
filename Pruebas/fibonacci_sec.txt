@@ -1,0 +1,20 @@
+programa fibonacci_sec
+
+func fibonacci(n :int) : int {
+  var a : int = 0
+  var b : int = 1
+  var temp : int
+  repetir(n) {
+    temp = a
+    a = b
+    b = temp + b
+  }
+  regresa a
+}
+
+var num :int
+
+escribe("Teclea el numero")
+lee(num)
+
+escribe(fibonacci(num))

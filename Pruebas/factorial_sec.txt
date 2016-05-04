@@ -1,0 +1,20 @@
+programa factorial_sec
+
+func factorial(n : int) : int {
+  si (n <= 0) {
+    regresa 1
+  }
+  var num : int = 1
+  mientras(n >= 1) {
+    num = num * n
+    n = n - 1
+  }
+  regresa num
+}
+
+
+var n : int = 0
+escribe("Teclea el numero")
+lee(n)
+
+escribe(factorial(n))

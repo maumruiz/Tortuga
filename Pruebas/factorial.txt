@@ -1,0 +1,16 @@
+programa factorial
+
+func factorial(n : int) : int {
+  si (n <= 0) {
+    regresa 1
+  } sino {
+    regresa n * factorial(n - 1)
+  }
+}
+
+
+var n : int = 0
+escribe("Teclea el numero")
+lee(n)
+
+escribe(factorial(n))

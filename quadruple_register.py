@@ -3,6 +3,7 @@ from semantic_cube import SemanticCube
 from virtual_address_handler import VirtualAddressHandler
 from constant_handler import ConstantHandler
 from op_codes import OpCodes
+from logger import Logger
 import sys
 
 class QuadrupleRegister:
@@ -50,11 +51,12 @@ class QuadrupleRegister:
         self.constant_list = []
         self.address_handler = VirtualAddressHandler()
         self.constant_handler = ConstantHandler(self.address_handler)
+        self.log = Logger(False)
 
     # La función push operand se encarga de aregar un operando a la lista de operandos
     def push_operand(self, operand):
         if operand is None:
-            print(str(self.lexer.lineno) + ': ' + 'Error: Variable no definida')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: Variable no definida')
             exit(0)
         self.operand_stack.append(operand)
 
@@ -62,9 +64,8 @@ class QuadrupleRegister:
     # mande como argumento a su código entero, y después agregarlo a la lista de operadores
     def push_operator(self, operator):
         operator = self.__to_opcode(operator)
-        print('Pushing operator: ' +  str(operator))
+        self.log.write('Pushing operator: ' +  str(operator))
         self.operator_stack.append(operator)
-        print(self.operator_stack)
 
     # La función push_fake_bottom se encarga de poner la marca de fondo FALSE_CONSTANT
     # en la pila de operadores
@@ -78,7 +79,7 @@ class QuadrupleRegister:
         if self.operator_stack[-1] == QuadrupleRegister.FAKE_BOTTOM:
             self.operator_stack.pop()
         else:
-            print('Error: parenthesis mismatch')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: los parentesis no coinciden')
             exit(0)
 
     # La función push_int_literal se encarga de mandar el literal al constant_handler
@@ -141,7 +142,6 @@ class QuadrupleRegister:
     # igual, diferente, mayor o igual o menor o igual. Si si es, saca el operador de la
     # pila y llama a la función que checa la aritmetica de tipos.
     def sexp_check(self):
-        print(self.operator_stack)
         operator = self.operator_stack[-1] if self.operator_stack else None
         if (operator == QuadrupleRegister.GREATER or
             operator == QuadrupleRegister.LESSER or
@@ -171,13 +171,13 @@ class QuadrupleRegister:
             self.operator_stack.pop()
             operand = self.operand_stack.pop()
             assigned = self.operand_stack.pop()
-            print("Assigned type: " + str(assigned['type']) + "   Operand type: " + str(operand['type']) + '  Assigned address: ' + str(assigned['address']))
+            self.log.write("Assigned type: " + str(assigned['type']) + "   Operand type: " + str(operand['type']) + '  Assigned address: ' + str(assigned['address']))
             result_type = self.semantic_cube.get_result_type(assigned['type'], operand['type'], operator)
-            print('Result Type in assignment ::::: ' + str(result_type))
+            self.log.write('Result Type in assignment ::::: ' + str(result_type))
             if result_type is not None:
                 self.generate(operator, operand, None, assigned)
             else:
-                print('Error: Assignment type mismatch with operands ' + assigned['name'] + ' and ' + operand['name'])
+                print(str(self.lexer.lineno) + ': ' + 'Error: Los tipos de datos en la asignación no coinciden')
                 exit(0)
 
     # La función begin_if_check saca un operando de la lista de operandos, checa su tipo.
@@ -188,7 +188,7 @@ class QuadrupleRegister:
         self.print_quadruples()
         operand = self.operand_stack.pop()
         if  operand['type'] != SemanticCube.BOOL:
-            sys.exit('Error Semantico: El estatuto if requiere una expresión booleana')
+            sys.exit(str(self.lexer.lineno) + ': ' + 'Error Semantico: El estatuto if requiere una expresión booleana')
         else:
             self.generate(QuadrupleRegister.GOTOF, operand, None, None)
             self.jump_stack.append(len(self.quadruple_list) - 1)
@@ -221,7 +221,7 @@ class QuadrupleRegister:
     def middle_while_check(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.BOOL:
-            sys.exit('Semantic error: While statement requires a bool expression')
+            sys.exit(str(self.lexer.lineno) + ': ' + 'Error semántico: El estatuto if requiere una expresión booleana')
         else:
             self.generate(QuadrupleRegister.GOTOF, operand, None, None)
             self.jump_stack.append(len(self.quadruple_list) - 1)
@@ -271,7 +271,7 @@ class QuadrupleRegister:
             temp_result = self.__new_temp_var(SemanticCube.INT)
             self.generate(QuadrupleRegister.SUBSTRACTION, repeat_temp, c_one, repeat_temp)
         else:
-            sys.exit('Semantic Error: Repeat statement requires an int expression')
+            sys.exit(str(self.lexer.lineno) + ': ' + 'Error semántico: El estatuto if requiere una expresión booleana')
 
     # La función end_repeat_check saca de la pila de saltos primero el salto hacia el
     # cuadruplo de GoToF y después el punto de retorno hacia antes de la expresión.
@@ -290,7 +290,7 @@ class QuadrupleRegister:
     def array_check(self):
         variable = self.operand_stack.pop()
         if variable['upper_limit'] is None:
-            print('Error de semántica: La variable no es dimensionada')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: La variable no es dimensionada')
             exit(1)
         else:
             self.push_fake_bottom()
@@ -302,6 +302,7 @@ class QuadrupleRegister:
     def generate_return_statement(self, function_variable):
         operand = self.operand_stack.pop()
         self.generate(OpCodes.ASSIGNMENT, operand, None, function_variable)
+        self.generate_return_action()
 
     # La función generate_era recibe un nombre de función, y con este nombre, genera un
     # cuádruplo era con el mismo nombre de función
@@ -328,15 +329,19 @@ class QuadrupleRegister:
     # de la función.
     def verify_and_generate_argument(self, arg, arg_count, param_max):
         if(arg_count > param_max):
-            sys.exit(" Error: el número de parámetros dados es incorrecto")
+<<<<<<< HEAD
+            sys.exit(" Error: el número de parámetros dados es mayor al esperado")
+=======
+            sys.exit(str(self.lexer.lineno) + ': ' +" Error semántico: el número de parámetros dados es incorrecto")
+>>>>>>> origin/master
 
         operand = self.operand_stack.pop()
         if operand['type'] != arg['type']:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(QuadrupleRegister.PARAM, operand, None, arg['address'])
-            print("Argumento agregado: " + str(arg_count))
+            self.log.write("Argumento agregado: " + str(arg_count))
 
     # La función generate_array_access recibe una dirección base y un tamaño.
     # Se crea un índice viendo el último operando de la pila de operandos.
@@ -346,11 +351,11 @@ class QuadrupleRegister:
     # pointer y se genera un cuádruplo de suma con el último operando, la dirección
     # base y el pointer creado.
     # Al final se saca el fondo falso del arreglo.
-    def generate_array_access(self, base_address, size):
+    def generate_array_access(self, base_address, size, array_type):
         index = self.operand_stack[-1]
         self.generate(OpCodes.VERIFY, 0, size, index)
         aux = self.operand_stack.pop()
-        pointer = self.new_pointer()
+        pointer = self.new_pointer(array_type)
         self.generate(OpCodes.SUM, aux, base_address, pointer)
         self.operand_stack.append(pointer)
         self.pop_fake_bottom()
@@ -372,7 +377,7 @@ class QuadrupleRegister:
         if operand['type'] == SemanticCube.STRING or operand['type'] == SemanticCube.FLOAT or operand['type'] == SemanticCube.INT:
             self.generate(OpCodes.WRITE, operand, None, None)
         else:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
 
     # Saca el último operando de la pila de operandos y checa que el tipo sea entero,
@@ -381,7 +386,7 @@ class QuadrupleRegister:
     def generate_forward(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.FORWARD, operand, None, None)
@@ -392,7 +397,7 @@ class QuadrupleRegister:
     def generate_backward(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.BACKWARD, operand, None, None)
@@ -403,7 +408,7 @@ class QuadrupleRegister:
     def generate_right(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.RIGHT, operand, None, None)
@@ -414,7 +419,7 @@ class QuadrupleRegister:
     def generate_left(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.LEFT, operand, None, None)
@@ -426,7 +431,7 @@ class QuadrupleRegister:
         operand_2 = self.operand_stack.pop()
         operand_1 = self.operand_stack.pop()
         if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.POS, operand_1, operand_2, None)
@@ -437,7 +442,7 @@ class QuadrupleRegister:
     def generate_pos_x(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.POS_X, operand, None, None)
@@ -448,7 +453,7 @@ class QuadrupleRegister:
     def generate_pos_y(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.POS_Y, operand, None, None)
@@ -461,7 +466,7 @@ class QuadrupleRegister:
         operand_2 = self.operand_stack.pop()
         operand_1 = self.operand_stack.pop()
         if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT or operand_3['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.LINE_COLOR, operand_1, operand_2, operand_3)
@@ -472,7 +477,7 @@ class QuadrupleRegister:
     def generate_line_width(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.LINE_WIDTH, operand, None, None)
@@ -501,7 +506,7 @@ class QuadrupleRegister:
         operand_2 = self.operand_stack.pop()
         operand_1 = self.operand_stack.pop()
         if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT or operand_3['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.FILL_COLOR, operand_1, operand_2, operand_3)
@@ -514,10 +519,9 @@ class QuadrupleRegister:
         operand_2 = self.operand_stack.pop()
         operand_1 = self.operand_stack.pop()
         if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT or operand_3['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
-            print('Generando background color')
             self.generate(OpCodes.BACKGROUND_COLOR, operand_1, operand_2, operand_3)
 
     # Genera el cuádruplo save_pos que guarda la posicion
@@ -534,7 +538,7 @@ class QuadrupleRegister:
     def generate_random(self):
         operand = self.operand_stack.pop()
         if operand['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.RANDOM, operand, None, None)
@@ -546,7 +550,7 @@ class QuadrupleRegister:
         operand_2 = self.operand_stack.pop()
         operand_1 = self.operand_stack.pop()
         if operand_1['type'] != SemanticCube.INT or operand_2['type'] != SemanticCube.INT:
-            print('Error semántico: El tipo de argumento no coincide')
+            print(str(self.lexer.lineno) + ': ' + 'Error semántico: El tipo de argumento no coincide')
             exit(1)
         else:
             self.generate(OpCodes.CIRCLE, operand_1, operand_2, None)
@@ -571,8 +575,8 @@ class QuadrupleRegister:
     def print_debug_quadruples(self):
         counter = 0
         for quadruple in self.quadruple_list:
-            print('* Quadruple ' + str(counter))
-            print(' Operator: ' + str(quadruple['operator']) +
+            self.log.write('* Quadruple ' + str(counter))
+            self.log.write(' Operator: ' + str(quadruple['operator']) +
                 ' Operand1: ' + str(quadruple['operand_1']) +
                 ' Operand2: ' + str(quadruple['operand_2']) +
                 ' Result: ' + str(quadruple['result']))
@@ -582,7 +586,7 @@ class QuadrupleRegister:
         for constant in self.constant_list:
             address = constant['address']
             value = constant['name']
-            print(str(address) + ' ' + str(value))
+            self.log.write(str(address) + ' ' + str(value))
 
     # la función print_quadruples imprime las direcciones o nombres de los cuádruplos
     def print_quadruples(self):
@@ -599,7 +603,7 @@ class QuadrupleRegister:
                 operand_2 = operand_2['name']
             if isinstance(result, dict):
                 result = result['address']
-            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' ' + str(result))
+            self.log.write('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' ' + str(result))
             counter = counter + 1
 
     # la función print_name_quadruples imprime los nombres de todos los cuádruplos
@@ -617,13 +621,13 @@ class QuadrupleRegister:
                 operand_2 = operand_2['name']
             if isinstance(result, dict):
                 result = result['name']
-            print('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' ' + str(result))
+            self.log.write('*Quadruple ' + str(counter) + ':   ' + str(operator) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' ' + str(result))
             counter = counter + 1
 
     # La función new pointer crea un diccionario con el nombre, tipo y dirección del
     # nuevo pointer y lo regresa.
-    def new_pointer(self):
-        var = dict(name = 'ptr' + str(self.address_handler.pointer_count), type = SemanticCube.INT,
+    def new_pointer(self, var_type):
+        var = dict(name = 'ptr' + str(self.address_handler.pointer_count), type = var_type,
                    address = self.address_handler.next_pointer_address())
         return var
 
@@ -645,7 +649,7 @@ class QuadrupleRegister:
             var = dict(name = 'tb' + str(self.address_handler.temp_bool_count), type = var_type,
                        address = self.address_handler.next_temp_bool_address())
         else:
-            print('Error: Tipo ' + str(var_type) + ' desconocido')
+            print(str(self.lexer.lineno) + ': ' + 'Error: Tipo ' + str(var_type) + ' desconocido')
             exit(2)
             return None
 
@@ -662,11 +666,11 @@ class QuadrupleRegister:
         operand_2 = self.operand_stack.pop()
         operand_1 = self.operand_stack.pop()
         result_type = self.semantic_cube.get_result_type(operand_1['type'], operand_2['type'], operator)
-        print('Result Type :::::::::::::::::: ' + str(result_type) + ' ' + str(operand_1)+ ' ' + str(operand_2))
+        self.log.write('Result Type :::::::::::::::::: ' + str(result_type) + ' ' + str(operand_1)+ ' ' + str(operand_2))
         if result_type is not None:
             self.generate(operator, operand_1, operand_2, self.__new_temp_var(result_type))
         else:
-            print('Error: Operation type mismatch with operands ' + operand_1['name'] + ' and ' + operand_2['name'])
+            print(str(self.lexer.lineno) + ': ' + 'Error: Operación entre tipos incompatibles')
             exit(0)
 
     # La función __to_opcode recibe un operador como string, y con esto regresa
@@ -699,6 +703,6 @@ class QuadrupleRegister:
         elif operator_s == '<=':
             return QuadrupleRegister.MENOR_IGUAL
         else:
-            print ('Error: operador desconocido ' + operator_s)
+            print (str(self.lexer.lineno) + ': ' + 'Error: operador desconocido ' + operator_s)
             exit(1)
             return None
