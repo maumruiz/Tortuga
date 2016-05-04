@@ -675,7 +675,7 @@ class VirtualMachine:
 
     # La función op_end termina la ejecución gráfica de turtle.
     def op_end(self, quad):
-        turtle.done()
+        turtle.exitonclick()
         self.log.write(" end ")
 
     # Lista de opciones que se usa como switch

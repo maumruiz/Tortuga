@@ -1,0 +1,14 @@
+programa espirales
+
+color_fondo(0, 0, 0)
+
+var x : int = 0
+
+mientras (x < 400) {
+    adelante(50 + x)
+    derecha(91)
+
+    color_linea(255, 0, 0)
+
+    x = x + 1
+}

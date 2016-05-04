@@ -1,0 +1,25 @@
+programa hexagonos
+
+color_fondo(52, 152, 219)
+
+grosor_linea(3)
+
+var c : int = 0
+
+color_relleno(255, 150, 0)
+
+repetir(16) {
+    activar_relleno()
+    color_linea(0, 0, 0)
+    repetir(6) {
+        adelante(96)
+        derecha(60)
+    }
+    desactivar_relleno()
+    derecha(22)
+
+    c = c + 5
+    color_relleno(255 - c, 150 + c, 0)
+}
+
+
