@@ -12,7 +12,8 @@ class Register:
 
     # Init de la clase Register. Inicializa la lista de funciones como vacía y
     # las variables en 0
-    def __init__(self):
+    def __init__(self, lexer):
+        self.lexer = lexer
         self.current_scope = 0
         self.function_list = []
         self.address_handler = None
@@ -152,7 +153,7 @@ class Register:
                 self.current_function_call = index
                 self.log.write("Current function index: " + str(index))
                 return index
-        self.log.write(str(self.lexer.lineno) + ': ' + "Error: Funcion no declarada: " + function_name)
+        print(str(self.lexer.lineno) + ': ' + "Error: Funcion no declarada: " + function_name)
         exit(1)
 
     # La función get_expected_arg_type busca en la función con function call

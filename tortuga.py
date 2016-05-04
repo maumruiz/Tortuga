@@ -310,7 +310,7 @@ from virtual_machine import VirtualMachine
 from logger import Logger
 
 # Inicializacion de clases
-register = Register()
+register = Register(lexer)
 quadruple_reg = QuadrupleRegister(lexer)
 register.set_address_handler(quadruple_reg.address_handler)
 main_goto_quadruple = 0

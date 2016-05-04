@@ -8,6 +8,16 @@ arr[2] = 5
 arr[3] = 4
 arr[4] = 2
 
+escribe("Arreglo original:")
+var x : int = 0
+repetir(5) {
+  escribe(arr[x])
+  x = x + 1
+}
+
+escribe("#################")
+escribe("Arreglo ordenado:")
+
 var swapped : bool = verdadero
 var j : int = 0
 var i : int = 0

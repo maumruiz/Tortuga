@@ -1,5 +1,6 @@
 from memory import Memory
 from constant_table import ConstantTable
+from logger import Logger
 
 class MemoryMap:
     ''' Clase que maneja el mapa de memoria que va a utilizar la Máquina Virtual
@@ -33,7 +34,8 @@ class MemoryMap:
     # Del directorio de funciones saca las variables del 'main' para poder inicializar un objeto
     # de la clase Memory con las variables globales.
     def __init__(self, constant_table, functions):
-        print(" ////////////////////////   Memory Map init ////////////////////")
+        self.log = Logger(False)
+        self.log.write(" ////////////////////////   Memory Map init ////////////////////")
         global_variables = []
         for function in functions:
             if(function['name'] == "main"):
@@ -46,13 +48,13 @@ class MemoryMap:
         self.constant_table = constant_table
         self.nested_call_level = 0
 
-        print( "=============== functions dir ==================")
-        print(self.functions_table)
-        print( "=============== global memory ==================")
-        print(self.global_memory.register)
-        print(self.global_memory.temp_register)
-        print( "=============== constant memory ==================")
-        print(self.constant_table.table)
+        self.log.write( "=============== functions dir ==================")
+        self.log.write(self.functions_table)
+        self.log.write( "=============== global memory ==================")
+        self.log.write(self.global_memory.register)
+        self.log.write(self.global_memory.temp_register)
+        self.log.write( "=============== constant memory ==================")
+        self.log.write(self.constant_table.table)
 
     # Función que inicializa un objeto de la clase Memoria con las variables
     # locales de la función que se pasa como argumento. La memoria local se agrega
